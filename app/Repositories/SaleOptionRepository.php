@@ -13,9 +13,9 @@ class SaleOptionRepository implements RepositoriesInterface
     {
         //
     }
-    public function index(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
+    public function index()
     {
-        return SaleOption::paginate(10);
+        return SaleOption::all();
     }
 
     public function getById($id): SaleOption
