@@ -3,20 +3,23 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Mehradsadeghi\FilterQueryString\FilterQueryString;
 
 class Ad extends Model
 {
+    use FilterQueryString;
+    protected $filters = ['like','sort'];
     protected $fillable = [
-        'user_id', 
-        'category_id', 
-        'region_id', 
-        'title', 
-        'description', 
-        'price', 
-        'primary_image', 
-        'status', 
-        'sale_option_id', 
-        'views', 
+        'user_id',
+        'category_id',
+        'region_id',
+        'title',
+        'description',
+        'price',
+        'primary_image',
+        'status',
+        'sale_option_id',
+        'views',
         'likes'
     ];
 

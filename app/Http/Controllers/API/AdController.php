@@ -24,15 +24,15 @@ class AdController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $ads = $this->AdRepository->index();
+            $ads = $this->AdRepository->index($request->region_id,$request->category_id);
             return ApiResponseClass::sendResponse($ads, 'All ads retrieved successfully.');
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error retrieving ads: ' . $e->getMessage());
         }
-        
+
     }
 
     /**
@@ -53,7 +53,7 @@ class AdController extends Controller
             'images.*'=>['image', 'max:2048'],
         ]);
         try {
-            $fields['user_id']=Auth::id()?? 1; //just in test 
+            $fields['user_id']=Auth::id()?? 1; //just in test
             $fields['primary_image']=$this->ImageService->saveImage($fields['primary_image']);
             $ad=$this->AdRepository->store($fields);
             if ($request->hasFile('images')) {

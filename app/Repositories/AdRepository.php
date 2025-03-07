@@ -3,6 +3,8 @@
 namespace App\Repositories;
 use App\Interfaces\RepositoriesInterface;
 use App\Models\Ad;
+use App\Models\Category;
+use App\Models\region;
 use Illuminate\Support\Facades\DB;
 
 class AdRepository implements RepositoriesInterface
@@ -14,9 +16,30 @@ class AdRepository implements RepositoriesInterface
     {
         //
     }
-    public function index(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
+    public function index($region_id,$category_id)
     {
-        return Ad::with(['category', 'region', 'saleOption'])->withMax('bids', 'amount')->paginate(10);
+        $query = Ad::query();
+
+        if ($region_id) {
+            $region = region::with('children')->find($region_id);
+            if ($region) {
+                $regionIds = $region->children()->pluck('id')->push($region->id);
+                $allRegionIds = region::whereIn('parent_id', $regionIds)->pluck('id');
+                $regionIds = $regionIds->merge($allRegionIds);
+                $query->whereIn('region_id', $regionIds);
+            }
+        }
+
+        if ($category_id) {
+            $category = Category::with('children')->find($category_id);
+            if ($category) {
+                $categoryIds = $category->children()->pluck('id')->push($category->id);
+                $allCategoryIds = Category::whereIn('parent_id', $categoryIds)->pluck('id');
+                $categoryIds = $categoryIds->merge($allCategoryIds);
+                $query->whereIn('category_id', $categoryIds);
+            }
+        }
+        return Ad::with(['category', 'region', 'saleOption'])->withMax('bids', 'amount')->filter()->paginate(10);
     }
 
     public function getById($id): Ad
@@ -41,11 +64,11 @@ class AdRepository implements RepositoriesInterface
             $Ad = Ad::with(['bids', 'images', 'comments', 'views', 'likes', 'favoritedBy','conversations'])->findOrFail($id);
             foreach ($Ad->images as $image) {
                 if (\File::exists($image->image_url)) {
-                    \File::delete($image->image_url); 
+                    \File::delete($image->image_url);
                 }
             }
             if(\File::exists($Ad->primary_image)){
-                \File::delete($Ad->primary_image); 
+                \File::delete($Ad->primary_image);
             }
             $Ad->bids()->delete();
             $Ad->comments()->delete();
@@ -57,5 +80,5 @@ class AdRepository implements RepositoriesInterface
             return $Ad->delete();
         });
     }
-    
+
 }
