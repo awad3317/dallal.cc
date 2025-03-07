@@ -53,7 +53,7 @@ class AdController extends Controller
             'images.*'=>['image', 'max:2048'],
         ]);
         try {
-            $fields['user_id']=Auth::id();
+            $fields['user_id']=Auth::id()?? 1; //just in test 
             $fields['primary_image']=$this->ImageService->saveImage($fields['primary_image']);
             $ad=$this->AdRepository->store($fields);
             if ($request->hasFile('images')) {

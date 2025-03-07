@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             RegionSeeder::class,
             SaleOptionSeeder::class,
+            UserSeeder::class,
         ]);
     }
 }
