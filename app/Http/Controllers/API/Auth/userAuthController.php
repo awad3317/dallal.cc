@@ -31,7 +31,7 @@ class userAuthController extends Controller
         ]);
 
         // Create the avatar using the service
-        // $fields['image'] = $this->AvatarService->createAvatar($fields['name']);
+        $fields['image'] = $this->AvatarService->createAvatar($fields['name']);
 
         // Store the new user using the UserRepository
         $user=$this->UserRepository->store($fields);
