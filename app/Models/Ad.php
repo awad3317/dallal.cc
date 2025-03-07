@@ -35,7 +35,7 @@ class Ad extends Model
 
     public function region()
     {
-        return $this->belongsTo(Region::class);
+        return $this->belongsTo(region::class);
     }
 
     public function saleOption()
