@@ -2,15 +2,15 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AdController;
-use App\Http\Controllers\Api\BidController;
-use App\Http\Controllers\Api\ImageController;
+use App\Http\Controllers\API\AdController;
+use App\Http\Controllers\API\BidController;
+use App\Http\Controllers\API\ImageController;
 use App\Http\Controllers\API\RegionController;
-use App\Http\Controllers\api\auth\OTPController;
-use App\Http\Controllers\api\CategoryController;
-use App\Http\Controllers\Api\FavoriteController;
-use App\Http\Controllers\Api\SaleOptionController;
-use App\Http\Controllers\api\Auth\userAuthController;
+use App\Http\Controllers\API\auth\OTPController;
+use App\Http\Controllers\API\CategoryController;
+use App\Http\Controllers\API\FavoriteController;
+use App\Http\Controllers\API\SaleOptionController;
+use App\Http\Controllers\API\Auth\userAuthController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
