@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AdController;
 use App\Http\Controllers\Api\BidController;
 use App\Http\Controllers\Api\ImageController;
-use App\Http\Controllers\api\RegionController;
+use App\Http\Controllers\API\RegionController;
 use App\Http\Controllers\api\auth\OTPController;
 use App\Http\Controllers\api\CategoryController;
 use App\Http\Controllers\Api\FavoriteController;
