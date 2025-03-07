@@ -36,12 +36,11 @@ class AdRepository implements RepositoriesInterface
                 $categoryIds = $category->children()->pluck('id')->push($category->id);
                 $allCategoryIds = Category::whereIn('parent_id', $categoryIds)->pluck('id');
                 $categoryIds = $categoryIds->merge($allCategoryIds);
-                dd($categoryIds);
                 $query->whereIn('category_id', $categoryIds);
 
             }
         }
-        return Ad::with(['category', 'region', 'saleOption'])->withMax('bids', 'amount')->filter()->paginate(10);
+        return $query->with(['category', 'region', 'saleOption'])->withMax('bids', 'amount')->filter()->paginate(10);
     }
 
     public function getById($id): Ad
