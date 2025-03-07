@@ -16,18 +16,17 @@ class ImageService
      */
     public function saveImage($image, $folder = 'Primary_images')
     {
-        // Get the file extension
-        $extension = $image->getClientOriginalExtension();
 
         // Generate a unique filename
-        $filename = uniqid('', true) . '.' . $extension;
+        $filename = uniqid('', true) . '.' . $image->getClientOriginalExtension();
+        $filePath = $folder . '/' . $filename;
 
         // Save the file to the specified folder
-        $image->storeAs($folder,$filename,'public');
+        $image->storeAs($folder, $filename, 'public');
         // $filePath = Storage::putFileAs($folder, $image, $filename);
 
         // Return the full file path
-        return $folder. '/' . $filename;
+        return 'storage/' . $filePath;
         // return 'storage/' . $filename;
     }
 
