@@ -22,7 +22,6 @@ class AdRepository implements RepositoriesInterface
 
         if ($region_id) {
             $region = region::with('children')->find($region_id);
-            dd($region);
             if ($region) {
                 $regionIds = $region->children()->pluck('id')->push($region->id);
                 $allRegionIds = region::whereIn('parent_id', $regionIds)->pluck('id');
@@ -33,6 +32,7 @@ class AdRepository implements RepositoriesInterface
 
         if ($category_id) {
             $category = Category::with('children')->find($category_id);
+            dd($category);
             if ($category) {
                 $categoryIds = $category->children()->pluck('id')->push($category->id);
                 $allCategoryIds = Category::whereIn('parent_id', $categoryIds)->pluck('id');
