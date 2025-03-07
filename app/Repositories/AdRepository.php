@@ -21,6 +21,7 @@ class AdRepository implements RepositoriesInterface
         $query = Ad::query();
 
         if ($region_id) {
+            dd($region_id);
             $region = region::with('children')->find($region_id);
             if ($region) {
                 $regionIds = $region->children()->pluck('id')->push($region->id);
