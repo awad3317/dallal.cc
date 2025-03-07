@@ -10,14 +10,14 @@ class region extends Model
 
     public function parent()
     {
-        return $this->belongsTo(Region::class, 'parent_id');
+        return $this->belongsTo(region::class, 'parent_id');
     }
 
     public function children()
     {
-        return $this->hasMany(Region::class, 'parent_id');
+        return $this->hasMany(region::class, 'parent_id');
     }
-    
+
     public function ads()
     {
         return $this->hasMany(Ad::class);
