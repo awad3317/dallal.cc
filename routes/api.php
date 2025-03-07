@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\CommentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AdController;
@@ -29,14 +30,15 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Route::apiResource('/bid',BidController::class);
     // Route::apiResource('/favorite',FavoriteController::class)->except(['show','update']);
     // Route::apiResource('/image',ImageController::class)->except(['show','index']);
-    
-    
+
+
 });
 Route::post('/register',[userAuthController::class,'register']);
 Route::post('/login',[userAuthController::class,'login']);
 Route::post('/verifyOtpAndLogin',[OTPController::class,'verifyOtpAndLogin']);
 Route::post('/resendOTP',[OTPController::class,'resendOTP']);
 Route::apiResource('/region',RegionController::class);
+Route::apiResource('/comment',CommentController::class)->except(['show','update']);
 Route::get('/regions/parents', [RegionController::class,'getParents']);
 Route::get('/regions/{id}/children', [RegionController::class,'getChildren']);
 Route::apiResource('/category',CategoryController::class);

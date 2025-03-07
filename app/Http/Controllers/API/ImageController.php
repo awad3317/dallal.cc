@@ -42,7 +42,7 @@ class ImageController extends Controller
             return ApiResponseClass::sendResponse($Image,'Image saved successfully.');
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error save Image: ' . $e->getMessage());
-        } 
+        }
     }
 
     /**
@@ -58,7 +58,15 @@ class ImageController extends Controller
      */
     public function update(Request $request,$id)
     {
-        //
+        $fields=$request->validate([
+            'image'=>['required','image','max:2048']
+        ]);
+        try {
+            $Image=$this->ImageRepository->update($fields, $id);
+            return ApiResponseClass::sendResponse($Image,'Image is updated successfully.');
+        }catch (Exception $e) {
+            return ApiResponseClass::sendError('Error Update Image: ' . $e->getMessage());
+        }
     }
 
     /**
