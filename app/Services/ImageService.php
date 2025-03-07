@@ -23,7 +23,7 @@ class ImageService
         $filename = uniqid('', true) . '.' . $extension;
 
         // Save the file to the specified folder
-        $image->save($folder,$filename);
+        $image->storeAs($folder,$filename);
         // $filePath = Storage::putFileAs($folder, $image, $filename);
 
         // Return the full file path
