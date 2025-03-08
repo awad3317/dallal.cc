@@ -49,18 +49,26 @@ class AdController extends Controller
             'primary_image' =>['required','image','max:2048'],
             'status'=>['required','in:جديد,مستعمل'],
             'sale_option_id' =>['required',Rule::exists('sale_options','id')],
-            'images'=>['nullable', 'array', 'max:7'],
-            'images.*'=>['image', 'max:2048'],
+            'image1' => ['nullable', 'image', 'max:2048'],
+            'image2' => ['nullable', 'image', 'max:2048'],
+            'image3' => ['nullable', 'image', 'max:2048'],
+            'image4' => ['nullable', 'image', 'max:2048'],
+            'image5' => ['nullable', 'image', 'max:2048'],
+            'image6' => ['nullable', 'image', 'max:2048'],
+            'image7' => ['nullable', 'image', 'max:2048'],
         ]);
         try {
             $fields['user_id']=Auth::id()?? 1; //just in test
             $fields['primary_image']=$this->ImageService->saveImage($fields['primary_image']);
             $ad=$this->AdRepository->store($fields);
-            if ($request->hasFile('images')) {
-                $Images = $request->file('images');
-                foreach ($Images as $image) {
-                    $imagePath = $this->ImageService->saveImage($image,'additional_image');
-                    $ad->images()->create(['image_url' => $imagePath]);
+            if ($request->hasAny(['image1', 'image2', 'image3', 'image4', 'image5', 'image6', 'image7'])) {
+                for ($i = 1; $i <= 7; $i++) {
+                    $fieldName = 'image' . $i;
+                    if ($request->hasFile($fieldName)) {
+                        $image = $request->file($fieldName);
+                        $imagePath = $this->ImageService->saveImage($image, 'additional_image');
+                        $ad->images()->create(['image_url' => $imagePath]);
+                    }
                 }
             }
             return ApiResponseClass::sendResponse($ad,'Ad saved successfully.');
