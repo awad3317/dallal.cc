@@ -15,20 +15,16 @@ class CorsMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $headers = [
-            'Access-Control-Allow-Origin' => 'http://localhost:3000',
-            'Access-Control-Allow-Methods' => 'GET, POST, PUT, DELETE, OPTIONS',
-            'Access-Control-Allow-Credentials' => 'true',
-            'Access-Control-Allow-Headers' => 'Content-Type, Authorization, X-Requested-With',
-        ];
-        if ($request->isMethod('OPTIONS')) {
-            return response()->json('OK', 200, $headers);
-        }
         $response = $next($request);
-        foreach ($headers as $key => $value) {
-            $response->header($key, $value);
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+        $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+        $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+        
+        if ($request->isMethod('OPTIONS')) {
+            return response()->json('OK', 200, $response->headers->all());
         }
 
         return $response;
     }
+
 }
