@@ -18,32 +18,32 @@ class CategorySeeder extends Seeder
 
         $categories = [
             [
-                'name' => 'Electronics',
+                'name' => 'الإلكترونيات',
                 'parent_id' => null,
                 'image' => 'electronics.png',
             ],
             [
-                'name' => 'Mobile Phones',
+                'name' => 'الهواتف المحمولة',
                 'parent_id' => 1,
                 'image' => 'mobile_phones.png',
             ],
             [
-                'name' => 'Laptops',
+                'name' => 'أجهزة اللابتوب',
                 'parent_id' => 1, 
                 'image' => 'laptops.png',
             ],
             [
-                'name' => 'Clothing',
+                'name' => 'الملابس',
                 'parent_id' => null,
                 'image' => 'clothing.png',
             ],
             [
-                'name' => 'Men\'s Clothing',
+                'name' => 'ملابس الرجال',
                 'parent_id' => 4, 
                 'image' => 'mens_clothing.png',
             ],
             [
-                'name' => 'Women\'s Clothing',
+                'name' => 'ملابس النساء',
                 'parent_id' => 4, 
                 'image' => 'womens_clothing.png',
             ],
