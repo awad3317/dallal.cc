@@ -45,7 +45,7 @@ class AdRepository implements RepositoriesInterface
 
     public function getById($id): Ad
     {
-        return Ad::with(['user','category','region','saleOption','bids','images','comments'])->withMax('bids','amount')->findOrFail($id);
+        return Ad::with(['user','category','region','saleOption','bids','images','comments.user'])->withMax('bids','amount')->findOrFail($id);
     }
 
     public function store(array $data): Ad
