@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Region;
+use App\Models\region;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -196,14 +196,14 @@ class RegionSeeder extends Seeder
 
         foreach ($cities as $city) {
             
-            $parentRegion = Region::create([
+            $parentRegion = region::create([
                 'name' => $city,
                 'parent_id' => null, 
             ]);
 
             if (isset($neighborhoods[$city])) {
                 foreach ($neighborhoods[$city] as $neighborhood) {
-                    Region::create([
+                    region::create([
                         'name' => $neighborhood,
                         'parent_id' => $parentRegion->id, 
                     ]);
