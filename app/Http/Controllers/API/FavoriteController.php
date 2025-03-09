@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Classes\ApiResponseClass;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Repositories\FavoriteRepository;
 
 class FavoriteController extends Controller
@@ -38,10 +39,10 @@ class FavoriteController extends Controller
     public function store(Request $request)
     {
         $fields=$request->validate([
-            'user_id' => ['required',Rule::exists('users','id')],
             'ad_id' => ['required',Rule::exists('ads','id')],
         ]);
         try {
+            $fields['user_id']= Auth::id() ?? 1; //just in test
             $Favorite=$this->FavoriteRepository->store($fields);
             return ApiResponseClass::sendResponse($Favorite,'Favorite saved successfully.');
         } catch (Exception $e) {
