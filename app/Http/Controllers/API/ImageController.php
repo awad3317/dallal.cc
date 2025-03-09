@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Services\ImageService;
 use Illuminate\Validation\Rule;
 use App\Classes\ApiResponseClass;
+use App\Repositories\AdRepository;
 use App\Http\Controllers\Controller;
 use App\Repositories\ImageRepository;
 
@@ -15,7 +16,7 @@ class ImageController extends Controller
      /**
      * Create a new class instance.
      */
-    public function __construct(private ImageRepository $ImageRepository,private ImageService $ImageService)
+    public function __construct(private ImageRepository $ImageRepository,private ImageService $ImageService,private AdRepository $AdRepository)
     {
         //
     }
@@ -37,6 +38,10 @@ class ImageController extends Controller
             'image'=>['required','image','max:2048']
         ]);
         try {
+            $ad = $this->AdRepository->getById($fields['ad_id']);
+            if ($ad->images()->count() >= 7) {
+                return ApiResponseClass::sendError('Cannot save image. The ad already has 7 images.');
+            }
             $fields['image_url']=$this->ImageService->saveImage($fields['image'],'additional_image');
             $Image=$this->ImageRepository->store($fields);
             return ApiResponseClass::sendResponse($Image,'Image saved successfully.');
