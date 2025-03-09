@@ -83,7 +83,7 @@ class AdController extends Controller
     public function show(string $id)
     {
         try{
-            $ad = $this->AdRepository->getById($id);
+            $ad = $this->AdRepository->getByIdWithSimilarAd($id);
             return ApiResponseClass::sendResponse($ad, " data getted  successfully");
         }catch(Exception $e){
             return ApiResponseClass::sendError('Error returned Ad: ' . $e->getMessage());

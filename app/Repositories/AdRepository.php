@@ -81,5 +81,16 @@ class AdRepository implements RepositoriesInterface
             return $Ad->delete();
         });
     }
+    public function getByIdWithSimilarAd($id): Ad
+    {
+        $ad=Ad::with(['user','category','region','saleOption','bids','images','comments.user:id,name,image'])->withMax('bids','amount')->findOrFail($id);
+        $similarAds = Ad::where('category_id', $ad->category_id)
+        ->where('id', '!=', $ad->id) 
+        ->inRandomOrder() 
+        ->limit(5) 
+        ->get();
+        $ad->similar_ads = $similarAds;
+        return $ad;
+    }
 
 }
