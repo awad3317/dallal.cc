@@ -67,6 +67,13 @@ class ImageController extends Controller
             'image'=>['required','image','max:2048']
         ]);
         try {
+            $oldImage = $this->ImageRepository->getById($id);
+            if (\File::exists($oldImage->image_url)) {
+                \File::delete($oldImage->image_url);
+            }
+            $imagePath = $this->ImageService->saveImage($fields['image'], 'additional_image');
+            unset($fields);
+            $fields['image_url']=$imagePath;
             $Image=$this->ImageRepository->update($fields, $id);
             return ApiResponseClass::sendResponse($Image,'Image is updated successfully.');
         }catch (Exception $e) {
