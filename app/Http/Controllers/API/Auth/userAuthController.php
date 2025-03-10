@@ -71,7 +71,8 @@ class userAuthController extends Controller
             $this->UserRepository->update(['last_login'=>now()],$user->id);
             // Create a new token for the user
             $token = $user->createToken($user->username . '-AuthToken')->plainTextToken;
-            return ApiResponseClass::sendResponse(['token' => $token, 'user' => $user], 'User logged in successfully');
+            $user->token=$token;
+            return ApiResponseClass::sendResponse(['user' => $user], 'User logged in successfully');
         }
         return ApiResponseClass::sendError('Unauthorized', ['error' => 'Invalid credentials']);
         
