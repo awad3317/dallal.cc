@@ -59,7 +59,7 @@ class userAuthController extends Controller
             $otp=$this->otpService->generateOTP($user->email);
 
             // Send an email with the OTP code to the user's email address
-            // SendOtpEmailJob::dispatch($user->email, $otp);
+            SendOtpEmailJob::dispatch($user->email, $otp);
             return ApiResponseClass::sendError('Unauthorized', ['error' => 'Email not verified. An OTP has been sent to '.$user->email]);
         }
 
