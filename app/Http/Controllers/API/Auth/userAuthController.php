@@ -41,7 +41,7 @@ class userAuthController extends Controller
         // Send an email with the OTP code to the user's email address
         SendOtpEmailJob::dispatch($user->email, $otp);
         
-        return ApiResponseClass::sendResponse($user,'OTP sent to ' . $user->email);
+        return ApiResponseClass::sendResponse($user,'OTP sent to ->'. $otp .'<-'. $user->email);
     }
 
     public function login(Request $request)
