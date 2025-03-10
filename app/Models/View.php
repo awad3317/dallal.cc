@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class View extends Model
 {
-    protected $fillable = ['ad_id', 'user_id'];
+    protected $fillable = ['ad_id', 'user_id','session_id','ip_address','viewed_at'];
 
     public function ad()
     {

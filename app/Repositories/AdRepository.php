@@ -94,4 +94,8 @@ class AdRepository implements RepositoriesInterface
         return $ad;
     }
 
+    public function incrementViews($adId){
+        Ad::where('id', $adId)->increment('views');
+    }
+
 }

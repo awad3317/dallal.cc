@@ -10,6 +10,7 @@ use App\Classes\ApiResponseClass;
 use App\Repositories\AdRepository;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Jobs\recordViewJob;
 
 class AdController extends Controller
 {
@@ -84,6 +85,7 @@ class AdController extends Controller
     {
         try{
             $ad = $this->AdRepository->getByIdWithSimilarAd($id);
+            recordViewJob::dispatch($ad->id, Auth::id() ?? null);
             return ApiResponseClass::sendResponse($ad, " data getted  successfully");
         }catch(Exception $e){
             return ApiResponseClass::sendError('Error returned Ad: ' . $e->getMessage());

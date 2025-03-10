@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('views', function (Blueprint $table) {
             $table->id();
             $table->foreignId('ad_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade'); 
+            $table->string('session_id')->nullable(); 
+            $table->string('ip_address')->nullable(); 
             $table->timestamp('viewed_at')->useCurrent();
             $table->timestamps();
         });
