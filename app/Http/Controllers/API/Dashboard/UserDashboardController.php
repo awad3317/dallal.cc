@@ -45,7 +45,7 @@ class UserDashboardController extends Controller
     {
         try {
             $user = $this->UserRepository->getById(Auth::id() ?? 1);// just in test
-            $favorites = $user->favorites()->paginate(10); 
+            $favorites = $user->favorites()->with(['category', 'region', 'saleOption'])->withMax('bids', 'amount')->paginate(10); 
             return ApiResponseClass::sendResponse($favorites, 'favorites retrieved successfully.');
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error retrieving favorites: ' . $e->getMessage());
