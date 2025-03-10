@@ -2,10 +2,54 @@
 
 namespace App\Http\Controllers\API\Dashboard;
 
-use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Http\Request;
+use App\Classes\ApiResponseClass;
+use App\Repositories\AdRepository;
+use App\Http\Controllers\Controller;
+use App\Repositories\UserRepository;
+use Illuminate\Support\Facades\Auth;
 
 class UserDashboardController extends Controller
 {
-    //
+     /**
+     * Create a new class instance.
+     */
+    public function __construct(private UserRepository $UserRepository)
+    {
+        //
+    }
+
+    public function getUserData()
+    {
+        try {
+            $user = $this->UserRepository->getById(Auth::id() ?? 1); // just in test
+            return ApiResponseClass::sendResponse($user, 'user retrieved successfully.');
+        } catch (Exception $e) {
+            return ApiResponseClass::sendError('Error retrieving user: ' . $e->getMessage());
+        }
+    }
+
+    public function getUserAds()
+    {
+        try {
+            $user = $this->UserRepository->getById(Auth::id() ?? 1);// just in test
+            $ads = $user->ads->paginate(10); 
+            return ApiResponseClass::sendResponse($ads, 'ads retrieved successfully.');
+        } catch (Exception $e) {
+            return ApiResponseClass::sendError('Error retrieving ads: ' . $e->getMessage());
+        }
+    }
+
+    public function getUserFavoriteAds()
+    {
+        try {
+            $user = $this->UserRepository->getById(Auth::id() ?? 1);// just in test
+            $favorites = $user->favorites->paginate(10); 
+            return ApiResponseClass::sendResponse($favorites, 'favorites retrieved successfully.');
+        } catch (Exception $e) {
+            return ApiResponseClass::sendError('Error retrieving favorites: ' . $e->getMessage());
+        }
+    }
+
 }

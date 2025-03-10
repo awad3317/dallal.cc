@@ -1,17 +1,18 @@
 <?php
 
-use App\Http\Controllers\API\CommentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AdController;
 use App\Http\Controllers\API\BidController;
 use App\Http\Controllers\API\ImageController;
 use App\Http\Controllers\API\RegionController;
+use App\Http\Controllers\API\CommentController;
 use App\Http\Controllers\API\Auth\OTPController;
 use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\FavoriteController;
 use App\Http\Controllers\API\SaleOptionController;
 use App\Http\Controllers\API\Auth\userAuthController;
+use App\Http\Controllers\API\Dashboard\UserDashboardController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -37,6 +38,9 @@ Route::post('/register',[userAuthController::class,'register']);
 Route::post('/login',[userAuthController::class,'login']);
 Route::post('/verifyOtpAndLogin',[OTPController::class,'verifyOtpAndLogin']);
 Route::post('/resendOTP',[OTPController::class,'resendOTP']);
+Route::get('/getUserData',[UserDashboardController::class,'getUserData']);
+Route::get('/getUserAds',[UserDashboardController::class,'getUserAds']);
+Route::get('/getUserFavoriteAds',[UserDashboardController::class,'getUserFavoriteAds']);
 Route::apiResource('/region',RegionController::class);
 Route::apiResource('/comment',CommentController::class)->except(['show','update']);
 Route::get('/regions/parents', [RegionController::class,'getParents']);
