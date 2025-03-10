@@ -3,14 +3,15 @@
 namespace App\Http\Controllers\Api;
 
 use Exception;
+use App\Jobs\recordViewJob;
 use Illuminate\Http\Request;
+use App\Services\ViewService;
 use App\Services\ImageService;
 use Illuminate\Validation\Rule;
 use App\Classes\ApiResponseClass;
 use App\Repositories\AdRepository;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Jobs\recordViewJob;
 
 class AdController extends Controller
 {
@@ -85,7 +86,8 @@ class AdController extends Controller
     {
         try{
             $ad = $this->AdRepository->getByIdWithSimilarAd($id);
-            recordViewJob::dispatch($ad->id, Auth::id() ?? null);
+            $viewService = app(ViewService::class);
+            recordViewJob::dispatch($viewService,$ad->id, Auth::id() ?? null);
             return ApiResponseClass::sendResponse($ad, " data getted  successfully");
         }catch(Exception $e){
             return ApiResponseClass::sendError('Error returned Ad: ' . $e->getMessage());
