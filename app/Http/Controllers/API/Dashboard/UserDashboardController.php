@@ -34,7 +34,7 @@ class UserDashboardController extends Controller
     {
         try {
             $user = $this->UserRepository->getById(Auth::id() ?? 1);// just in test
-            $ads = $user->ads()->paginate(10); 
+            $ads = $user->ads()->with(['category', 'region', 'saleOption'])->withMax('bids', 'amount')->paginate(10); 
             return ApiResponseClass::sendResponse($ads, 'ads retrieved successfully.');
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error retrieving ads: ' . $e->getMessage());
