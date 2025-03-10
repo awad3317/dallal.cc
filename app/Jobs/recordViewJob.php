@@ -17,8 +17,9 @@ class recordViewJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct($adId,$userId=null)
+    public function __construct($adId,$userId,ViewService $viewService)
     {
+        $this->ViewService = $viewService;
         $this->adId=$adId;
         $this->userId=$userId;
     }
