@@ -7,7 +7,7 @@ use App\Http\Controllers\API\AdController;
 use App\Http\Controllers\API\BidController;
 use App\Http\Controllers\API\ImageController;
 use App\Http\Controllers\API\RegionController;
-use App\Http\Controllers\API\auth\OTPController;
+use App\Http\Controllers\API\Auth\OTPController;
 use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\FavoriteController;
 use App\Http\Controllers\API\SaleOptionController;

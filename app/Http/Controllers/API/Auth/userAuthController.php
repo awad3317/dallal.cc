@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\API\Auth;
 
-use Laravolt\Avatar\Avatar;
 use App\Services\OtpService;
 use Illuminate\Http\Request;
 use App\Jobs\SendOtpEmailJob;

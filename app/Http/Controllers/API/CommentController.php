@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\api;
 
+use Exception;
 use App\Classes\ApiResponseClass;
 use App\Http\Controllers\Controller;
 use App\Repositories\CommentRepository;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
