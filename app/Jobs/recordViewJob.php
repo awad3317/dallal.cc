@@ -10,15 +10,16 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 class recordViewJob implements ShouldQueue
 {
     use Queueable;
-    private ViewService $ViewService;
+    private ViewService $viewService;
     protected $adId;
     protected $userId;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(private ViewService $viewService,$adId,$userId)
+    public function __construct(ViewService $viewService,$adId,$userId)
     {
+        $this->viewService = $viewService;
         $this->adId=$adId;
         $this->userId=$userId;
     }
@@ -29,7 +30,7 @@ class recordViewJob implements ShouldQueue
     public function handle(): void
     {
         try {
-           $this->ViewService->recordView($this->adId,$this->userId);
+           $this->viewService->recordView($this->adId,$this->userId);
         } catch (\Exception $e) {
             Log::error('Failed to record view: ' . $e->getMessage());
         }

@@ -86,8 +86,7 @@ class AdController extends Controller
     {
         try{
             $ad = $this->AdRepository->getByIdWithSimilarAd($id);
-            $viewService = app(ViewService::class);
-            recordViewJob::dispatch($viewService,$ad->id, Auth::id() ?? null);
+            recordViewJob::dispatch(app(ViewService::class),$ad->id, Auth::id() ?? null);
             return ApiResponseClass::sendResponse($ad, " data getted  successfully");
         }catch(Exception $e){
             return ApiResponseClass::sendError('Error returned Ad: ' . $e->getMessage());
