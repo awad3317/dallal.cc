@@ -60,7 +60,7 @@ class AdController extends Controller
             'image7' => ['nullable', 'image', 'max:2048'],
         ]);
         try {
-            $fields['user_id']=Auth::id()?? 1; //just in test
+            $fields['user_id']=Auth::id();
             $fields['primary_image']=$this->ImageService->saveImage($fields['primary_image']);
             $ad=$this->AdRepository->store($fields);
             if ($request->hasAny(['image1', 'image2', 'image3', 'image4', 'image5', 'image6', 'image7'])) {

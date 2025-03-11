@@ -23,7 +23,7 @@ class UserDashboardController extends Controller
     public function getUserData()
     {
         try {
-            $user = $this->UserRepository->getById(Auth::id() ?? 1); // just in test
+            $user = $this->UserRepository->getById(Auth::id()); 
             return ApiResponseClass::sendResponse($user, 'user retrieved successfully.');
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error retrieving user: ' . $e->getMessage());
@@ -33,7 +33,7 @@ class UserDashboardController extends Controller
     public function getUserAds()
     {
         try {
-            $user = $this->UserRepository->getById(Auth::id() ?? 1);// just in test
+            $user = $this->UserRepository->getById(Auth::id());
             $ads = $user->ads()->with(['category', 'region', 'saleOption'])->withMax('bids', 'amount')->paginate(10); 
             return ApiResponseClass::sendResponse($ads, 'ads retrieved successfully.');
         } catch (Exception $e) {
@@ -44,7 +44,7 @@ class UserDashboardController extends Controller
     public function getUserFavoriteAds()
     {
         try {
-            $user = $this->UserRepository->getById(Auth::id() ?? 1);// just in test
+            $user = $this->UserRepository->getById(Auth::id());
             $favorites = $user->favorites()->with(['category', 'region', 'saleOption'])->withMax('bids', 'amount')->paginate(10); 
             return ApiResponseClass::sendResponse($favorites, 'favorites retrieved successfully.');
         } catch (Exception $e) {

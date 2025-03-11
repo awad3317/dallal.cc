@@ -20,39 +20,44 @@ Route::get('/user', function (Request $request) {
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout',[userAuthController::class,'logout']);
-    // Route::apiResource('/region',RegionController::class);
-    // Route::get('/regions/parents', [RegionController::class,'getParents']);
-    // Route::get('/regions/{id}/children', [RegionController::class,'getChildren']);
-    // Route::apiResource('/category',CategoryController::class);
-    // Route::get('/categories/parents', [CategoryController::class,'getParents']);
-    // Route::get('/categories/{id}/children', [CategoryController::class,'getChildren']);
-    // Route::apiResource('/ad',AdController::class)->only(['store']);
-    // Route::apiResource('/saleOption',SaleOptionController::class);
-    // Route::apiResource('/bid',BidController::class);
-    // Route::apiResource('/favorite',FavoriteController::class)->except(['show','update']);
-    // Route::apiResource('/image',ImageController::class)->except(['show','index']);
+        //      Dashboard for User      //
+    Route::get('/getUserData',[UserDashboardController::class,'getUserData']);
+    Route::get('/getUserAds',[UserDashboardController::class,'getUserAds']);
+    Route::get('/getUserFavoriteAds',[UserDashboardController::class,'getUserFavoriteAds']);
 
-
+    Route::apiResource('/region',RegionController::class)->except(['index']);
+    Route::apiResource('/category',CategoryController::class)->except(['inedx']);
+    Route::apiResource('/comment',CommentController::class)->except(['show','update']);
+    Route::apiResource('/ad',AdController::class)->except(['index','show']);
+    Route::apiResource('/saleOption',SaleOptionController::class)->except(['index']);
+    Route::apiResource('/bid',BidController::class)->except(['index']);
+    Route::apiResource('/image',ImageController::class)->except(['show','index']);
+    Route::apiResource('/favorite',FavoriteController::class)->except(['show','update']);
 });
+    //           Auth Route          //
 Route::post('/register',[userAuthController::class,'register']);
 Route::post('/login',[userAuthController::class,'login']);
 Route::post('/verifyOtpAndLogin',[OTPController::class,'verifyOtpAndLogin']);
 Route::post('/resendOTP',[OTPController::class,'resendOTP']);
-Route::get('/getUserData',[UserDashboardController::class,'getUserData']);
-Route::get('/getUserAds',[UserDashboardController::class,'getUserAds']);
-Route::get('/getUserFavoriteAds',[UserDashboardController::class,'getUserFavoriteAds']);
-Route::apiResource('/region',RegionController::class);
-Route::apiResource('/comment',CommentController::class)->except(['show','update']);
+    //             Regions           //
 Route::get('/regions/parents', [RegionController::class,'getParents']);
 Route::get('/regions/{id}/children', [RegionController::class,'getChildren']);
-Route::apiResource('/category',CategoryController::class);
+Route::get('/region',[RegionController::class,'index']);
+    //             Category           //
 Route::get('/categories/parents', [CategoryController::class,'getParents']);
 Route::get('/categories/{id}/children', [CategoryController::class,'getChildren']);
-Route::apiResource('/ad',AdController::class)->only(['store']);
-Route::apiResource('/saleOption',SaleOptionController::class);
-Route::apiResource('/bid',BidController::class);
-Route::apiResource('/favorite',FavoriteController::class)->except(['show','update']);
-Route::apiResource('/image',ImageController::class)->except(['show','index']);
-Route::apiResource('/ad',AdController::class)->except(['store']);
+Route::get('/category',[CategoryController::class,'index']);
+
+Route::get('/ad',[AdController::class,'index']);
+Route::get('/ad/{id}',[AdController::class,'show']);
+Route::get('/saleOption',[SaleOptionController::class,'index']);
+Route::get('/bid',[BidController::class,'index']);
+
+
+
+
+
+
+
 
 
