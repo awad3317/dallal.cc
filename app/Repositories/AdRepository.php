@@ -95,9 +95,9 @@ class AdRepository implements RepositoriesInterface
         ->limit(5) 
         ->get();
         $ad->similar_ads = $similarAds;
-        $auth=Auth::id() ?? null;
-        if ($auth!=null) {
-            $isLiked = Like::where('user_id', Auth::id())
+        // $auth=Auth::id() ?? null;
+        if (true) {
+            $isLiked = Like::where('user_id', Auth::id()?? 1)
                 ->where('ad_id', $ad->id)
                 ->exists();
             $ad->is_liked = $isLiked;
