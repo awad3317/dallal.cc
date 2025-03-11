@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AdController;
 use App\Http\Controllers\API\BidController;
+use App\Http\Controllers\Api\LikeController;
 use App\Http\Controllers\API\ImageController;
 use App\Http\Controllers\API\RegionController;
 use App\Http\Controllers\API\CommentController;
@@ -33,6 +34,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('/bid',BidController::class)->except(['index']);
     Route::apiResource('/image',ImageController::class)->except(['show','index']);
     Route::apiResource('/favorite',FavoriteController::class)->except(['show','update']);
+    Route::post('/like',[LikeController::class,'store']);
+    Route::delete('/like/{ad_id}',[LikeController::class,'destroy']);
+    
 });
     //           Auth Route          //
 Route::post('/register',[userAuthController::class,'register']);
