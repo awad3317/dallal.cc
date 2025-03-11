@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Interfaces\RepositoriesInterface;
 
+use function PHPUnit\Framework\isNull;
+
 class AdRepository implements RepositoriesInterface
 {
     /**
@@ -93,7 +95,8 @@ class AdRepository implements RepositoriesInterface
         ->limit(5) 
         ->get();
         $ad->similar_ads = $similarAds;
-        if (Auth::check()) {
+        $auth=Auth::id() ?? null;
+        if (!isNull($auth)) {
             $isLiked = Like::where('user_id', Auth::id())
                 ->where('ad_id', $ad->id)
                 ->exists();
