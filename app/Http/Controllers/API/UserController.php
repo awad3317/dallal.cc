@@ -63,7 +63,6 @@ class UserController extends Controller
         if($id != Auth::id()){
             return ApiResponseClass::sendError('You do not have permission to update this user.');
         }
-        dd($request->all());
         $fields=$request->validate([
             'username' => ['sometimes','string', Rule::unique('users')->ignore($id)],
             'name' => ['sometimes','string','max:100'],
