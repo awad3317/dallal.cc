@@ -25,6 +25,7 @@ class LikeService
     public function unlikeAd($adId)
     {
         $like = $this->LikeRepository->unlikeAd($adId);
+        $this->AdRepository->decrementLikes($adId);
         return $like;
     }
 }
