@@ -8,6 +8,7 @@ use Illuminate\Validation\Rule;
 use App\Classes\ApiResponseClass;
 use App\Repositories\BidRepository;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class BidController extends Controller
 {
@@ -39,10 +40,10 @@ class BidController extends Controller
     {
         $fields=$request->validate([
             'ad_id' => ['required',Rule::exists('ads','id')],
-            'user_id' => ['required',Rule::exists('users','id')],
             'amount' => ['required','numeric','min:0'],
         ]);
         try {
+            $fields['user_id']=Auth::id();
             $Bid=$this->BidRepository->store($fields);
             return ApiResponseClass::sendResponse($Bid,'Bid saved successfully.');
         } catch (Exception $e) {
@@ -74,7 +75,6 @@ class BidController extends Controller
         }
         $fields=$request->validate([
             'ad_id' =>['sometimes',Rule::exists('ads','id')],
-            'user_id' => ['sometimes',Rule::exists('users','id')],
             'amount' => ['sometimes','numeric','min:0'],
         ]);
         try {
