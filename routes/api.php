@@ -12,8 +12,10 @@ use App\Http\Controllers\API\CommentController;
 use App\Http\Controllers\API\Auth\OTPController;
 use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\FavoriteController;
+use App\Http\Controllers\API\Auth\RoleController;
 use App\Http\Controllers\API\SaleOptionController;
 use App\Http\Controllers\API\Auth\userAuthController;
+use App\Http\Controllers\API\Auth\PermissionController;
 use App\Http\Controllers\API\Dashboard\UserDashboardController;
 
 Route::get('/user', function (Request $request) {
@@ -35,6 +37,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('/saleOption',SaleOptionController::class)->except(['index']);
     Route::apiResource('/bid',BidController::class)->except(['index']);
     Route::apiResource('/image',ImageController::class)->except(['show','index']);
+    Route::apiResource('/role',RoleController::class)->except(['update']);
+    Route::get('/permission',[PermissionController::class,'index']);
     Route::apiResource('/favorite',FavoriteController::class)->except(['show','update']);
     Route::post('/like',[LikeController::class,'store']);
     Route::delete('/like/{ad_id}',[LikeController::class,'destroy']);

@@ -64,7 +64,7 @@ class UserController extends Controller
             return ApiResponseClass::sendError('You do not have permission to update this user.');
         }
         $fields=$request->validate([
-            'username' => ['sometimes','string', Rule::unique('users')->ignore($id)],
+            'username' => ['sometimes','string','regex:/^[A-Za-z0-9_]+$/', Rule::unique('users')->ignore($id)],
             'name' => ['sometimes','string','max:100'],
             'phone_number' => ['sometimes','string','min:10','max:15',],
             'image' => ['sometimes','image','max:2048'],
