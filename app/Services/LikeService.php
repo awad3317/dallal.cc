@@ -19,13 +19,17 @@ class LikeService
     public function likeAd($adId)
     {
         $like= $this->LikeRepository->likeAd($adId);
-        $this->AdRepository->incrementLikes($adId);
+        if($like->wasRecentlyCreated){
+            $this->AdRepository->incrementLikes($adId);
+        }
         return $like;
     }
     public function unlikeAd($adId)
     {
         $like = $this->LikeRepository->unlikeAd($adId);
-        $this->AdRepository->decrementLikes($adId);
+        if($like){
+            $this->AdRepository->decrementLikes($adId);
+        }
         return $like;
     }
 }
