@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AdController;
 use App\Http\Controllers\API\BidController;
-use App\Http\Controllers\Api\LikeController;
+use App\Http\Controllers\API\LikeController;
 use App\Http\Controllers\API\ImageController;
 use App\Http\Controllers\API\RegionController;
 use App\Http\Controllers\API\CommentController;
