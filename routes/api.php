@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AdController;
 use App\Http\Controllers\API\BidController;
 use App\Http\Controllers\API\LikeController;
+use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\ImageController;
 use App\Http\Controllers\API\RegionController;
 use App\Http\Controllers\API\CommentController;
@@ -29,6 +30,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('/region',RegionController::class)->except(['index']);
     Route::apiResource('/category',CategoryController::class)->except(['inedx']);
     Route::apiResource('/comment',CommentController::class)->except(['show','update']);
+    Route::apiResource('user', UserController::class)->except(['store']);
     Route::apiResource('/ad',AdController::class)->except(['index','show']);
     Route::apiResource('/saleOption',SaleOptionController::class)->except(['index']);
     Route::apiResource('/bid',BidController::class)->except(['index']);

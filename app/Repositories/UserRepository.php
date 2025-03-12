@@ -33,6 +33,11 @@ class UserRepository implements RepositoriesInterface
     public function update(array $data, $id): User
     {
         $user = User::findOrFail($id);
+        if (array_key_exists('image', $data)) {
+            if (\File::exists($user->image)) {
+                \File::delete($user->image);
+            }
+        }
         $user->update($data);
         return $user;
     }
