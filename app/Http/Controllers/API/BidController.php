@@ -92,8 +92,13 @@ class BidController extends Controller
     {
         try {
             $Bid=$this->BidRepository->getById($id);
-            if($this->BidRepository->delete($Bid->id)){
-                return ApiResponseClass::sendResponse($Bid, "{$Bid->id} unsaved successfully.");
+            if($Bid->user_id == Auth::id()){
+                if($this->BidRepository->delete($Bid->id)){
+                    return ApiResponseClass::sendResponse($Bid, "{$Bid->id} unsaved successfully.");
+                }
+            }
+            else{
+                return ApiResponseClass::sendError('You do not have permission to delete this bid.');
             }
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error deleting Bid: ' . $e->getMessage());
