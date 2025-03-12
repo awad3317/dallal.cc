@@ -12,6 +12,7 @@ use App\Classes\ApiResponseClass;
 use App\Repositories\AdRepository;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class AdController extends Controller
 {
@@ -82,10 +83,10 @@ class AdController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id,Request $request)
     {
         try{
-            $ad = $this->AdRepository->getByIdWithSimilarAd($id);
+            $ad = $this->AdRepository->getByIdWithSimilarAd($id,PersonalAccessToken::findToken($request->bearerToken())->tokenable_id ?? null);
             recordViewJob::dispatch(app(ViewService::class),$ad->id, Auth::id() ?? null);
             return ApiResponseClass::sendResponse($ad, " data getted  successfully");
         }catch(Exception $e){

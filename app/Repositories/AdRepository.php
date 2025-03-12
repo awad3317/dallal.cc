@@ -85,7 +85,7 @@ class AdRepository implements RepositoriesInterface
             return $Ad->delete();
         });
     }
-    public function getByIdWithSimilarAd($id)
+    public function getByIdWithSimilarAd($id,$user_id)
     {
         $ad=Ad::with(['user','category','region','saleOption','bids','images','comments.user:id,name,image'])->withMax('bids','amount')->findOrFail($id);
         $similarAds = Ad::with(['category:id,name','region:id,name','saleOption:id,name'])
@@ -96,9 +96,9 @@ class AdRepository implements RepositoriesInterface
         ->get();
         $ad->similar_ads = $similarAds;
         // $auth=Auth::id() ?? null;
-        return Auth::id();
-        if ($auth) {
-            $isLiked = Like::where('user_id', Auth::id())
+        // return Auth::id();
+        if ($user_id) {
+            $isLiked = Like::where('user_id', $user_id)
                 ->where('ad_id', $ad->id)
                 ->exists();
             $ad->is_liked = $isLiked;
