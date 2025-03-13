@@ -84,19 +84,27 @@ class ConversationController extends Controller
     }
 
     public function sendMessage(Request $request)
-    {
-        $fields=$request->validate([
-            'receiver_id' => ['required',Rule::exists('users','id')],
-            'message_text' => ['required','string'],
-            'conversation_id'=>['required',Rule::exists('conversations','id')],
-            'attachment' =>['nullable','image'] ,
-        ]);
-        try {
-            $fields['sender_id']=Auth::id();
-            $message=$this->MessageRepository->store($fields);
-            return ApiResponseClass::sendResponse($message, " send message successfully");
-        } catch (Exception $e) {
-            return ApiResponseClass::sendError('Error send message: ' . $e->getMessage());
-        } 
+{
+    $fields = $request->validate([
+        'message_text' => ['required', 'string'],
+        'conversation_id' => ['required', Rule::exists('conversations', 'id')],
+        'attachment' => ['nullable', 'image'],
+    ]);
+
+    try {
+        $conversation = $this->ConversationRepository->getById($fields['conversation_id']);
+
+        $userId = Auth::id();
+        if ($conversation->sender_id != $userId && $conversation->receiver_id != $userId) {
+            return ApiResponseClass::sendError('Unauthorized: You are not part of this conversation.', 403);
+        }
+        $fields['receiver_id'] = ($conversation->sender_id == $userId) ? $conversation->receiver_id : $conversation->sender_id;
+        $fields['sender_id'] = $userId;
+
+        $message = $this->MessageRepository->store($fields);
+        return ApiResponseClass::sendResponse($message, "Message sent successfully");
+    } catch (Exception $e) {
+        return ApiResponseClass::sendError('Error sending message: ' . $e->getMessage());
     }
+}
 }
