@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Events\TestPusherEvent;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AdController;
 use App\Http\Controllers\API\BidController;
@@ -65,6 +66,11 @@ Route::get('/ad',[AdController::class,'index']);
 Route::get('/ad/{id}',[AdController::class,'show']);
 Route::get('/saleOption',[SaleOptionController::class,'index']);
 Route::get('/bid',[BidController::class,'index']);
+
+Route::get('/test-pusher', function () {
+    event(new TestPusherEvent());
+    return "Event has been sent!";
+});
 
 
 
