@@ -91,6 +91,7 @@ class ImageController extends Controller
             if($this->ImageRepository->delete($Image->id)){
                 return ApiResponseClass::sendResponse($Image, "{$Image->id} unsaved successfully.");
             }
+            return ApiResponseClass::sendError("Image with ID {$id} may not be found or not deleted. Try again.");
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error deleting Image: ' . $e->getMessage());
         }

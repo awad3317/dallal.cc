@@ -76,6 +76,7 @@ class CommentController extends Controller
             if($this->CommentRepository->delete($Comment->id)){
                 return ApiResponseClass::sendResponse($Comment, "{$Comment->id} unsaved successfully.");
             }
+            return ApiResponseClass::sendError("Comment with ID {$id} may not be found or not deleted. Try again.");
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error deleting Comment: ' . $e->getMessage());
         }

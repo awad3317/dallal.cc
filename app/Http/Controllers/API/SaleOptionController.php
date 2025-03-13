@@ -87,6 +87,7 @@ class SaleOptionController extends Controller
             if($this->SaleOptionRepository->delete($SaleOption->id)){
                 return ApiResponseClass::sendResponse($SaleOption, "{$SaleOption->id} unsaved successfully.");
             }
+            return ApiResponseClass::sendError("SaleOption with ID {$id} may not be found or not deleted. Try again.");
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error deleting SaleOption: ' . $e->getMessage());
         }

@@ -42,7 +42,7 @@ class FavoriteController extends Controller
             'ad_id' => ['required',Rule::exists('ads','id')],
         ]);
         try {
-            $fields['user_id']= Auth::id() ?? 1; //just in test
+            $fields['user_id']= Auth::id();
             $Favorite=$this->FavoriteRepository->store($fields);
             return ApiResponseClass::sendResponse($Favorite,'Favorite saved successfully.');
         } catch (Exception $e) {
@@ -69,13 +69,14 @@ class FavoriteController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
         try {
             $Favorite=$this->FavoriteRepository->getById($id);
             if($this->FavoriteRepository->delete($Favorite->id)){
                 return ApiResponseClass::sendResponse($Favorite, "{$Favorite->id} unsaved successfully.");
             }
+            return ApiResponseClass::sendError("Favorite with ID {$id} may not be found or not deleted. Try again.");
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error deleting Favorite: ' . $e->getMessage());
         }

@@ -46,7 +46,6 @@ class LikeController extends Controller
                 return ApiResponseClass::sendResponse(null, 'Ad unliked successfully.');
             }
             return ApiResponseClass::sendError('Ad not liked or already unliked.');
-            return ApiResponseClass::sendError("Like with ID {$id} may not be found or not deleted. Try again.");
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error unliking ad: ' . $e->getMessage());
         }

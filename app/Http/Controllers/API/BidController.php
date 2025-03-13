@@ -97,6 +97,7 @@ class BidController extends Controller
                 if($this->BidRepository->delete($Bid->id)){
                     return ApiResponseClass::sendResponse($Bid, "{$Bid->id} unsaved successfully.");
                 }
+                return ApiResponseClass::sendError("Bid with ID {$id} may not be found or not deleted. Try again.");
             }
             else{
                 return ApiResponseClass::sendError('You do not have permission to delete this bid.');
