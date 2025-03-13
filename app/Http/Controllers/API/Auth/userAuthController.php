@@ -27,6 +27,17 @@ class userAuthController extends Controller
             'email' => ['required','email',Rule::unique('users','email')],
             'password' => ['required','string','min:6','confirmed',],
             'phone_number' => ['required','string','min:10','max:15',],
+        ], [
+            'name.required' => 'الاسم مطلوب.',
+            'email.required' => 'البريد الإلكتروني مطلوب.',
+            'email.email' => 'البريد الإلكتروني يجب أن يكون صحيحًا.',
+            'email.unique' => 'البريد الإلكتروني مسجل مسبقًا.',
+            'password.required' => 'كلمة المرور مطلوبة.',
+            'password.min' => 'كلمة المرور يجب أن تحتوي على 6 أحرف على الأقل.',
+            'password.confirmed' => 'تأكيد كلمة المرور غير متطابق.',
+            'phone_number.required' => 'رقم الهاتف مطلوب.',
+            'phone_number.min' => 'رقم الهاتف يجب أن يحتوي على 10 أحرف على الأقل.',
+            'phone_number.max' => 'رقم الهاتف لا يمكن أن يتجاوز 15 حرفًا.',
         ]);
 
         // Create the avatar using the service
