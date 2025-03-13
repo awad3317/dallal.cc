@@ -1,5 +1,6 @@
 <?php
 
+use Exception;
 use Illuminate\Http\Request;
 use App\Events\TestPusherEvent;
 use Illuminate\Support\Facades\Route;
@@ -68,8 +69,13 @@ Route::get('/saleOption',[SaleOptionController::class,'index']);
 Route::get('/bid',[BidController::class,'index']);
 
 Route::get('/test-pusher', function () {
-    event(new TestPusherEvent());
+    try {
+        event(new TestPusherEvent());
     return "Event has been sent!";
+    } catch (Exception $e) {
+        return $e->getMessage();
+    }
+    
 });
 
 
