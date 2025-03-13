@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('sender_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('receiver_id')->constrained('users')->onDelete('cascade');
             $table->text('message_text');
-            $table->string('attachment_url')->nullable();
+            $table->string('attachment')->nullable();
             $table->timestamp('sent_at')->useCurrent();
             $table->boolean('is_read')->default(false);
             $table->timestamps();

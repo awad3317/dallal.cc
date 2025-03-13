@@ -21,7 +21,7 @@ class ConversationRepository implements RepositoriesInterface
      */
     public function index(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
-        return Conversation::with(['ad', 'user'])->paginate(10);
+        return Conversation::with(['ad','sender','receiver'])->paginate(10);
     }
 
     /**
@@ -29,7 +29,7 @@ class ConversationRepository implements RepositoriesInterface
      */
     public function getById($id): Conversation
     {
-        return Conversation::with(['ad', 'user'])->findOrFail($id);
+        return Conversation::with(['messages'])->findOrFail($id);
     }
 
     /**
@@ -56,6 +56,14 @@ class ConversationRepository implements RepositoriesInterface
     public function delete($id): bool
     {
         return Conversation::where('id', $id)->delete() > 0;
+    }
+
+    public function getUserConversations($userId)
+    {
+        return Conversation::where('sender_id', $userId)
+            ->orWhere('receiver_id', $userId)
+            ->with(['sender', 'receiver', 'messages','ad'])
+            ->get();
     }
     
 }

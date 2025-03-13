@@ -14,6 +14,7 @@ use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\FavoriteController;
 use App\Http\Controllers\API\Auth\RoleController;
 use App\Http\Controllers\API\SaleOptionController;
+use App\Http\Controllers\API\ConversationController;
 use App\Http\Controllers\API\Auth\userAuthController;
 use App\Http\Controllers\API\Auth\PermissionController;
 use App\Http\Controllers\API\Dashboard\UserDashboardController;
@@ -38,6 +39,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('/bid',BidController::class)->except(['index']);
     Route::apiResource('/image',ImageController::class)->except(['show','index']);
     Route::apiResource('/role',RoleController::class)->except(['update']);
+    Route::apiResource('/conversation',ConversationController::class)->except(['update','destroy']);
+    Route::post('/sendMessage',[ConversationController::class,'sendMessage']);
     Route::get('/permission',[PermissionController::class,'index']);
     Route::apiResource('/favorite',FavoriteController::class)->except(['show','update']);
     Route::post('/like',[LikeController::class,'store']);
