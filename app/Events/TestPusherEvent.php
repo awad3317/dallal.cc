@@ -27,11 +27,13 @@ class TestPusherEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('chat');
+        return new Channel('testChannel');
     }
 
-    public function broadcastAs()
+    public function broadcastWith():array
     {
-        return 'test-event';
+        return [
+            'awad'=>$this->message,
+        ];
     }
 }
