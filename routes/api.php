@@ -67,15 +67,6 @@ Route::get('/ad/{id}',[AdController::class,'show']);
 Route::get('/saleOption',[SaleOptionController::class,'index']);
 Route::get('/bid',[BidController::class,'index']);
 
-Route::get('/test-pusher', function () {
-    try {
-        event(new TestPusherEvent());
-        return "Event has been sent!";
-    } catch (Exception $e) {
-        return $e->getMessage();
-    }
-    
-});
 
 
 

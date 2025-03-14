@@ -14,12 +14,10 @@ class TestPusherEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    /**
-     * Create a new event instance.
-     */
-    public function __construct()
+    public $message;
+    public function __construct($message)
     {
-        //
+        $this->message = $message;
     }
 
     /**
@@ -29,7 +27,7 @@ class TestPusherEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('channel-name');
+        return new Channel('chat');
     }
 
     public function broadcastAs()
