@@ -34,6 +34,7 @@ class TestPusherEvent implements ShouldBroadcast
     {
         return [
             'awad'=>$this->message,
+            
         ];
     }
 }
