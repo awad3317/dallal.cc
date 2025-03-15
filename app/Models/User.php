@@ -78,8 +78,9 @@ class User extends Authenticatable implements LaratrustUser
 
     public function likes()
     {
-        return $this->hasMany(Like::class);
+        return $this->belongsToMany(Ad::class, 'likes', 'user_id', 'ad_id')->withTimestamps();
     }
+
 
     public function conversations()
     {
