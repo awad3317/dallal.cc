@@ -28,7 +28,7 @@ class ConversationRepository implements RepositoriesInterface
     public function getById($id): Conversation
     {
         
-        $conversation = Conversation::with(['messages'])->findOrFail($id);
+        $conversation = Conversation::with(['messages','receiver','sender'])->findOrFail($id);
     
     
         $sortedMessages = $conversation->messages->sortBy('id');
