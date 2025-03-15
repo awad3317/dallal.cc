@@ -36,6 +36,7 @@ class ConversationRepository implements RepositoriesInterface
         
         $messagesWithSenderFlag = $sortedMessages->map(function ($message) {
             $message->is_sender = ($message->sender_id == Auth::id());
+            $message->makeHidden(['created_at', 'updated_at']);
             return $message;
         });
     
