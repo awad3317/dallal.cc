@@ -3,6 +3,7 @@
 namespace App\Repositories;
 use App\Interfaces\RepositoriesInterface;
 use App\Models\Conversation;
+use Illuminate\Support\Facades\Auth;
 
 class ConversationRepository implements RepositoriesInterface
 {
@@ -24,12 +25,24 @@ class ConversationRepository implements RepositoriesInterface
         return Conversation::with(['ad','sender','receiver'])->paginate(10);
     }
 
-    /**
-     * Retrieve a Conversation by ID.
-     */
     public function getById($id): Conversation
     {
-        return Conversation::with(['messages'])->findOrFail($id);
+        
+        $conversation = Conversation::with(['messages'])->findOrFail($id);
+    
+    
+        $sortedMessages = $conversation->messages->sortBy('id');
+    
+        
+        $messagesWithSenderFlag = $sortedMessages->map(function ($message) {
+            $message->is_sender = ($message->sender_id == Auth::id());
+            return $message;
+        });
+    
+        
+        $conversation->setAttribute('messages', $messagesWithSenderFlag);
+    
+        return $conversation;
     }
 
     /**
