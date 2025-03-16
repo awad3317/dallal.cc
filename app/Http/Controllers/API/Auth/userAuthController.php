@@ -42,7 +42,13 @@ class userAuthController extends Controller
 
         ]);
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            $errors = $validator->errors();
+            $firstError = $errors->first();
+        
+            return response()->json([
+                'message' => $firstError, 
+                'errors' => $errors,
+            ], 422);
         }
         $fields = $request->only(['name', 'email', 'password', 'phone_number']);
         // $fields=$request->validate([
