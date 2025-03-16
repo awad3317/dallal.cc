@@ -29,7 +29,7 @@ class userAuthController extends Controller
             'name'=>['required','string','max:100'],
             'email' => ['required','email',Rule::unique('users','email')],
             'password' => ['required','string','min:6','confirmed',],
-            'phone_number' => ['required','string','min:10','max:15',],
+            'phone_number' => ['required','string','min:9','max:15',],
         ],[
             'name.required' => 'الاسم مطلوب.',
             'email.required' => 'البريد الإلكتروني مطلوب.',
@@ -39,7 +39,7 @@ class userAuthController extends Controller
             'password.min' => 'كلمة المرور يجب أن تحتوي على 6 أحرف على الأقل.',
             'password.confirmed' => 'تأكيد كلمة المرور غير متطابق.',
             'phone_number.required' => 'رقم الهاتف مطلوب.',
-            'phone_number.min' => 'رقم الهاتف يجب أن يحتوي على 10 أحرف على الأقل.',
+            'phone_number.min' => 'رقم الهاتف يجب أن يحتوي على 9 أحرف على الأقل.',
             'phone_number.max' => 'رقم الهاتف لا يمكن أن يتجاوز 15 حرفًا.',
 
         ]);
