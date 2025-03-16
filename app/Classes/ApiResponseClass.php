@@ -48,11 +48,10 @@ class ApiResponseClass
         return response()->json($response, $code);
     }
 
-    public static function sendValidationError($errors, $code = 422)
+    public static function sendValidationError($Message,$errors, $code = 422)
     {
         return response()->json([
-            'success' => false,
-            'message' => 'Validation Error',
+            'message' => $Message, 
             'errors' => $errors,
         ], $code);
     }

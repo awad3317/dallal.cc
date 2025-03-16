@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
+use function PHPUnit\Framework\returnValue;
+
 class userAuthController extends Controller
 {
     public function __construct(private UserRepository $UserRepository,private OtpService $otpService,private AvatarService $AvatarService)
@@ -42,33 +44,10 @@ class userAuthController extends Controller
 
         ]);
         if ($validator->fails()) {
-            $errors = $validator->errors();
-            $firstError = $errors->first();
-        
-            return response()->json([
-                'message' => $firstError, 
-                'errors' => $errors,
-            ], 422);
+           return ApiResponseClass::sendValidationError($validator->errors()->first(),$validator->errors());
         }
         $fields = $request->only(['name', 'email', 'password', 'phone_number']);
-        // $fields=$request->validate([
-        //     'name'=>['required','string','max:100'],
-        //     'email' => ['required','email',Rule::unique('users','email')],
-        //     'password' => ['required','string','min:6','confirmed',],
-        //     'phone_number' => ['required','string','min:10','max:15',],
-        // ], [
-        //     'name.required' => 'الاسم مطلوب.',
-        //     'email.required' => 'البريد الإلكتروني مطلوب.',
-        //     'email.email' => 'البريد الإلكتروني يجب أن يكون صحيحًا.',
-        //     'email.unique' => 'البريد الإلكتروني مسجل مسبقًا.',
-        //     'password.required' => 'كلمة المرور مطلوبة.',
-        //     'password.min' => 'كلمة المرور يجب أن تحتوي على 6 أحرف على الأقل.',
-        //     'password.confirmed' => 'تأكيد كلمة المرور غير متطابق.',
-        //     'phone_number.required' => 'رقم الهاتف مطلوب.',
-        //     'phone_number.min' => 'رقم الهاتف يجب أن يحتوي على 10 أحرف على الأقل.',
-        //     'phone_number.max' => 'رقم الهاتف لا يمكن أن يتجاوز 15 حرفًا.',
-        // ]);
-
+       
         // Create the avatar using the service
         $fields['image'] = $this->AvatarService->createAvatar($fields['name']);
 
