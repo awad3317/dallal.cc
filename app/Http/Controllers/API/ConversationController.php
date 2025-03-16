@@ -85,7 +85,7 @@ class ConversationController extends Controller
     }
 
     public function sendMessage(Request $request)
-{
+    {
     $fields = $request->validate([
         'message_text' => ['required', 'string'],
         'conversation_id' => ['required', Rule::exists('conversations', 'id')],
@@ -105,8 +105,18 @@ class ConversationController extends Controller
         $message = $this->MessageRepository->store($fields);
         event( new sentMessageEvent($fields['message_text'],$fields['receiver_id'],$fields['conversation_id'],$fields['sender_id']));
         return ApiResponseClass::sendResponse($message, "Message sent successfully");
-    } catch (Exception $e) {
-        return ApiResponseClass::sendError('Error sending message: ' . $e->getMessage());
+        } catch (Exception $e) {
+            return ApiResponseClass::sendError('Error sending message: ' . $e->getMessage());
+        }
     }
-}
+
+    public function checkConversationExists($adId){
+        $Conversation=$this->ConversationRepository->checkConversationExists($adId);
+        if($Conversation){
+            return ApiResponseClass::sendResponse($Conversation, "the conversation is exists");
+        }
+        else{
+            return ApiResponseClass::sendResponse($Conversation, "not found");
+        }
+    }
 }

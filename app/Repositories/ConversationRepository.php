@@ -79,5 +79,19 @@ class ConversationRepository implements RepositoriesInterface
             ->with(['sender', 'receiver', 'messages','ad'])
             ->get();
     }
+
+    public function checkConversationExists($adId)
+    {
+        $senderId= Auth::id();
+        $Conversation=Conversation::where('sender_id', $senderId)
+        ->where('ad_id', $adId)
+        ->first();
+        if($Conversation){
+            return $this->getById($Conversation->id);
+        }
+        else{
+            return false;
+        }
+    }
     
 }

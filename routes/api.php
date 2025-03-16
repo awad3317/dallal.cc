@@ -43,6 +43,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('/role',RoleController::class)->except(['update']);
     Route::apiResource('/conversation',ConversationController::class)->except(['update','destroy']);
     Route::post('/sendMessage',[ConversationController::class,'sendMessage']);
+    Route::get('/checkConversationExists/{ad_id}',[ConversationController::class,'checkConversationExists']);
     Route::get('/permission',[PermissionController::class,'index']);
     Route::apiResource('/favorite',FavoriteController::class)->except(['show','update']);
     Route::post('/like',[LikeController::class,'store']);
