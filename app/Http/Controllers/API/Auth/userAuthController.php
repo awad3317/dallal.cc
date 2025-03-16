@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class userAuthController extends Controller
 {
@@ -22,12 +23,12 @@ class userAuthController extends Controller
 
     public function register(Request $request)
     {
-        $fields=$request->validate([
+        $validator = Validator::make($request->all(), [
             'name'=>['required','string','max:100'],
             'email' => ['required','email',Rule::unique('users','email')],
             'password' => ['required','string','min:6','confirmed',],
             'phone_number' => ['required','string','min:10','max:15',],
-        ], [
+        ],[
             'name.required' => 'الاسم مطلوب.',
             'email.required' => 'البريد الإلكتروني مطلوب.',
             'email.email' => 'البريد الإلكتروني يجب أن يكون صحيحًا.',
@@ -38,7 +39,29 @@ class userAuthController extends Controller
             'phone_number.required' => 'رقم الهاتف مطلوب.',
             'phone_number.min' => 'رقم الهاتف يجب أن يحتوي على 10 أحرف على الأقل.',
             'phone_number.max' => 'رقم الهاتف لا يمكن أن يتجاوز 15 حرفًا.',
+
         ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+        $fields = $request->only(['name', 'email', 'password', 'phone_number']);
+        // $fields=$request->validate([
+        //     'name'=>['required','string','max:100'],
+        //     'email' => ['required','email',Rule::unique('users','email')],
+        //     'password' => ['required','string','min:6','confirmed',],
+        //     'phone_number' => ['required','string','min:10','max:15',],
+        // ], [
+        //     'name.required' => 'الاسم مطلوب.',
+        //     'email.required' => 'البريد الإلكتروني مطلوب.',
+        //     'email.email' => 'البريد الإلكتروني يجب أن يكون صحيحًا.',
+        //     'email.unique' => 'البريد الإلكتروني مسجل مسبقًا.',
+        //     'password.required' => 'كلمة المرور مطلوبة.',
+        //     'password.min' => 'كلمة المرور يجب أن تحتوي على 6 أحرف على الأقل.',
+        //     'password.confirmed' => 'تأكيد كلمة المرور غير متطابق.',
+        //     'phone_number.required' => 'رقم الهاتف مطلوب.',
+        //     'phone_number.min' => 'رقم الهاتف يجب أن يحتوي على 10 أحرف على الأقل.',
+        //     'phone_number.max' => 'رقم الهاتف لا يمكن أن يتجاوز 15 حرفًا.',
+        // ]);
 
         // Create the avatar using the service
         $fields['image'] = $this->AvatarService->createAvatar($fields['name']);
