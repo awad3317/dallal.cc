@@ -69,7 +69,8 @@ class userAuthController extends Controller
             'identifier' => ['required'],
             'password' => ['required','string'],
         ],[
-
+            'identifier.required'=>'يجب كتابة البريد الإلكتروني',
+            'password.required'=>'يجب كتابة كلمة المرور',
         ]);
         if ($validator->fails()) {
            return ApiResponseClass::sendValidationError($validator->errors()->first(),$validator->errors());
