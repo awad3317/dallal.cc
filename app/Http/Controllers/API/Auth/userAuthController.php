@@ -60,18 +60,24 @@ class userAuthController extends Controller
         // Send an email with the OTP code to the user's email address
         SendOtpEmailJob::dispatch($user->email, $otp);
         
-        return ApiResponseClass::sendResponse($user,'OTP sent to ->'. $otp .'<-'. $user->email);
+        return ApiResponseClass::sendResponse($user,'تم إرسال رمز التحقق الى البريد الإلكتروني :'. $user->email);
     }
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
+        $validator = Validator::make($request->all(), [
             'identifier' => ['required'],
             'password' => ['required','string'],
+        ],[
+
         ]);
+        if ($validator->fails()) {
+           return ApiResponseClass::sendValidationError($validator->errors()->first(),$validator->errors());
+        }
+        $credentials=$request->only(['identifier','password']);
         $user=$this->UserRepository->findByUsernameOrEmail($credentials['identifier']);
         if (!$user) {
-            return ApiResponseClass::sendError('Unauthorized', ['error' => 'Invalid credentials'], 401);
+            return ApiResponseClass::sendError('Unauthorized', ['error' => 'البيانات غير صحيحه'], 401);
         }
         if (!$user->email_verified) {
             // Generate a random OTP and prepare it for sending
@@ -79,7 +85,7 @@ class userAuthController extends Controller
 
             // Send an email with the OTP code to the user's email address
             SendOtpEmailJob::dispatch($user->email, $otp);
-            return ApiResponseClass::sendError('Unauthorized', ['error' => 'Email not verified. An OTP has been sent to '.$user->email]);
+            return ApiResponseClass::sendError('Forbidden', ['error' => 'البريد الإلكتروني غير محقق. تم إرسال رمز التحقق'.$user->email],403);
         }
 
         // Check if the user exists and if the password is correct
@@ -91,9 +97,9 @@ class userAuthController extends Controller
             // Create a new token for the user
             $token = $user->createToken($user->username . '-AuthToken')->plainTextToken;
             $user->token=$token;
-            return ApiResponseClass::sendResponse(['user' => $user], 'User logged in successfully');
+            return ApiResponseClass::sendResponse(['user' => $user], 'تم تسجيل دخول المستخدم بنجاح');
         }
-        return ApiResponseClass::sendError('Unauthorized', ['error' => 'Invalid credentials']);
+        return ApiResponseClass::sendError('Unauthorized', ['error' => 'البيانات غير صحيحه'],401);
         
     }
 
@@ -101,7 +107,7 @@ class userAuthController extends Controller
     { 
         $user = Auth::user();
         $user->tokens()->delete(); 
-        return ApiResponseClass::sendResponse(null, 'Logged out successfully');
+        return ApiResponseClass::sendResponse(null, 'تم تسجيل الخروج بنجاح');
     }
 
 }
