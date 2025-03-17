@@ -10,6 +10,7 @@ use App\Classes\ApiResponseClass;
 use App\Http\Controllers\Controller;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -63,12 +64,27 @@ class UserController extends Controller
         if($id != Auth::id()){
             return ApiResponseClass::sendError('You do not have permission to update this user.');
         }
-        $fields=$request->validate([
+        $validator = Validator::make($request->all(), [
             'username' => ['sometimes','string','regex:/^[A-Za-z0-9_]+$/', Rule::unique('users')->ignore($id)],
             'name' => ['sometimes','string','max:100'],
             'phone_number' => ['sometimes','string','min:10','max:15',],
             'image' => ['sometimes','image','max:2048'],
+        ],[
+            'username.string' => 'يجب أن يكون اسم المستخدم نصًا.',
+            'username.regex' => 'يجب أن يحتوي اسم المستخدم على أحرف إنجليزية وأرقام وشرطة سفلية (_) فقط.',
+            'username.unique' => 'اسم المستخدم هذا مستخدم بالفعل.',
+            'name.string' => 'يجب أن يكون الاسم نصًا.',
+            'name.max' => 'يجب ألا يتجاوز الاسم 100 حرف.',
+            'phone_number.string' => 'يجب أن يكون رقم الهاتف نصًا.',
+            'phone_number.min' => 'يجب أن يتكون رقم الهاتف من 10 أرقام على الأقل.',
+            'phone_number.max' => 'يجب ألا يتجاوز رقم الهاتف 15 رقمًا.',
+            'image.image' => 'يجب أن يكون الملف المرفوع صورة.',
+            'image.max' => 'يجب ألا يتجاوز حجم الصورة 2 ميجابايت.',
         ]);
+        if ($validator->fails()) {
+            return ApiResponseClass::sendValidationError($validator->errors()->first(),$validator->errors());
+        }
+        $fields=$request->only(['username','name','phone_number','image']);
         if ($request->hasFile('image')) {
             $fields['image']=$this->ImageService->saveImage($fields['image'],'images_users');
         }
@@ -78,8 +94,6 @@ class UserController extends Controller
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error updated User: ' . $e->getMessage());
         }
-
-
     }
 
     /**
