@@ -27,7 +27,7 @@ class OTPController extends Controller
         try {
             $otp=$this->otpService->generateOTP($fields['email']);
             SendOtpEmailJob::dispatch($fields['email'], $otp);
-            return ApiResponseClass::sendResponse(null,'OTP resent to ' . $fields['email']);
+            return ApiResponseClass::sendResponse(null,'تم إرسال رمز التحقق الى : ' . $fields['email']);
         } catch (Exception $e) {
             return ApiResponseClass::sendError(null,'Failed to resend OTP. ' . $e->getMessage());
         }
@@ -60,7 +60,7 @@ class OTPController extends Controller
             $token = $user->createToken($user->username . '-AuthToken')->plainTextToken;
             return ApiResponseClass::sendResponse(['token' => $token, 'user' => $user], 'User logged in successfully');
         }
-        return ApiResponseClass::sendError('Invalid or expired OTP.',[],400);
+        return ApiResponseClass::sendError('رمز التحقق غير صالح او منتهي الصلاحيه',[],400);
     }
 
     // public function verifyOtp(Request $request) {
