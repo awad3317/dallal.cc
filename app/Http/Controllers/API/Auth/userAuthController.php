@@ -32,8 +32,8 @@ class userAuthController extends Controller
             'phone_number' => ['required','string','min:9','max:15',],
         ],[
             'name.required' => 'الاسم مطلوب.',
-            'email.required' => 'البريد الإلكتروني مطلوب.',
-            'email.email' => 'البريد الإلكتروني يجب أن يكون صحيحًا.',
+            'email.required' => 'يجب إدخال البريد الإلكتروني',
+            'email.email' => 'يجب إدخال بريد إلكتروني صالح',
             'email.unique' => 'البريد الإلكتروني مسجل مسبقًا.',
             'password.required' => 'كلمة المرور مطلوبة.',
             'password.min' => 'كلمة المرور يجب أن تحتوي على 6 أحرف على الأقل.',

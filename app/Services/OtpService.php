@@ -11,7 +11,7 @@ class OtpService
         
     }
 
-    public function generateOTP($email)
+    public function generateOTP($email,$purpose='account_creation')
     {
         $existingOtp=$this->OtpRepository->findByEmail($email);
         if($existingOtp){
@@ -23,7 +23,7 @@ class OtpService
             'email' => $email,
             'code' => $otp,
             'expires_at' => $expiresAt,
-            'purpose' => 'account_creation',
+            'purpose' => $purpose,
         ];
         $this->OtpRepository->store($data);
         return $otp; 

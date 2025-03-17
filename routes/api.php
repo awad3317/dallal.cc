@@ -19,6 +19,7 @@ use App\Http\Controllers\API\SaleOptionController;
 use App\Http\Controllers\API\ConversationController;
 use App\Http\Controllers\API\Auth\userAuthController;
 use App\Http\Controllers\API\Auth\PermissionController;
+use App\Http\Controllers\API\Auth\forgetPasswordController;
 use App\Http\Controllers\API\Dashboard\UserDashboardController;
 
 Route::get('/user', function (Request $request) {
@@ -63,6 +64,10 @@ Route::get('/region',[RegionController::class,'index']);
 Route::get('/categories/parents', [CategoryController::class,'getParents']);
 Route::get('/categories/{id}/children', [CategoryController::class,'getChildren']);
 Route::get('/category',[CategoryController::class,'index']);
+    //             Forget Password           //
+Route::post('/forgetPassword', [forgetPasswordController::class,'forgetPassword']);
+Route::post('/resetPassword', [forgetPasswordController::class,'resetPassword']);
+
 
 Route::get('/ad',[AdController::class,'index']);
 Route::get('/ad/{id}',[AdController::class,'show']);
