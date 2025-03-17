@@ -110,8 +110,11 @@ class ConversationController extends Controller
         }
     }
 
-    public function checkConversationExists($adId){
-        $Conversation=$this->ConversationRepository->checkConversationExists($adId);
+    public function checkConversationExists(Request $request){
+        $fields=$request->validate([
+            'ad_id' => ['required',Rule::exists('ads','id')],
+        ]);
+        $Conversation=$this->ConversationRepository->checkConversationExists($fields['ad_id']);
         if($Conversation){
             return ApiResponseClass::sendResponse($Conversation, "the conversation is exists");
         }
