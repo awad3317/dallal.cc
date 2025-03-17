@@ -11,6 +11,7 @@ use App\Classes\ApiResponseClass;
 use App\Http\Controllers\Controller;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class OTPController extends Controller
 {
@@ -34,10 +35,19 @@ class OTPController extends Controller
     }
 
     public function verifyOtpAndLogin(Request $request) {
-        $fields=$request->validate([
-            'email' => ['required','email'],
+        $validator = Validator::make($request->all(), [
+           'email' => ['required','email'],
             'otp' => ['required','numeric'],
+        ],[
+           'email.required'=>'يجب كتابة البريد الإلكتروني',
+           'email.email'=>'يجب ان يكون المدخل بريد الإلكتروني',
+           'otp.required'=>'يجب كتابة رمز التحقق',
+           'otp.numeric'=>'يجب ان يكون رمز التحقق رقما',
         ]);
+        if ($validator->fails()) {
+           return ApiResponseClass::sendValidationError($validator->errors()->first(),$validator->errors());
+        }
+        $fields=$request->only(['email', 'otp']);
         // Verify the provided OTP using the OTP service
         if($this->otpService->verifyOTP($fields['email'],$fields['otp'])){
             $user=$this->UserRepository->findByEmail($fields['email']);
