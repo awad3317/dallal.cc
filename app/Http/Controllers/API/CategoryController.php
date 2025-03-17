@@ -63,7 +63,7 @@ class CategoryController extends Controller
         ]);
         try {
             $Categorie=$this->CategoryRepository->store($fields);
-            return ApiResponseClass::sendResponse($Categorie,'category saved successfully.');
+            return ApiResponseClass::sendResponse($Categorie,'تم حفظ الفئة بنجاح');
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error save category: ' . $e->getMessage());
         }
