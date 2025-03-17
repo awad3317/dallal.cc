@@ -155,6 +155,9 @@ class AdController extends Controller
     {
         try {
             $ad=$this->AdRepository->getById($id);
+            if ($ad->user_id !== Auth::id()) {
+                return ApiResponseClass::sendError("ليس لديك صلاحية لحدف هدا الإعلان", [], 403);
+            }
             if($this->AdRepository->delete($ad->id)){
                 return ApiResponseClass::sendResponse($ad, "{$ad->id} unsaved successfully.");
             }
