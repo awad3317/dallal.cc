@@ -42,7 +42,7 @@ class CommentController extends Controller
             'comment_text' => ['required','string'],
         ]);
         try {
-            $fields['user_id']= Auth::id() ?? 1; //just in test
+            $fields['user_id']= Auth::id();
             $Comment=$this->CommentRepository->store($fields);
             return ApiResponseClass::sendResponse($Comment,'Comment saved successfully.');
         } catch (Exception $e) {
