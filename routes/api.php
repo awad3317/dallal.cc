@@ -83,7 +83,7 @@ Route::get('/saleOption',[SaleOptionController::class,'index']);
 Route::get('/bid',[BidController::class,'index']);
 
 Route::get('/test',function (){
-    event( new sentMessageEvent('hi i am awad',4,7,2)); 
+    event( new TestPusherEvent('hi i am awad')); 
     return 'done';
 });
 
