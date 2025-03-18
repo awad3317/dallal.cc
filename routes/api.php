@@ -82,10 +82,10 @@ Route::get('/ad/{id}',[AdController::class,'show']);
 Route::get('/saleOption',[SaleOptionController::class,'index']);
 Route::get('/bid',[BidController::class,'index']);
 
-Route::get('/test',function (){
-    event( new TestPusherEvent('hi i am awad')); 
-    return 'done';
-});
+// Route::get('/test',function (){
+//     event( new TestPusherEvent('hi i am awad')); 
+//     return 'done';
+// });
 
 
 
