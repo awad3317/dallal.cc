@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API\Auth;
 
+use App\Mail\OtpMail;
 use App\Services\OtpService;
 use Illuminate\Http\Request;
 use App\Jobs\SendOtpEmailJob;
@@ -12,8 +13,9 @@ use App\Http\Controllers\Controller;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 use function PHPUnit\Framework\returnValue;
 
 class userAuthController extends Controller
@@ -85,7 +87,8 @@ class userAuthController extends Controller
             $otp=$this->otpService->generateOTP($user->email);
 
             // Send an email with the OTP code to the user's email address
-            SendOtpEmailJob::dispatch($user->email, $otp);
+            // SendOtpEmailJob::dispatch($user->email, $otp);
+            Mail::to($user->email)->send(new OtpMail($otp));
             return ApiResponseClass::sendError('Forbidden', ['error' => 'البريد الإلكتروني غير محقق. تم إرسال رمز التحقق'.$user->email],403);
         }
 
