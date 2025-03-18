@@ -5,7 +5,7 @@ namespace App\Http\Controllers\api;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use App\Events\sentMessageEvent;
+use App\Events\TestPusherEvent;
 use App\Classes\ApiResponseClass;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -104,7 +104,7 @@ class ConversationController extends Controller
         $fields['sender_id'] = $userId;
 
         $message = $this->MessageRepository->store($fields);
-        event( new sentMessageEvent($fields['message_text'],$fields['receiver_id'],$fields['conversation_id'],$fields['sender_id']));
+        event( new TestPusherEvent($fields['message_text'],$fields['receiver_id'],$fields['conversation_id'],$fields['sender_id'],$message->id));
         return ApiResponseClass::sendResponse($message, "Message sent successfully");
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error sending message: ' . $e->getMessage());

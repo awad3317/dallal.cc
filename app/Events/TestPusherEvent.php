@@ -15,9 +15,21 @@ class TestPusherEvent implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $message;
-    public function __construct($message)
+    public $receiverId;
+    public $conversation_id;
+    public $sender_id;
+    public $message_id;
+    /**
+     * Create a new event instance.
+     */
+    public function __construct($message,$receiverId,$conversation_id,$sender_id,$message_id)
     {
-        $this->message = $message;
+        $this->message=$message;
+        $this->receiverId=$receiverId;
+        $this->conversation_id=$conversation_id;
+        $this->sender_id=$sender_id;
+        $this->message_id=$message_id;
+
     }
 
     /**
@@ -33,8 +45,12 @@ class TestPusherEvent implements ShouldBroadcast
     public function broadcastWith():array
     {
         return [
-            'awad'=>$this->message,
-            
+            'id'=>$this->message_id,
+            'message_text'=>$this->message,
+            'conversation_id'=>$this->conversation_id,
+            'sender_id'=>$this->sender_id,
+            'receiver_id'=>$this->receiverId,
+            'sent_at' => now()->toDateTimeString(),
         ];
     }
 }
