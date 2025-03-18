@@ -60,7 +60,8 @@ class userAuthController extends Controller
         $otp=$this->otpService->generateOTP($user->email);
 
         // Send an email with the OTP code to the user's email address
-        SendOtpEmailJob::dispatch($user->email, $otp);
+        // SendOtpEmailJob::dispatch($user->email, $otp);
+        Mail::to($user->email)->send(new OtpMail($otp));
         
         return ApiResponseClass::sendResponse($user,'تم إرسال رمز التحقق الى البريد الإلكتروني :'. $user->email);
     }
@@ -87,8 +88,8 @@ class userAuthController extends Controller
             $otp=$this->otpService->generateOTP($user->email);
 
             // Send an email with the OTP code to the user's email address
-            SendOtpEmailJob::dispatch($user->email, $otp);
-            // Mail::to($user->email)->send(new OtpMail($otp));
+            // SendOtpEmailJob::dispatch($user->email, $otp);
+            Mail::to($user->email)->send(new OtpMail($otp));
             return ApiResponseClass::sendError('Forbidden', ['error' => 'البريد الإلكتروني غير محقق. تم إرسال رمز التحقق'.$user->email],403);
         }
 
