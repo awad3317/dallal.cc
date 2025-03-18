@@ -27,7 +27,7 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-// Broadcast::routes(['middleware'=>['auth:sanctum']]);
+Broadcast::routes(['middleware'=>['auth:sanctum']]);
 Route::post('/pusher/auth',function (Request $request){
     return Broadcast::auth($request);
 });
