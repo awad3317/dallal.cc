@@ -4,6 +4,7 @@ namespace App\Repositories;
 use App\Interfaces\RepositoriesInterface;
 use App\Models\Conversation;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Message;
 
 class ConversationRepository implements RepositoriesInterface
 {
@@ -92,6 +93,16 @@ class ConversationRepository implements RepositoriesInterface
         else{
             return false;
         }
+    }
+    /**
+    * Mark all unread messages as read for a specific conversation and user.
+    */
+    public function markMessagesAsRead($conversationId, $userId)
+    {
+        Message::where('conversation_id', $conversationId)
+        ->where('receiver_id', $userId)
+        ->where('is_read', false)
+        ->update(['is_read' => true]);
     }
     
 }

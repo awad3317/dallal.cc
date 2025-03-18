@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\MessageRepository;
 use App\Repositories\ConversationRepository;
+use Illuminate\Support\Facades\Validator;
 
 class ConversationController extends Controller
 {
@@ -122,4 +123,34 @@ class ConversationController extends Controller
             return ApiResponseClass::sendResponse($Conversation, "not found");
         }
     }
+
+    /**
+    * Mark all unread messages as read in a conversation.
+    */
+    public function markMessagesAsRead(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'conversation_id' => ['required', Rule::exists('conversations', 'id')],
+        ],[
+            'conversation_id.required'=>'يجب كتابة رقم المحادثه',
+            'conversation_id.exists'=>'المحادثة غير مسجله في النظام'
+        ]);
+        if ($validator->fails()) {
+           return ApiResponseClass::sendValidationError($validator->errors()->first(),$validator->errors());
+        }
+        $fields=$request->only(['conversation_id']);
+        try {
+            $userId = Auth::id();
+            $conversation = $this->ConversationRepository->getById($fields['conversation_id']);
+            if ($conversation->sender_id != $userId && $conversation->receiver_id != $userId) {
+                return ApiResponseClass::sendError('Unauthorized: You are not part of this conversation.', 403);
+            }
+            $this->ConversationRepository->markMessagesAsRead($fields['conversation_id'], $userId);
+            return ApiResponseClass::sendResponse(null, 'All messages marked as read successfully.');
+        } catch (Exception $e) {
+            return ApiResponseClass::sendError('Error marking messages as read: ' . $e->getMessage());
+        }
+    }
+
+
 }

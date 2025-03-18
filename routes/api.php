@@ -21,10 +21,16 @@ use App\Http\Controllers\API\Auth\userAuthController;
 use App\Http\Controllers\API\Auth\PermissionController;
 use App\Http\Controllers\API\Auth\forgetPasswordController;
 use App\Http\Controllers\API\Dashboard\UserDashboardController;
+use Illuminate\Support\Facades\Broadcast;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
+
+Broadcast::routes(['middleware'=>['auth:sanctum']]);
+Route::post('/pusher/auth',function (Request $request){
+    return Broadcast::auth($request);
+});
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout',[userAuthController::class,'logout']);
@@ -49,6 +55,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('/favorite',FavoriteController::class)->except(['show','update']);
     Route::post('/like',[LikeController::class,'store']);
     Route::delete('/like/{ad_id}',[LikeController::class,'destroy']);
+
+    Route::post('/conversations/mark-as-read', [ConversationController::class, 'markMessagesAsRead']);
     
 });
     //           Auth Route          //
