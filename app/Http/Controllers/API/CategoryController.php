@@ -8,6 +8,7 @@ use Illuminate\Validation\Rule;
 use App\Classes\ApiResponseClass;
 use App\Http\Controllers\Controller;
 use App\Repositories\CategoryRepository;
+use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
@@ -86,7 +87,25 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => ['required','string',Rule::unique('categories','name')],
+            'parent_id' => ['nullable',Rule::exists('categories','id')]
+        ], [
+           'name.required'=>'يجب إدخال أسم الصنف',
+           'name.string'=>'يجب أن يكون الاسم نصاً',
+           'name.unique'=>'ألاسم موجود من قبل في النظام',
+        ]);
+    
+        if ($validator->fails()) {
+            return ApiResponseClass::sendValidationError($validator->errors()->first(), $validator->errors());
+        }
+        try {
+            $fields=$request->only(['name','parent_id']);
+            $category=$this->CategoryRepository->update($fields,$id);
+            return ApiResponseClass::sendResponse($category,'category is updated successfully.');
+        } catch (Exception $e) {
+            return ApiResponseClass::sendError('Error updated category: ' . $e->getMessage());
+        }
     }
 
     /**
