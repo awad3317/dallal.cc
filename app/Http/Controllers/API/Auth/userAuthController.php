@@ -57,7 +57,7 @@ class userAuthController extends Controller
         $user=$this->UserRepository->store($fields);
 
         // Generate a random OTP and prepare it for sending
-        $otp=$this->otpService->generateOTP($user->email);
+        $otp=$this->otpService->generateOTP($user->email,'account_creation');
 
         // Send an email with the OTP code to the user's email address
         // SendOtpEmailJob::dispatch($user->email, $otp);
@@ -85,7 +85,7 @@ class userAuthController extends Controller
         }
         if (!$user->email_verified) {
             // Generate a random OTP and prepare it for sending
-            $otp=$this->otpService->generateOTP($user->email);
+            $otp=$this->otpService->generateOTP($user->email,'account_creation');
 
             // Send an email with the OTP code to the user's email address
             // SendOtpEmailJob::dispatch($user->email, $otp);
