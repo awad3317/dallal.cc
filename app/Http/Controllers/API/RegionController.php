@@ -62,8 +62,8 @@ class RegionController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => ['required','string',Rule::unique('categories','name')],
-            'parent_id' => ['nullable',Rule::exists('categories','id')]
+            'name' => ['required','string',Rule::unique('regions','name')],
+            'parent_id' => ['nullable',Rule::exists('regions','id')]
         ], [
            'name.required'=>'يجب إدخال أسم المنطقة',
            'name.string'=>'يجب أن يكون الاسم نصاً',
@@ -100,8 +100,8 @@ class RegionController extends Controller
     public function update(Request $request, string $id)
     {
         $validator = Validator::make($request->all(), [
-            'name' => ['required','string',Rule::unique('categories','name')],
-            'parent_id' => ['nullable',Rule::exists('categories','id')]
+            'name' => ['required','string',Rule::unique('regions','name')->ignore($id)],
+            'parent_id' => ['nullable',Rule::exists('regions','id')]
         ], [
            'name.required'=>'يجب إدخال أسم المنطقة',
            'name.string'=>'يجب أن يكون الاسم نصاً',

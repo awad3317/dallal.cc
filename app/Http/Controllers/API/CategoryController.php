@@ -97,7 +97,7 @@ class CategoryController extends Controller
     public function update(Request $request, string $id)
     {
         $validator = Validator::make($request->all(), [
-            'name' => ['required','string',Rule::unique('categories','name')],
+            'name' => ['required','string',Rule::unique('categories','name')->ignore($id)],
             'parent_id' => ['nullable',Rule::exists('categories','id')]
         ], [
            'name.required'=>'يجب إدخال أسم الصنف',
