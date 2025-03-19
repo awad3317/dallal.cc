@@ -21,6 +21,7 @@ use App\Http\Controllers\API\Auth\userAuthController;
 use App\Http\Controllers\API\Auth\PermissionController;
 use App\Http\Controllers\API\Auth\forgetPasswordController;
 use App\Http\Controllers\API\Dashboard\UserDashboardController;
+use App\Models\Role;
 use Illuminate\Support\Facades\Broadcast;
 
 Route::get('/user', function (Request $request) {
@@ -44,6 +45,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('/comment',CommentController::class)->except(['show','update']);
     Route::apiResource('user', UserController::class)->except(['store']);
     Route::apiResource('/ad',AdController::class)->except(['index','show']);
+    Route::get('verifyAd/{id}',[AdController::class,'verifyAd']);
+    
     Route::apiResource('/saleOption',SaleOptionController::class)->except(['index']);
     Route::apiResource('/bid',BidController::class)->except(['index']);
     Route::apiResource('/image',ImageController::class)->except(['show','index']);
@@ -72,7 +75,7 @@ Route::get('/region',[RegionController::class,'index']);
 Route::get('/categories/parents', [CategoryController::class,'getParents']);
 Route::get('/categories/{id}/children', [CategoryController::class,'getChildren']);
 Route::get('/category',[CategoryController::class,'index']);
-    //             Forget Password           //
+    //             Forget Password     //
 Route::post('/forgetPassword', [forgetPasswordController::class,'forgetPassword']);
 Route::post('/resetPassword', [forgetPasswordController::class,'resetPassword']);
 

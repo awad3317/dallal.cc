@@ -20,7 +20,8 @@ class Ad extends Model
         'status',
         'sale_option_id',
         'views',
-        'likes'
+        'likes',
+        'verified'
     ];
 
     public function user()

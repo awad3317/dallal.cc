@@ -166,4 +166,16 @@ class AdController extends Controller
             return ApiResponseClass::sendError('Error deleting Ad: ' . $e->getMessage());
         }
     }
+
+    public function verifyAd($id){
+        $ad = $this->AdRepository->getById($id);
+        if($ad->verified){
+            $ad->update(['verified'=>false]);
+            return ApiResponseClass::sendResponse($ad,'ad unverified successfully');
+        }
+        else{
+            $ad->update(['verified'=>true]);
+            return ApiResponseClass::sendResponse($ad,'ad verified successfully');
+        }
+    }
 }
