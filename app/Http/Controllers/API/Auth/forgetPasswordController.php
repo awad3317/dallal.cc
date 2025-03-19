@@ -3,14 +3,16 @@
 namespace App\Http\Controllers\API\Auth;
 
 use Exception;
+use App\Mail\OtpMail;
 use App\Services\OtpService;
 use Illuminate\Http\Request;
 use App\Jobs\SendOtpEmailJob;
+use Illuminate\Validation\Rule;
 use App\Classes\ApiResponseClass;
 use App\Http\Controllers\Controller;
 use App\Repositories\UserRepository;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 
 class forgetPasswordController extends Controller
 {
@@ -33,7 +35,8 @@ class forgetPasswordController extends Controller
         try {
             $fields=$request->only(['email']);
             $otp = $this->otpService->generateOTP($fields['email'],'forgetPassword');
-            SendOtpEmailJob::dispatch($fields['email'], $otp);
+            // SendOtpEmailJob::dispatch($fields['email'], $otp);
+            Mail::to($fields['email'])->send(new OtpMail($otp));
             return ApiResponseClass::sendResponse(null, 'تم إرسال رمز التحقق إلى: ' . $fields['email']);
         } catch (Exception $e) {
             return ApiResponseClass::sendError(null, 'فشل في إرسال رمز التحقق. ' . $e->getMessage());
