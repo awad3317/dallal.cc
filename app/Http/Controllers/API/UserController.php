@@ -115,4 +115,26 @@ class UserController extends Controller
             return ApiResponseClass::sendError('Error deleting User: ' . $e->getMessage());
         }
     }
+
+    public function changePassword(Request $request){
+        try {
+            $validator=Validator::make($request->all(),[
+                'old_password'=>['required'],
+                'new_password'=>['required', 'string', 'min:8','confirmed'],
+            ]);
+            if ($validator->fails()) {
+                return ApiResponseClass::sendValidationError($validator->errors()->first(),$validator->errors());
+            }
+            $user=$this->UserRepository->getById(Auth::id());
+            $result=$this->UserRepository->changePassword($request->all(),$user);
+            if($result){
+                PersonalAccessToken::findToken($request->bearerToken())->delete();
+                return ApiResponseClass::sendResponse(null," {$user->id} password has been changed.. Login again ",);
+            }
+            return ApiResponseClass::sendError('the password is incorrect');
+        } catch (Exception $e) {
+            return ApiResponseClass::sendError('Error change Password: ' . $e->getMessage());
+        }
+        
+    }
 }

@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Repositories;
-use App\Interfaces\RepositoriesInterface;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use App\Interfaces\RepositoriesInterface;
 
 class UserRepository implements RepositoriesInterface
 {
@@ -70,6 +71,16 @@ class UserRepository implements RepositoriesInterface
         }
 
         return $uniqueUsername;
+    }
+
+    public function changePassword(array $data,$user) {
+        if(!Hash::check($data['old_password'], $user->password)){
+            return false;
+        }
+        $user->update([
+            'password'=>$data['password'],
+        ]);
+        return true;
     }
 
 }

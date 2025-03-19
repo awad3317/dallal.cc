@@ -4,10 +4,11 @@ namespace App\Http\Controllers\api\auth;
 
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Classes\ApiResponseClass;
 use App\Http\Controllers\Controller;
 use App\Repositories\RoleRepository;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Validator;
 
 class RoleController extends Controller
 {
@@ -36,12 +37,22 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        $fields=$request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => ['required','string',Rule::unique('roles','name')],
             'display_name' => ['required','string'],
             'permissions' => ['required','array'],
             'permissions.*' => [Rule::exists('permissions','id')],
+        ],[
+            'name.required' => 'يجب إدخال إدخال اسم الدور',
+            'name.string' => 'يجب أن يكون اأسم الدور نصاً',
+            'name.unique' => 'ألاسم موجد في النظام من قبل',
+            'display_name.required'=>'يجب كتابة اسم عرض الدور',
+            'display_name.string'=>'يجب أن يكون اسم عرض الدور نصاً'
         ]);
+        if ($validator->fails()) {
+           return ApiResponseClass::sendValidationError($validator->errors()->first(),$validator->errors());
+        }
+        $fields=$request->only(['name','display_name','permissions']);
         try {
             if (isset($request->permissions) && !is_array($request->permissions)) {
                 $fields['permissions']= [$request->permissions];
