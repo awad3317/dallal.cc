@@ -57,10 +57,19 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $fields=$request->validate([
-            'name' => ['required','string'],
-            'parent_id' => ['nullable',Rule::exists('categories','id')],
+        $validator = Validator::make($request->all(), [
+            'name' => ['required','string',Rule::unique('categories','name')],
+            'parent_id' => ['nullable',Rule::exists('categories','id')]
+        ], [
+           'name.required'=>'يجب إدخال أسم الصنف',
+           'name.string'=>'يجب أن يكون الاسم نصاً',
+           'name.unique'=>'ألاسم موجود من قبل في النظام',
         ]);
+    
+        if ($validator->fails()) {
+            return ApiResponseClass::sendValidationError($validator->errors()->first(), $validator->errors());
+        }
+        $fields=$request->only(['name','parent_id']);
         try {
             $Categorie=$this->CategoryRepository->store($fields);
             return ApiResponseClass::sendResponse($Categorie,'تم حفظ الفئة بنجاح');

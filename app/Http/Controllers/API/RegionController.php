@@ -8,6 +8,7 @@ use App\Classes\ApiResponseClass;
 use App\Repositories\RegionRepository;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 
 class RegionController extends Controller
 {
@@ -60,11 +61,19 @@ class RegionController extends Controller
      */
     public function store(Request $request)
     {
-        $fields=$request->validate([
-            'name' => ['required','string'],
-            'parent_id' => ['nullable',Rule::exists('Regions','id')]
+        $validator = Validator::make($request->all(), [
+            'name' => ['required','string',Rule::unique('categories','name')],
+            'parent_id' => ['nullable',Rule::exists('categories','id')]
+        ], [
+           'name.required'=>'يجب إدخال أسم المنطقة',
+           'name.string'=>'يجب أن يكون الاسم نصاً',
+           'name.unique'=>'ألاسم موجود من قبل في النظام',
         ]);
+        if ($validator->fails()) {
+            return ApiResponseClass::sendValidationError($validator->errors()->first(), $validator->errors());
+        }
         try {
+            $fields=$request->only(['name','parent_id']);
             $Region=$this->RegionRepository->store($fields);
             return ApiResponseClass::sendResponse($Region,'Region saved successfully.');
         } catch (Exception $e) {
@@ -90,11 +99,19 @@ class RegionController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $fields=$request->validate([
-            'name' => ['required','string'],
-            'parent_id' => ['nullable',Rule::exists('Regions','id')]
+        $validator = Validator::make($request->all(), [
+            'name' => ['required','string',Rule::unique('categories','name')],
+            'parent_id' => ['nullable',Rule::exists('categories','id')]
+        ], [
+           'name.required'=>'يجب إدخال أسم المنطقة',
+           'name.string'=>'يجب أن يكون الاسم نصاً',
+           'name.unique'=>'ألاسم موجود من قبل في النظام',
         ]);
+        if ($validator->fails()) {
+            return ApiResponseClass::sendValidationError($validator->errors()->first(), $validator->errors());
+        }
         try {
+            $fields=$request->only(['name','parent_id']);
             $Region=$this->RegionRepository->update($fields,$id);
             return ApiResponseClass::sendResponse($Region,'Region is updated successfully.');
         } catch (Exception $e) {
