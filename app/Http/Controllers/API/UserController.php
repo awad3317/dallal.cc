@@ -116,7 +116,10 @@ class UserController extends Controller
         }
     }
 
-    public function changePassword(Request $request){
+    public function changePassword(Request $request,$id){
+        if($id != Auth::id()){
+            return ApiResponseClass::sendError('You do not have permission to changePassword this user.');
+        }
         $validator=Validator::make($request->all(),[
             'old_password'=>['required'],
             'new_password'=>['required', 'string', 'min:8','confirmed'],

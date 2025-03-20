@@ -44,7 +44,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('/category',CategoryController::class)->except(['inedx']);
     Route::apiResource('/comment',CommentController::class)->except(['show','update']);
     Route::apiResource('user', UserController::class)->except(['store']);
-    Route::post('/changePassword',[UserController::class,'changePassword']);
+    Route::post('/changePassword/{id}',[UserController::class,'changePassword']);
     Route::post('/assignRole/{user_id}',[UserController::class,'assignRole']);
     Route::post('/revokeRole/{user_id}',[UserController::class,'revokeRole']);
     
