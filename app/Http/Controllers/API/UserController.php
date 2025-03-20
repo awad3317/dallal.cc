@@ -117,24 +117,70 @@ class UserController extends Controller
     }
 
     public function changePassword(Request $request){
+        $validator=Validator::make($request->all(),[
+            'old_password'=>['required'],
+            'new_password'=>['required', 'string', 'min:8','confirmed'],
+        ],[
+            'old_password.required'=>'يجب كتابة كلمة المرور القديمة',
+            'new_password.required'=>'يجب كتابة كلمة المرور الجديده',
+            'new_password.confirmed' => 'يجب تأكيد كلمة المرور الجديدة',
+            'new_password.min' => 'يجب أن تتكون كلمة المرور الجديدة من 8 أحرف على الأقل',
+        ]);
+        if ($validator->fails()) {
+            return ApiResponseClass::sendValidationError($validator->errors()->first(),$validator->errors());
+        }
         try {
-            $validator=Validator::make($request->all(),[
-                'old_password'=>['required'],
-                'new_password'=>['required', 'string', 'min:8','confirmed'],
-            ]);
-            if ($validator->fails()) {
-                return ApiResponseClass::sendValidationError($validator->errors()->first(),$validator->errors());
-            }
             $user=$this->UserRepository->getById(Auth::id());
-            $result=$this->UserRepository->changePassword($request->all(),$user);
+            $fields=$request->only(['old_password','new_password']);
+            $result=$this->UserRepository->changePassword($fields,$user);
             if($result){
-                PersonalAccessToken::findToken($request->bearerToken())->delete();
-                return ApiResponseClass::sendResponse(null," {$user->id} password has been changed.. Login again ",);
+                $user->tokens()->delete(); 
+                return ApiResponseClass::sendResponse(null, "تم تغيير كلمة المرور الخاصة بـ {$user->name}. يرجى تسجيل الدخول مرة أخرى.");
             }
-            return ApiResponseClass::sendError('the password is incorrect');
+            return ApiResponseClass::sendError('كلمة المرور غير صحيحة');
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error change Password: ' . $e->getMessage());
         }
         
+    }
+
+    public function assignRole(Request $request, $user_id){
+        $validator = Validator::make($request->all(), [
+            'role' => ['required','string',Rule::exists('roles','name')]
+        ],[
+            'role.required' => 'يجب كتابة اسم الدور',
+            'role.exists' => 'اسم الدور غير موجود في النظام',
+            'role.string' => 'يجب أن يكون أسم الدور نصاً',
+        ]);
+        if ($validator->fails()) {
+            return ApiResponseClass::sendValidationError($validator->errors()->first(),$validator->errors());
+        }
+        try {
+            $fields=$request->only(['role']);
+            $roles=$this->UserRepository->assignRole($user_id,$fields['role']);
+            return ApiResponseClass::sendResponse(['roles' => $roles], "تم تعيين الدور {$request->role} بنجاح."); 
+        } catch (Exception $e) {
+            return ApiResponseClass::sendError('Error User Not Found: ' . $e->getMessage());
+        }
+    }
+
+    public function revokeRole(Request $request, $user_id) {
+        $validator = Validator::make($request->all(), [
+            'role' => ['required','string',Rule::exists('roles','name')]
+        ],[
+            'role.required' => 'يجب كتابة اسم الدور',
+            'role.exists' => 'اسم الدور غير موجود في النظام',
+            'role.string' => 'يجب أن يكون أسم الدور نصاً',
+        ]);
+        if ($validator->fails()) {
+            return ApiResponseClass::sendValidationError($validator->errors()->first(),$validator->errors());
+        }
+        try {
+            $fields=$request->only(['role']);
+            $roles = $this->UserRepository->revokeRole($user_id, $fields['role']);
+            return ApiResponseClass::sendResponse(['roles' => $roles], "تم سحب الدور {$request->role} بنجاح.");
+        } catch (Exception $e) {
+            return ApiResponseClass::sendError('Error User Not Found: ' . $e->getMessage());
+        }
     }
 }

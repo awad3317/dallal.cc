@@ -83,4 +83,22 @@ class UserRepository implements RepositoriesInterface
         return true;
     }
 
+    public function assignRole($user_id,$role){
+        $user = $this->getById($user_id);
+        if(!$user->hasRole($role)){
+            $user->addRole($role);
+            return $user->getRoles();
+        }
+        return $user->getRoles();
+    }
+
+    public function revokeRole($user_id,$role){
+        $user = $this->getById($user_id);
+        if($user->hasRole($role)){
+            $user->removeRole($role);
+            return $user->getRoles();
+        }
+        return $user->getRoles();
+    }
+
 }
