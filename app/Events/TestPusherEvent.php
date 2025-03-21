@@ -39,7 +39,7 @@ class TestPusherEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('testChannel'.$this->receiverId);
+        return new Channel('testChannel.'.$this->receiverId);
     }
 
     public function broadcastWith():array
