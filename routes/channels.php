@@ -11,3 +11,6 @@ Broadcast::channel('private-channel.user.{id}', function ($user, $id) {
     // return (int) $user->id === (int) $id;
     return true;
 });
+Broadcast::channel('testChannel.{id}', function () {
+    return true;
+});
