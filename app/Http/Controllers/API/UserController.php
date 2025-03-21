@@ -96,7 +96,7 @@ class UserController extends Controller
                     if ($this->AvatarService->isDefaultAvatar($user->image)) 
                     {
                         
-                        unlink($user->image);
+                        unlink('awad'.$user->image);
                         
                         $newDefaultAvatar = $this->AvatarService->createAvatar($request->input('name'));
                         $fields['image'] = $newDefaultAvatar;
