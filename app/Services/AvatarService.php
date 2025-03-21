@@ -47,8 +47,7 @@ class AvatarService
 
     public function isDefaultAvatar($imagePath)
     {
-    
-    return strpos($imagePath, 'images_users') === 0;
+        return strpos($imagePath, 'images_users') === 0;
     }
 
 }

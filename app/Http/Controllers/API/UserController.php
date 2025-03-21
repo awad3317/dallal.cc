@@ -95,8 +95,8 @@ class UserController extends Controller
                 if ($request->input('name') !== $user->name) {
                     if ($this->AvatarService->isDefaultAvatar($user->image)) 
                     {
-                        if (\File::exists($user->image)) {
-                            \File::delete($user->image);
+                        if (file_exists($user->image)) {
+                            unlink($user->image);
                         }
                         $newDefaultAvatar = $this->AvatarService->createAvatar($request->input('name'));
                         $fields['image'] = $newDefaultAvatar;
