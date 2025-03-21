@@ -45,4 +45,10 @@ class AvatarService
         return preg_match('/\p{Arabic}/u', $text);
     }
 
+    public function isDefaultAvatar($imagePath)
+    {
+    
+    return strpos($imagePath, 'images_users') === 0;
+    }
+
 }

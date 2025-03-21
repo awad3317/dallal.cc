@@ -79,12 +79,38 @@ class RoleController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    * Update the specified resource in storage.
+    */
+    public function update(Request $request, $id)
     {
-        //
-    }
+        $validator = Validator::make($request->all(), [
+            'name' => ['sometimes', 'string', Rule::unique('roles', 'name')->ignore($id)],
+            'display_name' => ['sometimes', 'string'],
+            'permissions' => ['sometimes', 'array'],
+            'permissions.*' => [Rule::exists('permissions', 'id')],
+        ], [
+            'name.string' => 'يجب أن يكون اسم الدور نصاً',
+            'name.unique' => 'الاسم موجود في النظام من قبل',
+            'display_name.string' => 'يجب أن يكون اسم عرض الدور نصاً',
+        ]);
+        if ($validator->fails()) {
+            return ApiResponseClass::sendValidationError($validator->errors()->first(), $validator->errors());
+        }
+        try {
+            $fields = $request->only(['name', 'display_name', 'permissions']);
+            $role = $this->RoleRepository->getById($id);
+            if (isset($fields['permissions'])) {
+                if (!is_array($fields['permissions'])) {
+                    $fields['permissions'] = [$fields['permissions']];
+                }
+                $role->permissions()->sync($fields['permissions']);
+            }
+            $updatedRole = $this->RoleRepository->update($fields, $id);
+            return ApiResponseClass::sendResponse($updatedRole, "{$updatedRole['name']} updated successfully.");
+        } catch (Exception $e) {
+            return ApiResponseClass::sendError('Error updating role: ' . $e->getMessage());
+        }
+    }   
 
     /**
      * Remove the specified resource from storage.

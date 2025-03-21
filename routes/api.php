@@ -54,7 +54,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('/saleOption',SaleOptionController::class)->except(['index']);
     Route::apiResource('/bid',BidController::class)->except(['index']);
     Route::apiResource('/image',ImageController::class)->except(['show','index']);
-    Route::apiResource('/role',RoleController::class)->except(['update']);
+    Route::apiResource('/role',RoleController::class);
     Route::apiResource('/conversation',ConversationController::class)->except(['update','destroy']);
     Route::post('/sendMessage',[ConversationController::class,'sendMessage']);
     Route::post('/checkConversationExists',[ConversationController::class,'checkConversationExists']);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Exception;
 use Illuminate\Http\Request;
 use App\Services\ImageService;
+use App\Services\AvatarService;
 use Illuminate\Validation\Rule;
 use App\Classes\ApiResponseClass;
 use App\Http\Controllers\Controller;
@@ -17,7 +18,7 @@ class UserController extends Controller
      /**
      * Create a new class instance.
      */
-    public function __construct(private UserRepository $UserRepository,private ImageService $ImageService)
+    public function __construct(private UserRepository $UserRepository,private ImageService $ImageService,private AvatarService $AvatarService)
     {
         //
     }
@@ -84,11 +85,24 @@ class UserController extends Controller
         if ($validator->fails()) {
             return ApiResponseClass::sendValidationError($validator->errors()->first(),$validator->errors());
         }
-        $fields=$request->only(['username','name','phone_number','image']);
-        if ($request->hasFile('image')) {
-            $fields['image']=$this->ImageService->saveImage($fields['image'],'images_users');
-        }
         try {
+            $fields=$request->only(['username','name','phone_number','image']);
+            if ($request->hasFile('image')) {
+                $fields['image']=$this->ImageService->saveImage($fields['image'],'images_users');
+            }
+            elseif($request->has('name')){
+                $user = $this->UserRepository->getById($id);
+                if ($request->input('name') !== $user->name) {
+                    if ($this->AvatarService->isDefaultAvatar($user->image)) 
+                    {
+                        if (\File::exists($user->image)) {
+                            \File::delete($user->image);
+                        }
+                        $newDefaultAvatar = $this->AvatarService->createAvatar($request->input('name'));
+                        $fields['image'] = $newDefaultAvatar;
+                    }
+                }
+            }
             $User=$this->UserRepository->update($fields,$id);
             return ApiResponseClass::sendResponse($User,'User is updated successfully.');
         } catch (Exception $e) {
