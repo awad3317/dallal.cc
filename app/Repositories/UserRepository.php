@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 use App\Models\User;
+use Laratrust\Models\Role;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Interfaces\RepositoriesInterface;
@@ -83,22 +84,20 @@ class UserRepository implements RepositoriesInterface
         return true;
     }
 
-    public function assignRole($user_id,$role){
-        $user = $this->getById($user_id);
-        if(!$user->hasRole($role)){
-            $user->addRole($role);
-            return $user->getRoles();
-        }
-        return $user->getRoles();
+    public function assignRole($user,$role){
+        $user->role_id = null;
+        $user->save();
+        $user->role_id = $role->id;
+        $user->save();
+        return $user->role;
     }
 
-    public function revokeRole($user_id,$role){
-        $user = $this->getById($user_id);
-        if($user->hasRole($role)){
-            $user->removeRole($role);
-            return $user->getRoles();
+    public function revokeRole($user,$role){
+        if ($user->role_id === $role->id) {
+            $user->role_id = null;
+            $user->save();
         }
-        return $user->getRoles();
+        return $user->role;
     }
 
 }

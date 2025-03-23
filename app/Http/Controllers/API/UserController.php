@@ -177,12 +177,7 @@ class UserController extends Controller
             $fields=$request->only(['role']);
             $user=$this->UserRepository->getById($user_id);
             $role=$this->RoleRepository->getByName($fields['role']);
-            // $this->UserRepository->update(['role_id'=>$role->id],$user_id);
-            $user->role_id = null;
-            $user->save();
-            $user->role_id = $role->id;
-            $user->save();
-            // $roles=$this->UserRepository->assignRole($user_id,$fields['role']);
+            $role=$this->UserRepository->assignRole($user,$role);
             return ApiResponseClass::sendResponse(['role' => $role], "تم تعيين الدور {$request->role} بنجاح."); 
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error User Not Found: ' . $e->getMessage());
@@ -202,8 +197,10 @@ class UserController extends Controller
         }
         try {
             $fields=$request->only(['role']);
-            $roles = $this->UserRepository->revokeRole($user_id, $fields['role']);
-            return ApiResponseClass::sendResponse(['roles' => $roles], "تم سحب الدور {$request->role} بنجاح.");
+            $user=$this->UserRepository->getById($user_id);
+            $role=$this->RoleRepository->getByName($fields['role']);
+            $role= $this->UserRepository->revokeRole($user,$role);
+            return ApiResponseClass::sendResponse(['role' => $role], "تم سحب الدور {$request->role} بنجاح.");
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error User Not Found: ' . $e->getMessage());
         }
