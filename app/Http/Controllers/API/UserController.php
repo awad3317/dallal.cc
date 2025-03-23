@@ -175,8 +175,13 @@ class UserController extends Controller
         }
         try {
             $fields=$request->only(['role']);
+            $user=$this->UserRepository->getById($user_id);
             $role=$this->RoleRepository->getByName($fields['role']);
-            $this->UserRepository->update(['role_id'=>$role->id],$user_id);
+            // $this->UserRepository->update(['role_id'=>$role->id],$user_id);
+            $user->role_id = null;
+            $user->save();
+            $user->role_id = $role->id;
+            $user->save();
             // $roles=$this->UserRepository->assignRole($user_id,$fields['role']);
             return ApiResponseClass::sendResponse(['role' => $role], "تم تعيين الدور {$request->role} بنجاح."); 
         } catch (Exception $e) {
