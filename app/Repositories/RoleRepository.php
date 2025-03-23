@@ -57,6 +57,12 @@ class RoleRepository implements RepositoriesInterface
     {
         return Role::where('id', $id)->delete() > 0;
     }
+
+
+    public function getByName($role_name): Role
+    {
+        return Role::where('name', $role_name)->firstOrFail();
+    }
     
 }
 

@@ -28,7 +28,8 @@ class User extends Authenticatable implements LaratrustUser
         'phone_number', 
         'image', 
         'last_login', 
-        'email_verified'
+        'email_verified',
+        'role_id'
     ];
 
 
@@ -90,5 +91,9 @@ class User extends Authenticatable implements LaratrustUser
     public function favorites()
     {
         return $this->belongsToMany(Ad::class, 'favorites', 'user_id', 'ad_id')->withTimestamps();
+    }
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
     }
 }

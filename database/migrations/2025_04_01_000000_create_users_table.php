@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->timestamp('last_login')->nullable();
             $table->boolean('email_verified')->default(false);
+            $table->unsignedBigInteger('role_id')->nullable();
+            $table->foreign('role_id')->references('id')->on('roles')->onDelete('set null');
             $table->timestamps();
         });
 

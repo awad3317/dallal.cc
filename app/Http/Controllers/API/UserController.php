@@ -10,6 +10,7 @@ use Illuminate\Validation\Rule;
 use App\Classes\ApiResponseClass;
 use App\Http\Controllers\Controller;
 use App\Repositories\UserRepository;
+use App\Repositories\RoleRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -18,7 +19,7 @@ class UserController extends Controller
      /**
      * Create a new class instance.
      */
-    public function __construct(private UserRepository $UserRepository,private ImageService $ImageService,private AvatarService $AvatarService)
+    public function __construct(private UserRepository $UserRepository,private ImageService $ImageService,private AvatarService $AvatarService,private RoleRepository $RoleRepository)
     {
         //
     }
@@ -174,8 +175,10 @@ class UserController extends Controller
         }
         try {
             $fields=$request->only(['role']);
-            $roles=$this->UserRepository->assignRole($user_id,$fields['role']);
-            return ApiResponseClass::sendResponse(['roles' => $roles], "تم تعيين الدور {$request->role} بنجاح."); 
+            $role=$this->RoleRepository->getByName($fields['role']);
+            $this->UserRepository->update(['role_id'=>$role->id],$user_id);
+            // $roles=$this->UserRepository->assignRole($user_id,$fields['role']);
+            return ApiResponseClass::sendResponse(['role' => $role], "تم تعيين الدور {$request->role} بنجاح."); 
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error User Not Found: ' . $e->getMessage());
         }
