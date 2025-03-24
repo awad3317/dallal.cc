@@ -167,15 +167,24 @@ class AdController extends Controller
         }
     }
 
-    public function verifyAd($id){
-        $ad = $this->AdRepository->getById($id);
-        if($ad->verified){
-            $ad->update(['verified'=>false]);
-            return ApiResponseClass::sendResponse($ad,'ad unverified successfully');
+    public function verifyAd($id, Request $request){
+        $validator = Validator::make($request->all(), [
+            'verified'=>['required','boolean'],
+        ], [
+           'verified.required'=>'يجب ادخال حالة الاعلان',
+           'verified.boolean' => 'يجب ان يكون اما true او false',
+        ]);
+        if ($validator->fails()) {
+            return ApiResponseClass::sendValidationError($validator->errors()->first(), $validator->errors());
         }
-        else{
-            $ad->update(['verified'=>true]);
-            return ApiResponseClass::sendResponse($ad,'ad verified successfully');
+        try {
+            $ad = $this->AdRepository->getById($id);
+            $ad->update(['verified' => $request->verified]);
+            $message =  $request->verified ? 'ad accepted successfully' : 'ad rejected successfully';
+            return ApiResponseClass::sendResponse($ad, $message);
+        } catch (Exception $e) {
+            return ApiResponseClass::sendError('Error deleting Ad: ' . $e->getMessage());
         }
+       
     }
 }

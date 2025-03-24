@@ -39,6 +39,18 @@ class Ad extends Model
         return $this->belongsTo(region::class);
     }
 
+    public function parentRegion()
+    {
+        return $this->hasOneThrough(
+            Region::class, 
+            Region::class, 
+            'id', 
+            'id', 
+            'region_id', 
+            'parent_id' 
+        );
+    }
+
     public function saleOption()
     {
         return $this->belongsTo(SaleOption::class);

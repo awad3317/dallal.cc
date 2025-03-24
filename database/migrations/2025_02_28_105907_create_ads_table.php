@@ -24,7 +24,7 @@ return new class extends Migration
             $table->foreignId('sale_option_id')->constrained()->onDelete('cascade');
             $table->integer('views')->default(0);
             $table->integer('likes')->default(0);
-            $table->boolean('verified')->default(false);
+            $table->boolean('verified')->nullable()->default(null);
             $table->timestamps();
         });
     }

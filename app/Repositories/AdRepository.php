@@ -44,7 +44,15 @@ class AdRepository implements RepositoriesInterface
 
             }
         }
-        return $query->with(['category', 'region', 'saleOption'])->withMax('bids', 'amount')->filter()->paginate(10);
+        $ads = $query->with(['category', 'region', 'saleOption', 'parentRegion'])->withMax('bids', 'amount')->filter()->paginate(10);
+        $ads->getCollection()->transform(function ($ad) {
+            $ad->region_details = [
+            'parent' => $ad->parentRegion, 
+            'child' => $ad->region, 
+            ];
+            return $ad;
+        });
+        return $ads;
     }
 
     public function getById($id): Ad
