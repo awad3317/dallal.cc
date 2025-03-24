@@ -20,7 +20,7 @@ class AdController extends Controller
     /**
      * Create a new class instance.
      */
-    public function __construct(private AdRepository $AdRepository,private ImageService $ImageService)
+    public function __construct(private AdRepository $AdRepository,private ImageService $ImageService,private ViewService $ViewService)
     {
         //
     }
@@ -133,7 +133,8 @@ class AdController extends Controller
     {
         try{
             $ad = $this->AdRepository->getByIdWithSimilarAd($id,PersonalAccessToken::findToken($request->bearerToken())->tokenable_id ?? null);
-            recordViewJob::dispatch(app(ViewService::class),$ad->id, Auth::id() ?? null);
+            // recordViewJob::dispatch(app(ViewService::class),$ad->id, Auth::id() ?? null);
+            $this->ViewService->recordView($ad->id,Auth::id() ?? null);
             return ApiResponseClass::sendResponse($ad, " data getted  successfully");
         }catch(Exception $e){
             return ApiResponseClass::sendError('Error returned Ad: ' . $e->getMessage());

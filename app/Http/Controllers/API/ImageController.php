@@ -68,9 +68,7 @@ class ImageController extends Controller
         ]);
         try {
             $oldImage = $this->ImageRepository->getById($id);
-            if (\File::exists($oldImage->image_url)) {
-                \File::delete($oldImage->image_url);
-            }
+            $this->ImageService->deleteImage($oldImage->image_url);
             $imagePath = $this->ImageService->saveImage($fields['image'], 'additional_image');
             unset($fields);
             $fields['image_url']=$imagePath;
@@ -88,6 +86,7 @@ class ImageController extends Controller
     {
         try {
             $Image=$this->ImageRepository->getById($id);
+            $this->ImageService->deleteImage($Image->image_url);
             if($this->ImageRepository->delete($Image->id)){
                 return ApiResponseClass::sendResponse($Image, "{$Image->id} unsaved successfully.");
             }
