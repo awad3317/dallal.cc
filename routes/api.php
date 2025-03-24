@@ -1,9 +1,6 @@
 <?php
 
-use App\Models\Role;
 use Illuminate\Http\Request;
-use App\Events\TestPusherEvent;
-use App\Events\sentMessageEvent;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Broadcast;
 use App\Http\Controllers\API\AdController;
@@ -93,10 +90,6 @@ Route::get('/ad/{id}',[AdController::class,'show']);
 Route::get('/saleOption',[SaleOptionController::class,'index']);
 Route::get('/bid',[BidController::class,'index']);
 
-// Route::get('/test',function (){
-//     event( new TestPusherEvent('hi i am awad')); 
-//     return 'done';
-// });
 
 
 
