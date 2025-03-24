@@ -20,40 +20,48 @@ class AdRepository implements RepositoriesInterface
     {
         //
     }
-    public function index($region_id,$category_id)
-    {
-        $query = Ad::query();
+    public function index($region_id, $category_id)
+{
+    $query = Ad::query();
 
-        if ($region_id) {
-            $region = region::with('children')->find($region_id);
-            if ($region) {
-                $regionIds = $region->children()->pluck('id')->push($region->id);
-                $allRegionIds = region::whereIn('parent_id', $regionIds)->pluck('id');
-                $regionIds = $regionIds->merge($allRegionIds);
-                $query->whereIn('region_id', $regionIds);
-            }
+    // تصفية حسب المنطقة
+    if ($region_id) {
+        $region = Region::with('children')->find($region_id);
+        if ($region) {
+            $regionIds = $region->children()->pluck('id')->push($region->id);
+            $allRegionIds = Region::whereIn('parent_id', $regionIds)->pluck('id');
+            $regionIds = $regionIds->merge($allRegionIds);
+            $query->whereIn('region_id', $regionIds);
         }
-
-        if ($category_id) {
-            $category = Category::with('children')->find($category_id);
-            if ($category) {
-                $categoryIds = $category->children()->pluck('id')->push($category->id);
-                $allCategoryIds = Category::whereIn('parent_id', $categoryIds)->pluck('id');
-                $categoryIds = $categoryIds->merge($allCategoryIds);
-                $query->whereIn('category_id', $categoryIds);
-
-            }
-        }
-        $ads = $query->with(['category', 'region', 'saleOption', 'parentRegion'])->withMax('bids', 'amount')->filter()->paginate(10);
-        $ads->getCollection()->transform(function ($ad) {
-            $ad->region_details = [
-            'parent' => $ad->parentRegion, 
-            'child' => $ad->region, 
-            ];
-            return $ad;
-        });
-        return $ads;
     }
+
+    // تصفية حسب الفئة
+    if ($category_id) {
+        $category = Category::with('children')->find($category_id);
+        if ($category) {
+            $categoryIds = $category->children()->pluck('id')->push($category->id);
+            $allCategoryIds = Category::whereIn('parent_id', $categoryIds)->pluck('id');
+            $categoryIds = $categoryIds->merge($allCategoryIds);
+            $query->whereIn('category_id', $categoryIds);
+        }
+    }
+
+    // استرجاع البيانات مع العلاقات
+    $ads = $query->with(['category', 'region', 'saleOption', 'parentRegion'])
+                 ->withMax('bids', 'amount')
+                 ->filter()
+                 ->paginate(10);
+
+    $ads->getCollection()->transform(function ($ad) {
+        $ad->region_details = [
+            'parent' => $ad->parentRegion, // المنطقة الرئيسية (الأب)
+            'child' => $ad->region, // المنطقة الفرعية (الابن)
+        ];
+        return $ad;
+    });
+
+    return $ads;
+}
 
     public function getById($id): Ad
     {
