@@ -21,33 +21,28 @@ class AdRepository implements RepositoriesInterface
         //
     }
     public function index($region_id, $category_id)
-{
-    $query = Ad::query();
-
-    
-    if ($region_id) {
-        $region = Region::with('children')->find($region_id);
-        if ($region) {
-            $regionIds = $region->children()->pluck('id')->push($region->id);
-            $allRegionIds = Region::whereIn('parent_id', $regionIds)->pluck('id');
-            $regionIds = $regionIds->merge($allRegionIds);
-            $query->whereIn('region_id', $regionIds);
+    {
+        $query = Ad::query();
+        if ($region_id) {
+            $region = Region::with('children')->find($region_id);
+            if ($region) {
+                $regionIds = $region->children()->pluck('id')->push($region->id);
+                $allRegionIds = Region::whereIn('parent_id', $regionIds)->pluck('id');
+                $regionIds = $regionIds->merge($allRegionIds);
+                $query->whereIn('region_id', $regionIds);
+            }
         }
-    }
-
-    
-    if ($category_id) {
-        $category = Category::with('children')->find($category_id);
-        if ($category) {
-            $categoryIds = $category->children()->pluck('id')->push($category->id);
-            $allCategoryIds = Category::whereIn('parent_id', $categoryIds)->pluck('id');
-            $categoryIds = $categoryIds->merge($allCategoryIds);
-            $query->whereIn('category_id', $categoryIds);
+        if ($category_id) {
+            $category = Category::with('children')->find($category_id);
+            if ($category) {
+                $categoryIds = $category->children()->pluck('id')->push($category->id);
+                $allCategoryIds = Category::whereIn('parent_id', $categoryIds)->pluck('id');
+                $categoryIds = $categoryIds->merge($allCategoryIds);
+                $query->whereIn('category_id', $categoryIds);
+            }
         }
+        return  $query->with(['category.parent', 'region.parent', 'saleOption'])->withMax('bids', 'amount')->filter()->paginate(10);
     }
-    $ads = $query->with(['category', 'region.parent', 'saleOption'])->withMax('bids', 'amount')->filter()->paginate(10);
-    return $ads;
-}
 
     public function getById($id): Ad
     {
