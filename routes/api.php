@@ -49,7 +49,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/revokeRole/{user_id}',[UserController::class,'revokeRole']);
     
     Route::apiResource('/ad',AdController::class)->except(['index','show']);
-    Route::get('verifyAd/{id}',[AdController::class,'verifyAd']);
+    Route::post('verifyAd/{id}',[AdController::class,'verifyAd']);
     
     Route::apiResource('/saleOption',SaleOptionController::class)->except(['index']);
     Route::apiResource('/bid',BidController::class)->except(['index']);
