@@ -1,9 +1,11 @@
 <?php
 
+use App\Models\Role;
 use Illuminate\Http\Request;
 use App\Events\TestPusherEvent;
 use App\Events\sentMessageEvent;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Broadcast;
 use App\Http\Controllers\API\AdController;
 use App\Http\Controllers\API\BidController;
 use App\Http\Controllers\API\LikeController;
@@ -21,8 +23,7 @@ use App\Http\Controllers\API\Auth\userAuthController;
 use App\Http\Controllers\API\Auth\PermissionController;
 use App\Http\Controllers\API\Auth\forgetPasswordController;
 use App\Http\Controllers\API\Dashboard\UserDashboardController;
-use App\Models\Role;
-use Illuminate\Support\Facades\Broadcast;
+use App\Http\Controllers\API\Dashboard\AdminDashboardController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -39,6 +40,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/getUserData',[UserDashboardController::class,'getUserData']);
     Route::get('/getUserAds',[UserDashboardController::class,'getUserAds']);
     Route::get('/getUserFavoriteAds',[UserDashboardController::class,'getUserFavoriteAds']);
+        //      Dashborad for Admin     //
+    Route::get('/getAds',[AdminDashboardController::class,'getAds']);
+       
 
     Route::apiResource('/region',RegionController::class)->except(['index']);
     Route::apiResource('/category',CategoryController::class)->except(['inedx']);
