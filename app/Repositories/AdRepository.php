@@ -24,7 +24,7 @@ class AdRepository implements RepositoriesInterface
 {
     $query = Ad::query();
 
-    // تصفية حسب المنطقة
+    
     if ($region_id) {
         $region = Region::with('children')->find($region_id);
         if ($region) {
@@ -35,7 +35,7 @@ class AdRepository implements RepositoriesInterface
         }
     }
 
-    // تصفية حسب الفئة
+    
     if ($category_id) {
         $category = Category::with('children')->find($category_id);
         if ($category) {
@@ -45,21 +45,7 @@ class AdRepository implements RepositoriesInterface
             $query->whereIn('category_id', $categoryIds);
         }
     }
-
-    // استرجاع البيانات مع العلاقات
-    $ads = $query->with(['category', 'region', 'saleOption'])
-                 ->withMax('bids', 'amount')
-                 ->filter()
-                 ->paginate(10);
-
-    // $ads->getCollection()->transform(function ($ad) {
-    //     $ad->region_details = [
-    //         'parent' => $ad->parentRegion, // المنطقة الرئيسية (الأب)
-    //         'child' => $ad->region, // المنطقة الفرعية (الابن)
-    //     ];
-    //     return $ad;
-    // });
-
+    $ads = $query->with(['category', 'region.parent', 'saleOption'])->withMax('bids', 'amount')->filter()->paginate(10);
     return $ads;
 }
 
