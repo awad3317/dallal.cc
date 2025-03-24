@@ -47,7 +47,7 @@ class AdRepository implements RepositoriesInterface
     }
 
     // استرجاع البيانات مع العلاقات
-    $ads = $query->with(['category', 'region', 'saleOption', 'parentRegion'])
+    $ads = $query->with(['category', 'region', 'saleOption'])
                  ->withMax('bids', 'amount')
                  ->filter()
                  ->paginate(10);
