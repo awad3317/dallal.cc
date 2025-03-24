@@ -117,7 +117,7 @@ class ConversationController extends Controller
         ]);
         $Conversation=$this->ConversationRepository->checkConversationExists($fields['ad_id']);
         if($Conversation){
-            return ApiResponseClass::sendResponse($Conversation, "the conversation is exists");
+            return ApiResponseClass::sendResponse($Conversation, "the conversation is exists",201);
         }
         else{
             return ApiResponseClass::sendResponse($Conversation, "not found");
