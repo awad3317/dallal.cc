@@ -48,7 +48,8 @@ class Ad extends Model
             'id', 
             'region_id', 
             'parent_id' 
-        )->select('regions.*', 'regions.id as parent_region_id');;
+        )->join('regions as parent_regions', 'parent_regions.id', '=', 'regions.parent_id')
+        ->select('parent_regions.*', 'regions.id as child_region_id');
     }
 
     public function saleOption()
