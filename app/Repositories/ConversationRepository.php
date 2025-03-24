@@ -75,10 +75,18 @@ class ConversationRepository implements RepositoriesInterface
 
     public function getUserConversations($userId)
     {
-        return Conversation::where('sender_id', $userId)
+        // Retrieve conversations where the user is either the sender or the receiver
+        $conversations = Conversation::where('sender_id', $userId)
             ->orWhere('receiver_id', $userId)
             ->with(['sender', 'receiver', 'messages','ad'])
             ->get();
+        // Add an `other_user` object to each conversation
+        $conversations->map(function ($conversation) use ($userId) {
+            // Determine the other user in the conversation
+            $conversation->other_user = $conversation->sender_id == $userId? $conversation->receiver: $conversation->sender;
+            return $conversation;
+        });
+        return $conversations;
     }
 
     public function checkConversationExists($adId)
