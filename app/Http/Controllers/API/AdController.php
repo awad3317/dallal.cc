@@ -45,8 +45,8 @@ class AdController extends Controller
     public function store(Request $request)
     {
     $validator = Validator::make($request->all(), [
-        'category_id' => ['required', Rule::exists('categories', 'id')],
-        'region_id' => ['required', Rule::exists('regions', 'id')],
+        'category_id' => ['required', Rule::exists('categories', 'id')->where(function ($query){return $query->where('parent_id', '!=', null);})],
+        'region_id' => ['required', Rule::exists('regions', 'id')->where(function ($query){return $query->where('parent_id', '!=', null);})],
         'title' => ['required', 'string', 'max:255'],
         'description' => ['required', 'string'],
         'price' => ['required', 'numeric', 'min:0'],
