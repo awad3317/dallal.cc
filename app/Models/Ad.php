@@ -48,7 +48,7 @@ class Ad extends Model
             'id', 
             'region_id', 
             'parent_id' 
-        );
+        )->select('regions.*', 'regions.id as parent_region_id');;
     }
 
     public function saleOption()
