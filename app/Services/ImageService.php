@@ -30,4 +30,11 @@ class ImageService
         // return 'storage/' . $filename;
     }
 
+    public function deleteImage($image){
+        if (\File::exists($image)) {
+            \File::delete($image);
+        }
+        
+    }
+
 }

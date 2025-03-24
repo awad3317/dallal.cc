@@ -145,7 +145,57 @@ class AdController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'category_id' => ['sometimes', 'required', Rule::exists('categories', 'id')],
+            'region_id' => ['sometimes', 'required', Rule::exists('regions', 'id')],
+            'title' => ['sometimes', 'required', 'string', 'max:255'],
+            'description' => ['sometimes', 'required', 'string'],
+            'price' => ['sometimes', 'required', 'numeric', 'min:0'],
+            'primary_image' => ['sometimes', 'image', 'max:2048'],
+            'status' => ['sometimes', 'required', 'in:جديد,مستعمل'],
+            'sale_option_id' => ['sometimes', 'required', Rule::exists('sale_options', 'id')],
+        ],[
+            'category_id.required' => 'حقل التصنيف مطلوب.',
+            'category_id.exists' => 'التصنيف المحدد غير موجود.',
+            'region_id.required' => 'حقل المنطقة مطلوب.',
+            'region_id.exists' => 'المنطقة المحددة غير موجودة.',
+            'title.required' => 'حقل العنوان مطلوب.',
+            'title.string' => 'يجب أن يكون العنوان نصًا.',
+            'title.max' => 'يجب ألا يتجاوز العنوان 255 حرفًا.',
+            'description.required' => 'حقل الوصف مطلوب.',
+            'description.string' => 'يجب أن يكون الوصف نصًا.',
+            'price.required' => 'حقل السعر مطلوب.',
+            'price.numeric' => 'يجب أن يكون السعر رقمًا.',
+            'price.min' => 'يجب أن يكون السعر أكبر من أو يساوي 0.',
+            'primary_image.image' => 'يجب أن تكون الصورة الرئيسية ملف صورة.',
+            'primary_image.max' => 'يجب ألا تتجاوز الصورة الرئيسية 2 ميجابايت.',
+            'status.required' => 'حقل الحالة مطلوب.',
+            'status.in' => 'الحالة يجب أن تكون إما "جديد" أو "مستعمل".',
+            'sale_option_id.required' => 'حقل خيار البيع مطلوب.',
+            'sale_option_id.exists' => 'خيار البيع المحدد غير موجود.',
+        ]);
+        if ($validator->fails()) {
+            return ApiResponseClass::sendValidationError($validator->errors()->first(), $validator->errors());
+        }
+        try {
+            $ad = $this->AdRepository->getById($id);
+            // Check if the authenticated user owns the ad
+            if ($ad->user_id !== Auth::id()) {
+                return ApiResponseClass::sendError("ليس لديك صلاحية لتعديل هذا الإعلان", [], 403);
+            }
+            $fields = $request->only(['category_id','region_id','title','description','price','status','sale_option_id']);
+            if ($request->hasFile('primary_image')) {
+                // Delete old primary image
+                $this->ImageService->deleteImage($ad->primary_image);
+                // Save new primary image
+                $fields['primary_image'] = $this->ImageService->saveImage($request->file('primary_image'));
+            }
+            // Update the ad
+            $updatedAd = $this->AdRepository->update($fields,$ad);
+            return ApiResponseClass::sendResponse($updatedAd, 'تم تحديث الإعلان بنجاح.');
+        } catch (Exception $e) {
+            return ApiResponseClass::sendError('حدث خطأ أثناء تحديث الإعلان: ' . $e->getMessage());
+        }
     }
 
     /**
