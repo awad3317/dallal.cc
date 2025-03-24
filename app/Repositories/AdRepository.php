@@ -52,13 +52,13 @@ class AdRepository implements RepositoriesInterface
                  ->filter()
                  ->paginate(10);
 
-    $ads->getCollection()->transform(function ($ad) {
-        $ad->region_details = [
-            'parent' => $ad->parentRegion, // المنطقة الرئيسية (الأب)
-            'child' => $ad->region, // المنطقة الفرعية (الابن)
-        ];
-        return $ad;
-    });
+    // $ads->getCollection()->transform(function ($ad) {
+    //     $ad->region_details = [
+    //         'parent' => $ad->parentRegion, // المنطقة الرئيسية (الأب)
+    //         'child' => $ad->region, // المنطقة الفرعية (الابن)
+    //     ];
+    //     return $ad;
+    // });
 
     return $ads;
 }
