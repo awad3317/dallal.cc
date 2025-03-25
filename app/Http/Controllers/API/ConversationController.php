@@ -105,7 +105,7 @@ class ConversationController extends Controller
 
         $message = $this->MessageRepository->store($fields);
         event( new TestPusherEvent($fields['message_text'],$fields['receiver_id'],$fields['conversation_id'],$fields['sender_id'],$message->id));
-        return ApiResponseClass::sendResponse($message, "Message sent successfully");
+        return ApiResponseClass::sendResponse($message, "Message sent successfully",201);
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error sending message: ' . $e->getMessage());
         }
