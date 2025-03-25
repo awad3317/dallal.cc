@@ -23,6 +23,7 @@ class UserSeeder extends Seeder
             'image' => 'default.png', 
             'last_login' => now(),
             'email_verified' => true,
+            'role_id'=>1
         ]);
 
         
@@ -35,6 +36,7 @@ class UserSeeder extends Seeder
             'image' => 'default.png', 
             'last_login' => now(),
             'email_verified' => true,
+            'role_id'=>2
         ]);
     }
 }

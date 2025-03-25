@@ -29,6 +29,7 @@ class UserRepository implements RepositoriesInterface
     public function store(array $data): User
     {
         $data['username'] = $this->generateUniqueUsername($data['email']);
+        // $data['role_id'] = 2;
         return User::create($data);
     }
 

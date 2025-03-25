@@ -28,15 +28,20 @@ class ConversationRepository implements RepositoriesInterface
 
     public function getById($id): Conversation
     {
-        
+        // Get the conversation with its relationships (messages, receiver, sender)
         $conversation = Conversation::with(['messages','receiver','sender'])->findOrFail($id);
-    
-    
+        // Add other_user to the conversation
+        $conversation->other_user = ($conversation->sender_id == Auth::id()) 
+        ? $conversation->receiver 
+        : $conversation->sender;
+        // Sort messages by ID (oldest to newest)
         $sortedMessages = $conversation->messages->sortBy('id');
     
-        
+        // Process each message to add is_sender flag and hide some fields
         $messagesWithSenderFlag = $sortedMessages->map(function ($message) {
+            // Check if sender is the current user
             $message->is_sender = ($message->sender_id == Auth::id());
+            // Hide created_at and updated_at fields
             $message->makeHidden(['created_at', 'updated_at']);
             return $message;
         });
