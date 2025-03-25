@@ -42,11 +42,15 @@ class ConversationController extends Controller
      */
     public function store(Request $request)
     {
-        $fields=$request->validate([
+        $validator = Validator::make($request->all(), [
             'ad_id' => ['required',Rule::exists('ads','id')],
             'receiver_id' => ['required',Rule::exists('users','id')],
         ]);
+        if ($validator->fails()) {
+           return ApiResponseClass::sendValidationError($validator->errors()->first(),$validator->errors());
+        }
         try {
+            $fields=$request->only(['ad_id','receiver_id']);
             $fields['sender_id']=Auth::id();
             $conversation = $this->ConversationRepository->store($fields);
             return ApiResponseClass::sendResponse($conversation,'conversation saved successfully.');
@@ -121,9 +125,13 @@ class ConversationController extends Controller
     }
 
     public function checkConversationExists(Request $request){
-        $fields=$request->validate([
+        $validator = Validator::make($request->all(), [
             'ad_id' => ['required',Rule::exists('ads','id')],
         ]);
+        if ($validator->fails()) {
+            return ApiResponseClass::sendValidationError($validator->errors()->first(), $validator->errors());
+        }
+        $fields=$request->only(['ad_id']);
         $Conversation=$this->ConversationRepository->checkConversationExists($fields['ad_id']);
         if($Conversation){
             return ApiResponseClass::sendResponse($Conversation, "the conversation is exists",201);
