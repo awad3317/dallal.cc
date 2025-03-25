@@ -87,28 +87,37 @@ class ConversationController extends Controller
 
     public function sendMessage(Request $request)
     {
-    $fields = $request->validate([
-        'message_text' => ['required', 'string'],
-        'conversation_id' => ['required', Rule::exists('conversations', 'id')],
-        'attachment' => ['nullable', 'image'],
-    ]);
-
-    try {
-        $conversation = $this->ConversationRepository->getById($fields['conversation_id']);
-
-        $userId = Auth::id();
-        if ($conversation->sender_id != $userId && $conversation->receiver_id != $userId) {
-            return ApiResponseClass::sendError('Unauthorized: You are not part of this conversation.', 403);
+        $validator = Validator::make($request->all(), [
+            'message_text' => ['required', 'string'],
+            'conversation_id' => ['required', Rule::exists('conversations', 'id')],
+            'attachment' => ['nullable', 'image'],
+        ], [
+           'message_text.required'=>'يجب إدخال نص الرساله',
+           'message_text.string'=>'يجب أن تكون الرساله نصاً',
+           'conversation_id.required'=>'يجب إدخال رقم المحادثة',
+        ]);
+    
+        if ($validator->fails()) {
+            return ApiResponseClass::sendValidationError($validator->errors()->first(), $validator->errors());
         }
-        $fields['receiver_id'] = ($conversation->sender_id == $userId) ? $conversation->receiver_id : $conversation->sender_id;
-        $fields['sender_id'] = $userId;
 
-        $message = $this->MessageRepository->store($fields);
-        event( new TestPusherEvent($fields['message_text'],$fields['receiver_id'],$fields['conversation_id'],$fields['sender_id'],$message->id));
-        return ApiResponseClass::sendResponse($message, "Message sent successfully",201);
-        } catch (Exception $e) {
-            return ApiResponseClass::sendError('Error sending message: ' . $e->getMessage());
-        }
+        try {
+            $fields=$request->only(['message_text','conversation_id','attachment']);
+            $conversation = $this->ConversationRepository->getById($fields['conversation_id']);
+
+            $userId = Auth::id();
+            if ($conversation->sender_id != $userId && $conversation->receiver_id != $userId) {
+                return ApiResponseClass::sendError('Unauthorized: You are not part of this conversation.', 403);
+            }
+            $fields['receiver_id'] = ($conversation->sender_id == $userId) ? $conversation->receiver_id : $conversation->sender_id;
+            $fields['sender_id'] = $userId;
+
+            $message = $this->MessageRepository->store($fields);
+            event( new TestPusherEvent($fields['message_text'],$fields['receiver_id'],$fields['conversation_id'],$fields['sender_id'],$message->id));
+            return ApiResponseClass::sendResponse($message, "Message sent successfully",201);
+            } catch (Exception $e) {
+                return ApiResponseClass::sendError('Error sending message: ' . $e->getMessage());
+            }
     }
 
     public function checkConversationExists(Request $request){
