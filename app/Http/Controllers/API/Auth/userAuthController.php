@@ -13,10 +13,9 @@ use App\Http\Controllers\Controller;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
-use function PHPUnit\Framework\returnValue;
+
 
 class userAuthController extends Controller
 {
