@@ -9,6 +9,7 @@ use App\Classes\ApiResponseClass;
 use App\Repositories\BidRepository;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class BidController extends Controller
 {
@@ -39,11 +40,15 @@ class BidController extends Controller
      */
     public function store(Request $request)
     {
-        $fields=$request->validate([
+        $validator = Validator::make($request->all(), [
             'ad_id' => ['required',Rule::exists('ads','id')],
             'amount' => ['required','numeric','min:0'],
         ]);
+        if ($validator->fails()) {
+            return ApiResponseClass::sendValidationError($validator->errors()->first(), $validator->errors());
+        }
         try {
+            $fields=$request->only(['ad_id','amount']);
             $fields['user_id']=Auth::id();
             $Bid=$this->BidRepository->store($fields);
             return ApiResponseClass::sendResponse($Bid,'Bid saved successfully.');

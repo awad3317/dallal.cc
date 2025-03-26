@@ -69,8 +69,8 @@ class CategoryController extends Controller
         if ($validator->fails()) {
             return ApiResponseClass::sendValidationError($validator->errors()->first(), $validator->errors());
         }
-        $fields=$request->only(['name','parent_id']);
         try {
+            $fields=$request->only(['name','parent_id']);
             $Categorie=$this->CategoryRepository->store($fields);
             return ApiResponseClass::sendResponse($Categorie,'تم حفظ الفئة بنجاح');
         } catch (Exception $e) {
