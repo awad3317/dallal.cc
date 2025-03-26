@@ -102,7 +102,7 @@ class userAuthController extends Controller
             // Create a new token for the user
             $token = $user->createToken($user->username . '-AuthToken')->plainTextToken;
             $user->token=$token;
-            return ApiResponseClass::sendResponse(['user' => $user], 'تم تسجيل دخول المستخدم بنجاح');
+            return ApiResponseClass::sendResponse(['user' => $user], 'تم تسجيل دخول بنجاح');
         }
         return ApiResponseClass::sendError('Unauthorized', ['error' => 'البيانات غير صحيحه'],401);
         
