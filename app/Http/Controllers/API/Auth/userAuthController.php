@@ -94,6 +94,9 @@ class userAuthController extends Controller
 
         // Check if the user exists and if the password is correct
         if($user && Hash::check($credentials['password'], $user->password)){
+            if($user->is_banned){
+                return ApiResponseClass::sendError('الحساب محظور',null,403);
+            }
             // Log in the user
             Auth::login($user);
 

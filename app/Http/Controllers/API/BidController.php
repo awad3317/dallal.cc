@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Classes\ApiResponseClass;
+use Illuminate\Support\Facades\DB;
 use App\Repositories\BidRepository;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -42,7 +43,15 @@ class BidController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'ad_id' => ['required',Rule::exists('ads','id')],
-            'amount' => ['required','numeric','min:0'],
+            'amount' => ['required','numeric','min:0',
+                function ($attribute, $value, $fail) use ($request) {
+                $highestBid = DB::table('bids')
+                    ->where('ad_id', $request->ad_id)
+                    ->max('amount');
+                if ($value <= ($highestBid ?? 0)) {
+                    $fail('يجب أن يكون السعر أكبر من أعلى سعر حالى ('.($highestBid ?? 0).')');
+                }
+            },],
         ]);
         if ($validator->fails()) {
             return ApiResponseClass::sendValidationError($validator->errors()->first(), $validator->errors());

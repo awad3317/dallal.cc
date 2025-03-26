@@ -18,6 +18,10 @@ return Application::configure(basePath: dirname(__DIR__))
     // )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->append(\Illuminate\Http\Middleware\HandleCors::class);
+
+        $middleware->alias([
+            'check.banned' => \App\Http\Middleware\CheckBannedUser::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

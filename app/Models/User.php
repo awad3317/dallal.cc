@@ -29,7 +29,8 @@ class User extends Authenticatable implements LaratrustUser
         'image', 
         'last_login', 
         'email_verified',
-        'role_id'
+        'role_id',
+        'is_banned',
     ];
 
 

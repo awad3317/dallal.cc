@@ -31,7 +31,7 @@ Route::post('/pusher/auth',function (Request $request){
     return Broadcast::auth($request);
 });
 
-Route::middleware(['auth:sanctum'])->group(function () {
+Route::middleware(['auth:sanctum','check.banned'])->group(function () {
     Route::post('/logout',[userAuthController::class,'logout']);
         //      Dashboard for User      //
     Route::get('/getUserData',[UserDashboardController::class,'getUserData']);
@@ -48,6 +48,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/changePassword/{id}',[UserController::class,'changePassword']);
     Route::post('/assignRole/{user_id}',[UserController::class,'assignRole']);
     Route::post('/revokeRole/{user_id}',[UserController::class,'revokeRole']);
+    Route::post('/toggleBan/{user_id}',[UserController::class,'toggleBan']);
     
     Route::apiResource('/ad',AdController::class)->except(['index','show']);
     Route::post('verifyAd/{id}',[AdController::class,'verifyAd']);

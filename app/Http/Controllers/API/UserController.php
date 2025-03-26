@@ -96,9 +96,7 @@ class UserController extends Controller
                 if ($request->input('name') !== $user->name) {
                     if ($this->AvatarService->isDefaultAvatar($user->image)) 
                     {
-                        if (\File::exists($user->image)){
-                            \File::delete($user->image);
-                        }
+                        $this->ImageService->deleteImage($user->image);
                         $newDefaultAvatar = $this->AvatarService->createAvatar($request->input('name'));
                         $fields['image'] = $newDefaultAvatar;
                     }
@@ -205,4 +203,28 @@ class UserController extends Controller
             return ApiResponseClass::sendError('Error User Not Found: ' . $e->getMessage());
         }
     }
+
+    public function toggleBan(Request $request, $userId)
+    {
+        $validator = Validator::make($request->all(), [
+            'is_banned'=>['required','boolean']
+        ],[
+            'is_banned.required' => 'يجب إدخال نوع الحظر',
+            'is_banned.boolean'=>'يجب أن يكون نوع الحظر 1 او 0',
+        ]);
+        if ($validator->fails()) {
+            return ApiResponseClass::sendValidationError($validator->errors()->first(),$validator->errors());
+        }
+        try {
+            $fields=$request->only(['is_banned']);
+            $user=$this->UserRepository->update($fields,$userId);
+            $message = $request->is_banned ? 'تم حظر المستخدم بنجاح' : 'تم فك حظر المستخدم بنجاح';
+            return ApiResponseClass::sendResponse($user,$message);
+        } catch (Exception $e) {
+            return ApiResponseClass::sendError('An error occurred while processing the ban request : ' . $e->getMessage());
+        }
+        
+        
+    }
+    
 }
