@@ -9,8 +9,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Interfaces\RepositoriesInterface;
 
-use function PHPUnit\Framework\isNull;
-
 class AdRepository implements RepositoriesInterface
 {
     /**
