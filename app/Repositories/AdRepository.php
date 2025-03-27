@@ -115,7 +115,7 @@ class AdRepository implements RepositoriesInterface
     }
     public function getByIdWithSimilarAd($id,$user_id)
     {
-        $ad=Ad::with(['user','category','region','saleOption','bids.user:id,name','images','comments.user:id,name,image'])->withMax('bids','amount')->findOrFail($id);
+        $ad=Ad::with(['user','category.parent','region.parent','saleOption','bids.user:id,name','images','comments.user:id,name,image'])->withMax('bids','amount')->findOrFail($id);
         $similarAds = Ad::with(['category:id,name','region:id,name','saleOption:id,name'])
         ->where('category_id', $ad->category_id)
         ->where('id', '!=', $ad->id) 
