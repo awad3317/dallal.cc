@@ -18,11 +18,14 @@ class RoleSeeder extends Seeder
             'name' => 'admin',
             'display_name' => 'أدمن'
         ]);
+        $userRole = Role::create([
+            'name' => 'user',
+            'display_name' => 'مستخدم'
+        ]);
         $permissions = Permission::all()->pluck('id')->toArray();
-        $adminRole->permissions()->attach($permissions);
-        Role::create([
-            'name'=>'user',
-            'display_name'=>'مستخدم'
-        ])->permissions()->attach([$permissions]);
+        if (!empty($permissions)) {
+            $adminRole->permissions()->sync($permissions);
+            $userRole->permissions()->sync($permissions);
+        }
     }
 }
