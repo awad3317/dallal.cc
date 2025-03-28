@@ -164,4 +164,9 @@ class AdRepository implements RepositoriesInterface
         }
     }
 
+    public function edit($id):Ad
+    {
+        return Ad::with(['images'])->findOrFail($id);
+    }
+
 }

@@ -26,46 +26,46 @@ class AdminDashboardController extends Controller
     }
 
     public function getStatisticsByYear($year)
-{
-    $adsStatistics = $this->AdRepository->getAdsStatisticsByYear($year);
-    $usersStatistics = $this->UserRepository->getUsersStatisticsByYear($year);
+    {
+        $adsStatistics = $this->AdRepository->getAdsStatisticsByYear($year);
+        $usersStatistics = $this->UserRepository->getUsersStatisticsByYear($year);
     
-    $monthNames = [
-        '01' => 'January',
-        '02' => 'February',
-        '03' => 'March',
-        '04' => 'April',
-        '05' => 'May',
-        '06' => 'June',
-        '07' => 'July',
-        '08' => 'August',
-        '09' => 'September',
-        '10' => 'October',
-        '11' => 'November',
-        '12' => 'December'
-    ];
+        $monthNames = [
+            '01' => 'January',
+            '02' => 'February',
+            '03' => 'March',
+            '04' => 'April',
+            '05' => 'May',
+            '06' => 'June',
+            '07' => 'July',
+            '08' => 'August',
+            '09' => 'September',
+            '10' => 'October',
+            '11' => 'November',
+            '12' => 'December'
+        ];
     
-    $monthlyAds = array_fill_keys(array_values($monthNames), 0);
-    $monthlyUsers = array_fill_keys(array_values($monthNames), 0);
+        $monthlyAds = array_fill_keys(array_values($monthNames), 0);
+        $monthlyUsers = array_fill_keys(array_values($monthNames), 0);
     
-    foreach ($adsStatistics as $stat) {
-        $monthNum = str_pad($stat->month, 2, '0', STR_PAD_LEFT);
-        $monthName = $monthNames[$monthNum] ?? 'Unknown';
-        $monthlyAds[$monthName] = $stat->ads_count;
+        foreach ($adsStatistics as $stat) {
+            $monthNum = str_pad($stat->month, 2, '0', STR_PAD_LEFT);
+            $monthName = $monthNames[$monthNum] ?? 'Unknown';
+            $monthlyAds[$monthName] = $stat->ads_count;
+        }
+    
+        foreach ($usersStatistics as $stat) {
+            $monthNum = str_pad($stat->month, 2, '0', STR_PAD_LEFT);
+            $monthName = $monthNames[$monthNum] ?? 'Unknown';
+            $monthlyUsers[$monthName] = $stat->users_count;
+        }
+    
+        $result = [
+            'year' => $year,
+            'monthly_ads' => $monthlyAds,
+            'monthly_users' => $monthlyUsers
+        ];
+    
+        return ApiResponseClass::sendResponse($result, 'Statistics retrieved successfully.');
     }
-    
-    foreach ($usersStatistics as $stat) {
-        $monthNum = str_pad($stat->month, 2, '0', STR_PAD_LEFT);
-        $monthName = $monthNames[$monthNum] ?? 'Unknown';
-        $monthlyUsers[$monthName] = $stat->users_count;
-    }
-    
-    $result = [
-        'year' => $year,
-        'monthly_ads' => $monthlyAds,
-        'monthly_users' => $monthlyUsers
-    ];
-    
-    return ApiResponseClass::sendResponse($result, 'Statistics retrieved successfully.');
-}
 }

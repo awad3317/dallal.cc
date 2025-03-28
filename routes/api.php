@@ -53,6 +53,8 @@ Route::middleware(['auth:sanctum','check.banned'])->group(function () {
     Route::post('/toggleBan/{user_id}',[UserController::class,'toggleBan']);
     
     Route::apiResource('/ad',AdController::class)->except(['index','show']);
+    Route::get('/ad/edit/{id}',[AdController::class,'edit']);
+    
     Route::post('verifyAd/{id}',[AdController::class,'verifyAd']);
     
     Route::apiResource('/saleOption',SaleOptionController::class)->except(['index']);

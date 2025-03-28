@@ -142,6 +142,20 @@ class AdController extends Controller
     }
 
     /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit($id){
+
+        try {
+            $Ad=$this->AdRepository->edit($id);
+            return ApiResponseClass::sendResponse($Ad,'data getted  successfully');
+        }catch(Exception $e){
+            return ApiResponseClass::sendError('Error returned Ad: ' . $e->getMessage());
+        }
+       
+    }
+
+    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
