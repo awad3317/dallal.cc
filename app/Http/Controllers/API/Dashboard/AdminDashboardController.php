@@ -7,10 +7,11 @@ use Illuminate\Http\Request;
 use App\Classes\ApiResponseClass;
 use App\Repositories\AdRepository;
 use App\Http\Controllers\Controller;
+use App\Repositories\UserRepository;
 
 class AdminDashboardController extends Controller
 {
-    public function __construct(private AdRepository $AdRepository)
+    public function __construct(private AdRepository $AdRepository,private UserRepository $UserRepository)
     {
         //
     }
@@ -24,37 +25,50 @@ class AdminDashboardController extends Controller
         }
     }
 
-    public function getAdsStatisticsByYear($year)
+    public function getStatisticsByYear($year)
     {
-        $statistics = $this->AdRepository->getAdsStatisticsByYear($year);
-        $monthNames = [
-            1 => 'January',
-            2 => 'February',
-            3 => 'March',
-            4 => 'April',
-            5 => 'May',
-            6 => 'June',
-            7 => 'July',
-            8 => 'August',
-            9 => 'September',
-            10 => 'October',
-            11 => 'November',
-            12 => 'December'
-        ];
+    $adsStatistics = $this->AdRepository->getAdsStatisticsByYear($year);
+    $usersStatistics = $this->UserRepository->getUsersStatisticsByYear($year);
     
-        $monthlyAds = [];
-        foreach ($monthNames as $num => $name) {
-            $monthlyAds[$name] = 0; 
-        }
+    $monthNames = [
+        1 => 'January',
+        2 => 'February',
+        3 => 'March',
+        4 => 'April',
+        5 => 'May',
+        6 => 'June',
+        7 => 'July',
+        8 => 'August',
+        9 => 'September',
+        10 => 'October',
+        11 => 'November',
+        12 => 'December'
+    ];
     
-        foreach ($statistics as $stat) {
-            $monthName = $monthNames[$stat->month];
-            $monthlyAds[$monthName] = $stat->ads_count;
-        }
-        $result=[
-            'year' => $year,
-            'monthly_ads' => $monthlyAds
-        ];
-        ApiResponseClass::sendResponse($result,'statistics retrieved successfully.');
+    $monthlyAds = [];
+    $monthlyUsers = [];
+    
+    foreach ($monthNames as $num => $name) {
+        $monthlyAds[$name] = 0;
+        $monthlyUsers[$name] = 0;
+    }
+    
+    foreach ($adsStatistics as $stat) {
+        $monthName = $monthNames[$stat->month];
+        $monthlyAds[$monthName] = $stat->ads_count;
+    }
+    
+    foreach ($usersStatistics as $stat) {
+        $monthName = $monthNames[$stat->month];
+        $monthlyUsers[$name] = $stat->users_count;
+    }
+    
+    $result = [
+        'year' => $year,
+        'monthly_ads' => $monthlyAds,
+        'monthly_users' => $monthlyUsers
+    ];
+    
+    return ApiResponseClass::sendResponse($result, 'Statistics retrieved successfully.');
     }
 }

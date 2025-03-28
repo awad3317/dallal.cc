@@ -143,7 +143,7 @@ class AdRepository implements RepositoriesInterface
     }
 
     public function getAdsStatisticsByYear($year){
-        $statistics = Ad::select(
+        return $statistics = Ad::select(
             DB::raw('MONTH(created_at) as month'),
             DB::raw('COUNT(*) as ads_count')
         )

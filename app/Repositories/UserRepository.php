@@ -101,4 +101,16 @@ class UserRepository implements RepositoriesInterface
         return $user->role;
     }
 
+    public function getUsersStatisticsByYear($year)
+    {
+        return User::select(
+                DB::raw('MONTH(created_at) as month'),
+                DB::raw('COUNT(*) as users_count')
+            )
+            ->whereYear('created_at', $year)
+            ->groupBy(DB::raw('MONTH(created_at)'))
+            ->orderBy(DB::raw('MONTH(created_at)'))
+            ->get();
+    }
+
 }
