@@ -60,7 +60,7 @@ class UserRepository implements RepositoriesInterface
     }
     public function findByUsernameOrEmail($identifier)
     {
-       return User::where('email', $identifier)->orWhere('username', $identifier)->first();
+       return User::with(['role'])->where('email', $identifier)->orWhere('username', $identifier)->first();
     }
     public function generateUniqueUsername($email){
         $baseUsername = explode('@', $email)[0];
