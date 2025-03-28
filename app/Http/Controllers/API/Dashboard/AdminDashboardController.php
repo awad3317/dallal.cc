@@ -23,4 +23,38 @@ class AdminDashboardController extends Controller
             return ApiResponseClass::sendError('Error retrieving ads: ' . $e->getMessage());
         }
     }
+
+    public function getAdsStatisticsByYear($year)
+    {
+        $statistics = $this->AdRepository->getAdsStatisticsByYear($year);
+        $monthNames = [
+            1 => 'January',
+            2 => 'February',
+            3 => 'March',
+            4 => 'April',
+            5 => 'May',
+            6 => 'June',
+            7 => 'July',
+            8 => 'August',
+            9 => 'September',
+            10 => 'October',
+            11 => 'November',
+            12 => 'December'
+        ];
+    
+        $monthlyAds = [];
+        foreach ($monthNames as $num => $name) {
+            $monthlyAds[$name] = 0; 
+        }
+    
+        foreach ($statistics as $stat) {
+            $monthName = $monthNames[$stat->month];
+            $monthlyAds[$monthName] = $stat->ads_count;
+        }
+        $result=[
+            'year' => $year,
+            'monthly_ads' => $monthlyAds
+        ];
+        ApiResponseClass::sendResponse($result,'statistics retrieved successfully.');
+    }
 }

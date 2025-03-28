@@ -39,6 +39,8 @@ Route::middleware(['auth:sanctum','check.banned'])->group(function () {
     Route::get('/getUserFavoriteAds',[UserDashboardController::class,'getUserFavoriteAds']);
         //      Dashborad for Admin     //
     Route::get('/getAds',[AdminDashboardController::class,'getAds']);
+    Route::get('/getAdsStatisticsByYear/{year}',[AdminDashboardController::class,'getAdsStatisticsByYear']);
+    
        
 
     Route::apiResource('/region',RegionController::class)->except(['index']);

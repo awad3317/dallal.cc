@@ -142,4 +142,15 @@ class AdRepository implements RepositoriesInterface
         Ad::where('id', $adId)->decrement('likes');
     }
 
+    public function getAdsStatisticsByYear($year){
+        $statistics = Ad::select(
+            DB::raw('MONTH(created_at) as month'),
+            DB::raw('COUNT(*) as ads_count')
+        )
+        ->whereYear('created_at', $year)
+        ->groupBy(DB::raw('MONTH(created_at)'))
+        ->orderBy(DB::raw('MONTH(created_at)'))
+        ->get();
+    }
+
 }
