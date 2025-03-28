@@ -143,14 +143,25 @@ class AdRepository implements RepositoriesInterface
     }
 
     public function getAdsStatisticsByYear($year){
-        return $statistics = Ad::select(
-            DB::raw('MONTH(created_at) as month'),
-            DB::raw('COUNT(*) as ads_count')
-        )
-        ->whereYear('created_at', $year)
-        ->groupBy(DB::raw('MONTH(created_at)'))
-        ->orderBy(DB::raw('MONTH(created_at)'))
-        ->get();
+        if (config('database.default') === 'sqlite') {
+            return Ad::select(
+                    DB::raw('strftime("%m", created_at) as month'),
+                    DB::raw('COUNT(*) as ads_count')
+                )
+                ->where(DB::raw('strftime("%Y", created_at)'), $year)
+                ->groupBy(DB::raw('strftime("%m", created_at)'))
+                ->orderBy(DB::raw('strftime("%m", created_at)'))
+                ->get();
+        } else {
+            return Ad::select(
+                    DB::raw('MONTH(created_at) as month'),
+                    DB::raw('COUNT(*) as ads_count')
+                )
+                ->whereYear('created_at', $year)
+                ->groupBy(DB::raw('MONTH(created_at)'))
+                ->orderBy(DB::raw('MONTH(created_at)'))
+                ->get();
+        }
     }
 
 }
