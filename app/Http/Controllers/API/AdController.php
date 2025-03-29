@@ -199,12 +199,12 @@ class AdController extends Controller
                 return ApiResponseClass::sendError("ليس لديك صلاحية لتعديل هذا الإعلان", [], 403);
             }
             $fields = $request->only(['category_id','region_id','title','description','price','status','sale_option_id']);
-            // if ($request->hasFile('primary_image')) {
-            //     // Delete old primary image
-            //     $this->ImageService->deleteImage($ad->primary_image);
-            //     // Save new primary image
-            //     $fields['primary_image'] = $this->ImageService->saveImage($request->file('primary_image'));
-            // }
+            if ($request->hasFile('primary_image')) {
+                // Delete old primary image
+                $this->ImageService->deleteImage($ad->primary_image);
+                // Save new primary image
+                $fields['primary_image'] = $this->ImageService->saveImage($request->file('primary_image'));
+            }
             // // Update the ad
             // $updatedAd = $this->AdRepository->update($fields,$ad);
             return ApiResponseClass::sendResponse($fields, 'تم تحديث الإعلان بنجاح.');
