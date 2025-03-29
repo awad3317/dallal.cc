@@ -209,8 +209,8 @@ class AdController extends Controller
             $updatedAd = $this->AdRepository->update($fields,$ad);
             return ApiResponseClass::sendResponse($updatedAd, 'تم تحديث الإعلان بنجاح.');
         // } catch (Exception $e) {
-            return ApiResponseClass::sendError('حدث خطأ أثناء تحديث الإعلان: ' . $e->getMessage());
-        }
+            // return ApiResponseClass::sendError('حدث خطأ أثناء تحديث الإعلان: ' . $e->getMessage());
+        // }
     }
 
     /**
