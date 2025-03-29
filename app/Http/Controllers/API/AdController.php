@@ -206,7 +206,7 @@ class AdController extends Controller
                 $fields['primary_image'] = $this->ImageService->saveImage($request->file('primary_image'));
             }
             // // Update the ad
-            // $updatedAd = $this->AdRepository->update($fields,$ad);
+            $updatedAd = $this->AdRepository->update($fields,$ad);
             return ApiResponseClass::sendResponse($fields, 'تم تحديث الإعلان بنجاح.');
         } catch (Exception $e) {
             return ApiResponseClass::sendError('حدث خطأ أثناء تحديث الإعلان: ' . $e->getMessage());
