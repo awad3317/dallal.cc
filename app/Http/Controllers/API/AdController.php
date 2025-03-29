@@ -192,7 +192,7 @@ class AdController extends Controller
         if ($validator->fails()) {
             return ApiResponseClass::sendValidationError($validator->errors()->first(), $validator->errors());
         }
-        // try {
+        try {
             $ad = $this->AdRepository->getById($id);
             // Check if the authenticated user owns the ad
             if ($ad->user_id !== Auth::id()) {
@@ -205,12 +205,12 @@ class AdController extends Controller
             //     // Save new primary image
             //     $fields['primary_image'] = $this->ImageService->saveImage($request->file('primary_image'));
             // }
-            // Update the ad
-            $updatedAd = $this->AdRepository->update($fields,$ad);
-            return ApiResponseClass::sendResponse($updatedAd, 'تم تحديث الإعلان بنجاح.');
-        // } catch (Exception $e) {
-            // return ApiResponseClass::sendError('حدث خطأ أثناء تحديث الإعلان: ' . $e->getMessage());
-        // }
+            // // Update the ad
+            // $updatedAd = $this->AdRepository->update($fields,$ad);
+            return ApiResponseClass::sendResponse($fields, 'تم تحديث الإعلان بنجاح.');
+        } catch (Exception $e) {
+            return ApiResponseClass::sendError('حدث خطأ أثناء تحديث الإعلان: ' . $e->getMessage());
+        }
     }
 
     /**
