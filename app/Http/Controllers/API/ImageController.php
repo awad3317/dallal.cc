@@ -10,6 +10,7 @@ use App\Classes\ApiResponseClass;
 use App\Repositories\AdRepository;
 use App\Http\Controllers\Controller;
 use App\Repositories\ImageRepository;
+use Illuminate\Support\Facades\Validator;
 
 class ImageController extends Controller
 {
@@ -33,14 +34,18 @@ class ImageController extends Controller
      */
     public function store(Request $request)
     {
-        $fields=$request->validate([
+        $validator = Validator::make($request->all(), [
             'ad_id' => ['required',Rule::exists('ads','id')],
             'image'=>['required','image','max:2048']
         ]);
+        if ($validator->fails()) {
+            return ApiResponseClass::sendValidationError($validator->errors()->first(), $validator->errors());
+        }
         try {
+            $fields=$request->only(['ad_id','image']);
             $ad = $this->AdRepository->getById($fields['ad_id']);
             if ($ad->images()->count() >= 7) {
-                return ApiResponseClass::sendError('Cannot save image. The ad already has 7 images.');
+                return ApiResponseClass::sendError("تم الوصول إلى الحد الأقصى لعدد الصور المسموح به (7 صور) ولا يمكن إضافة المزيد.");
             }
             $fields['image_url']=$this->ImageService->saveImage($fields['image'],'additional_image');
             $Image=$this->ImageRepository->store($fields);
@@ -63,10 +68,14 @@ class ImageController extends Controller
      */
     public function update(Request $request,$id)
     {
-        $fields=$request->validate([
+        $validator = Validator::make($request->all(), [
             'image'=>['required','image','max:2048']
         ]);
+        if ($validator->fails()) {
+            return ApiResponseClass::sendValidationError($validator->errors()->first(), $validator->errors());
+        }
         try {
+            $fields=$request->only(['image']);
             $oldImage = $this->ImageRepository->getById($id);
             $this->ImageService->deleteImage($oldImage->image_url);
             $imagePath = $this->ImageService->saveImage($fields['image'], 'additional_image');
