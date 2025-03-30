@@ -10,6 +10,7 @@ use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\ImageController;
 use App\Http\Controllers\API\RegionController;
 use App\Http\Controllers\API\CommentController;
+use App\Http\Controllers\API\ContactController;
 use App\Http\Controllers\API\Auth\OTPController;
 use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\FavoriteController;
@@ -94,6 +95,9 @@ Route::get('/ad',[AdController::class,'index']);
 Route::get('/ad/{id}',[AdController::class,'show']);
 Route::get('/saleOption',[SaleOptionController::class,'index']);
 Route::get('/bid',[BidController::class,'index']);
+
+Route::apiResource('/contact',ContactController::class)->only(['store']);
+
 
 
 
