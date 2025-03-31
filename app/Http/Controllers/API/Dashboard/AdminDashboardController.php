@@ -8,6 +8,7 @@ use App\Classes\ApiResponseClass;
 use App\Repositories\AdRepository;
 use App\Http\Controllers\Controller;
 use App\Repositories\UserRepository;
+use Illuminate\Support\Facades\Auth;
 
 class AdminDashboardController extends Controller
 {
@@ -16,8 +17,17 @@ class AdminDashboardController extends Controller
         //
     }
 
+    /**
+     * Get all ads (Admin only)
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getAds(Request $request){
         try {
+            if (!Auth::user()->has_role('admin')) {
+                return ApiResponseClass::sendError('Unauthorized', 403);
+            }
             $ads = $this->AdRepository->indexAdminDashboard($request->region_id,$request->category_id);
             return ApiResponseClass::sendResponse($ads, 'All ads retrieved successfully.');
         } catch (Exception $e) {
@@ -25,6 +35,12 @@ class AdminDashboardController extends Controller
         }
     }
 
+    /**
+     * Get statistics by year (Admin only)
+     *
+     * @param int $year
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getStatisticsByYear($year)
     {
         $adsStatistics = $this->AdRepository->getAdsStatisticsByYear($year);
