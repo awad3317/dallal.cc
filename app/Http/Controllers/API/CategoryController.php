@@ -100,6 +100,9 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        if(!Auth::user()->has_permission('update-categorie')){
+            return ApiResponseClass::sendError("ليس لديك صلاحية لتعديل على فئة", [], 403);
+        }
         $validator = Validator::make($request->all(), [
             'name' => ['required','string',Rule::unique('categories','name')->ignore($id)],
             'parent_id' => ['nullable',Rule::exists('categories','id')]
