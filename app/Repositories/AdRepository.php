@@ -46,7 +46,7 @@ class AdRepository implements RepositoriesInterface
         })
         ->withMax('bids', 'amount')
         ->filter()
-        ->paginate(10);
+        ->paginate(12);
     }
 
     public function indexAdminDashboard($region_id, $category_id)

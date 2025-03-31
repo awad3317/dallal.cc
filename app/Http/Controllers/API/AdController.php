@@ -220,7 +220,7 @@ class AdController extends Controller
     {
         try {
             $ad=$this->AdRepository->getById($id);
-            if ($ad->user_id !== Auth::id()) {
+            if ($ad->user_id !== Auth::id() && !Auth::user()->has_role('admin')) {
                 return ApiResponseClass::sendError("ليس لديك صلاحية لحدف هدا الإعلان", [], 403);
             }
             if($this->AdRepository->delete($ad->id)){

@@ -25,9 +25,9 @@ class AdminDashboardController extends Controller
      */
     public function getAds(Request $request){
         try {
-            if (!Auth::user()->has_role('admin')) {
-                return ApiResponseClass::sendError('Unauthorized', 403);
-            }
+            // if (!Auth::user()->has_role('admin')) {
+            //     return ApiResponseClass::sendError('Unauthorized', 403);
+            // }
             $ads = $this->AdRepository->indexAdminDashboard($request->region_id,$request->category_id);
             return ApiResponseClass::sendResponse($ads, 'All ads retrieved successfully.');
         } catch (Exception $e) {
