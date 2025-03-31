@@ -53,15 +53,15 @@ class OTPController extends Controller
         $fields=$request->only(['email', 'otp']);
         // Verify the provided OTP using the OTP service
         if($this->otpService->verifyOTP($fields['email'],$fields['otp'])){
-            $user=$this->UserRepository->findByEmail($fields['email']);
+            // $user=$this->UserRepository->findByEmail($fields['email']);
 
-            // Update the user record to mark email as verified and set the last login time
-            $this->UserRepository->update(['email_verified'=>true,'last_login'=>now()],$user->id);
-            Auth::login($user);
+            // // Update the user record to mark email as verified and set the last login time
+            // $this->UserRepository->update(['email_verified'=>true,'last_login'=>now()],$user->id);
+            // Auth::login($user);
             
-            // Create a new authentication token for the user
-            $token = $user->createToken($user->username . '-AuthToken')->plainTextToken;
-            return ApiResponseClass::sendResponse(['token' => $token, 'user' => $user], 'User logged in successfully');
+            // // Create a new authentication token for the user
+            // $token = $user->createToken($user->username . '-AuthToken')->plainTextToken;
+            return ApiResponseClass::sendResponse(null, 'تم التحقق بنجاح');
         }
         return ApiResponseClass::sendError('رمز التحقق غير صالح او منتهي الصلاحيه',[],400);
     }
