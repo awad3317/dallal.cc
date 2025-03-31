@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Exception;
 use App\Jobs\recordViewJob;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules\File;
 use App\Services\ViewService;
 use App\Services\ImageService;
 use Illuminate\Validation\Rule;
@@ -166,7 +167,7 @@ class AdController extends Controller
             'title' => ['sometimes', 'required', 'string', 'max:255'],
             'description' => ['sometimes', 'required', 'string'],
             'price' => ['sometimes', 'required', 'numeric', 'min:0'],
-            'primary_image' => ['sometimes', 'image', 'max:2048'],
+            'primary_image' => ['sometimes', Rule::when($request->hasFile('primary_image'),['image','max:2048']),Rule::when(is_string($request->primary_image),'string')],
             'status' => ['sometimes', 'required', 'in:جديد,مستعمل'],
             'sale_option_id' => ['sometimes', 'required', Rule::exists('sale_options', 'id')],
         ],[
@@ -198,7 +199,7 @@ class AdController extends Controller
             if ($ad->user_id !== Auth::id()) {
                 return ApiResponseClass::sendError("ليس لديك صلاحية لتعديل هذا الإعلان", [], 403);
             }
-            $fields = $request->only(['category_id','region_id','title','description','price','status','sale_option_id']);
+            $fields = $request->only(['category_id','region_id','title','description','price','status','sale_option_id','primary_image']);
             if ($request->hasFile('primary_image')) {
                 // Delete old primary image
                 $this->ImageService->deleteImage($ad->primary_image);
