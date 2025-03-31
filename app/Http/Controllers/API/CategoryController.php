@@ -127,6 +127,9 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         try {
+            if(!Auth::user()->has_permission('destroy-categorie')){
+                return ApiResponseClass::sendError("ليس لديك صلاحية لحدف فئة", [], 403);
+            }
             $category=$this->CategoryRepository->getById($id);
             if($this->CategoryRepository->delete($category->id)){
                 return ApiResponseClass::sendResponse($category, "{$category->id} unsaved successfully.");
