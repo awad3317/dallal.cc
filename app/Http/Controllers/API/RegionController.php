@@ -4,10 +4,11 @@ namespace App\Http\Controllers\api;
 
 use Exception;
 use Illuminate\Http\Request;
-use App\Classes\ApiResponseClass;
-use App\Repositories\RegionRepository;
 use Illuminate\Validation\Rule;
+use App\Classes\ApiResponseClass;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Repositories\RegionRepository;
 use Illuminate\Support\Facades\Validator;
 
 class RegionController extends Controller
@@ -61,6 +62,9 @@ class RegionController extends Controller
      */
     public function store(Request $request)
     {
+        if(!Auth::user()->has_permission('create-region')){
+            return ApiResponseClass::sendError("ليس لديك صلاحية الإضافة منطقة", [], 403);
+        }
         $validator = Validator::make($request->all(), [
             'name' => ['required','string',Rule::unique('regions','name')],
             'parent_id' => ['nullable',Rule::exists('regions','id')]
@@ -99,6 +103,9 @@ class RegionController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        if(!Auth::user()->has_permission('update-region')){
+            return ApiResponseClass::sendError("ليس لديك صلاحية لتعديل على منطقة", [], 403);
+        }
         $validator = Validator::make($request->all(), [
             'name' => ['required','string',Rule::unique('regions','name')->ignore($id)],
             'parent_id' => ['nullable',Rule::exists('regions','id')]
@@ -125,6 +132,9 @@ class RegionController extends Controller
     public function destroy(string $id)
     {
         try {
+            if(!Auth::user()->has_permission('destroy-region')){
+                return ApiResponseClass::sendError("ليس لديك صلاحية لحدف منطقة", [], 403);
+            }
             $Region=$this->RegionRepository->getById($id);
             if($this->RegionRepository->delete($Region->id)){
                 return ApiResponseClass::sendResponse($Region, "{$Region->id} unsaved successfully.");
