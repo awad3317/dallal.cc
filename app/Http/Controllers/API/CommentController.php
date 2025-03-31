@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\api;
 
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Classes\ApiResponseClass;
 use App\Http\Controllers\Controller;
-use App\Repositories\CommentRepository;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rule;
+use App\Repositories\CommentRepository;
+use Illuminate\Support\Facades\Validator;
 
 class CommentController extends Controller
 {
@@ -37,11 +38,20 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-        $fields=$request->validate([
+        $validator = Validator::make($request->all(), [
             'ad_id' => ['required',Rule::exists('ads','id')],
             'comment_text' => ['required','string'],
+        ],[
+            'ad_id.required' => 'حقل معرف الإعلان مطلوب.',
+            'ad_id.exists' => 'معرف الإعلان المحدد غير موجود.',
+            'comment_text.required' => 'حقل التعليق مطلوب.',
+            'comment_text.string' => 'يجب أن يكون التعليق نصياً.',
         ]);
+        if ($validator->fails()) {
+            return ApiResponseClass::sendValidationError($validator->errors()->first(), $validator->errors());
+        }
         try {
+            $fields=$request->only(['ad_id','comment_text']);
             $fields['user_id']= Auth::id();
             $Comment=$this->CommentRepository->store($fields);
             return ApiResponseClass::sendResponse($Comment,'Comment saved successfully.');
