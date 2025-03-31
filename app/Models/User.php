@@ -148,11 +148,31 @@ class User extends Authenticatable implements LaratrustUser
     */
     public function has_role(string $roleName): bool
     {
+        // First verify the user has a role assigned
+        if (!$this->role) {
+            return false;
+        }
+        // Compare the user's role name with the specified role name
+        return $this->role->name === $roleName;
+    }
+
+    /**
+    * Check if the user has a specific permission
+    *
+    * @param string $permissionName
+    * @return bool
+    */
+    public function has_permission(string $permissionName): bool
+    {
+        // If the user doesn't have a role, they can't have any permissions
         if (!$this->role) {
             return false;
         }
 
-        return $this->role->name === $roleName;
+        // Check if the requested permission exists among the role's permissions
+        return $this->role->permissions()
+            ->where('name', $permissionName)
+            ->exists();
     }
 
 }

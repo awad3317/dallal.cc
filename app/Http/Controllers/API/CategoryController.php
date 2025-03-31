@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Classes\ApiResponseClass;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Repositories\CategoryRepository;
 use Illuminate\Support\Facades\Validator;
 
@@ -57,6 +58,9 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        if(!Auth::user()->has_permission('create-categorie')){
+            return ApiResponseClass::sendError("ليس لديك صلاحية الإضافة فئة جديده", [], 403);
+        }
         $validator = Validator::make($request->all(), [
             'name' => ['required','string',Rule::unique('categories','name')],
             'parent_id' => ['nullable',Rule::exists('categories','id')]
