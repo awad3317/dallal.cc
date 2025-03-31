@@ -8,6 +8,7 @@ use Illuminate\Validation\Rule;
 use App\Classes\ApiResponseClass;
 use App\Http\Controllers\Controller;
 use App\Repositories\RoleRepository;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class RoleController extends Controller
@@ -37,6 +38,9 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
+        if(!Auth::user()->has_permission('create-role')){
+            return ApiResponseClass::sendError("ليس لديك صلاحية الإضافة دور جديد", [], 403);
+        }
         $validator = Validator::make($request->all(), [
             'name' => ['required','string',Rule::unique('roles','name')],
             'display_name' => ['required','string'],
@@ -83,6 +87,9 @@ class RoleController extends Controller
     */
     public function update(Request $request, $id)
     {
+        if(!Auth::user()->has_permission('update-role')){
+            return ApiResponseClass::sendError("ليس لديك صلاحية لتعديل دور", [], 403);
+        }
         $validator = Validator::make($request->all(), [
             'name' => ['sometimes', 'string', Rule::unique('roles', 'name')->ignore($id)],
             'display_name' => ['sometimes', 'string'],
@@ -118,6 +125,9 @@ class RoleController extends Controller
     public function destroy($id)
     {
         try {
+            if(!Auth::user()->has_permission('destroy-role')){
+                return ApiResponseClass::sendError("ليس لديك صلاحية لحدف دور", [], 403);
+            }
             $role = $this->RoleRepository->getById($id);
             if ($this->RoleRepository->delete($id)) {
                 return ApiResponseClass::sendResponse($role, "{$role->role_name} deleted successfully.");
