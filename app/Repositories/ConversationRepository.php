@@ -83,7 +83,12 @@ class ConversationRepository implements RepositoriesInterface
         // Retrieve conversations where the user is either the sender or the receiver
         $conversations = Conversation::where('sender_id', $userId)
             ->orWhere('receiver_id', $userId)
-            ->with(['sender', 'receiver', 'messages','ad'])
+            ->with(['sender','receiver','messages' => 
+                function($query) {
+                    $query->latest()->limit(1);
+                },
+                'ad:id,title'
+            ])
             ->get();
         // Add an `other_user` object and count unread messages for each conversation
         $conversations->map(function ($conversation) use ($userId) {
