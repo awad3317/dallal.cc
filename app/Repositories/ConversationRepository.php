@@ -85,7 +85,7 @@ class ConversationRepository implements RepositoriesInterface
             ->orWhere('receiver_id', $userId)
             ->with(['sender','receiver','messages' => 
                 function($query) {
-                    $query->latest()->limit(1);
+                    $query->oldest()->limit(1);
                 },
                 'ad:id,title'
             ])
