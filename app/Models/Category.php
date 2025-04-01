@@ -14,7 +14,7 @@ class Category extends Model
      *
      * @var array
      */
-    protected $fillable = ['name', 'parent_id', 'image'];
+    protected $fillable = ['name', 'parent_id', 'icon'];
 
     /**
      * Get the parent category of this category.

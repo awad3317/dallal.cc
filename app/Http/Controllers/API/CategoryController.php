@@ -63,18 +63,20 @@ class CategoryController extends Controller
         }
         $validator = Validator::make($request->all(), [
             'name' => ['required','string',Rule::unique('categories','name')],
-            'parent_id' => ['nullable',Rule::exists('categories','id')]
+            'parent_id' => ['nullable',Rule::exists('categories','id')],
+            'icon' => ['required','string']
         ], [
            'name.required'=>'يجب إدخال أسم الصنف',
            'name.string'=>'يجب أن يكون الاسم نصاً',
            'name.unique'=>'ألاسم موجود من قبل في النظام',
+           'icon.required' => 'يجب عليك اختيار أيقونة للفئة'
         ]);
     
         if ($validator->fails()) {
             return ApiResponseClass::sendValidationError($validator->errors()->first(), $validator->errors());
         }
         try {
-            $fields=$request->only(['name','parent_id']);
+            $fields=$request->only(['name','parent_id','icon']);
             $Categorie=$this->CategoryRepository->store($fields);
             return ApiResponseClass::sendResponse($Categorie,'تم حفظ الفئة بنجاح');
         } catch (Exception $e) {
