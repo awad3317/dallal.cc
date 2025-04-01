@@ -84,7 +84,7 @@ class ConversationRepository implements RepositoriesInterface
         $conversations = Conversation::where('sender_id', $userId)
             ->orWhere('receiver_id', $userId)
             ->with(['sender','receiver','messages'=> function($query) {
-                $query->orderBy('id', 'DESC')->limit(1);} ,
+                $query->orderBy('id', 'DESC');} ,
                 'ad:id,title'
             ])
             ->get();
