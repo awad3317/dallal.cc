@@ -83,7 +83,8 @@ class ConversationRepository implements RepositoriesInterface
         // Retrieve conversations where the user is either the sender or the receiver
         $conversations = Conversation::where('sender_id', $userId)
             ->orWhere('receiver_id', $userId)
-            ->with(['sender','receiver','messages' ,
+            ->with(['sender','receiver','messages'=> function($query) {
+                $query->orderBy('id', 'DESC')->limit(1);} ,
                 'ad:id,title'
             ])
             ->get();
