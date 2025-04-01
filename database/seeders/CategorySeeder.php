@@ -20,32 +20,32 @@ class CategorySeeder extends Seeder
             [
                 'name' => 'الإلكترونيات',
                 'parent_id' => null,
-                'image' => 'electronics.png',
+                'icon' => 'CiPizza',
             ],
             [
                 'name' => 'الهواتف المحمولة',
                 'parent_id' => 1,
-                'image' => 'mobile_phones.png',
+                'icon' => 'CiPizza',
             ],
             [
                 'name' => 'أجهزة اللابتوب',
                 'parent_id' => 1, 
-                'image' => 'laptops.png',
+                'icon' => 'CiPizza',
             ],
             [
                 'name' => 'الملابس',
                 'parent_id' => null,
-                'image' => 'clothing.png',
+                'icon' => 'CiPizza',
             ],
             [
                 'name' => 'ملابس الرجال',
                 'parent_id' => 4, 
-                'image' => 'mens_clothing.png',
+                'icon' => 'CiPizza.',
             ],
             [
                 'name' => 'ملابس النساء',
                 'parent_id' => 4, 
-                'image' => 'womens_clothing.png',
+                'icon' => 'CiPizza',
             ],
         ];
 
