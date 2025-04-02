@@ -2,13 +2,14 @@
 
 namespace App\Events;
 
+use App\Models\User;
 use Illuminate\Broadcasting\Channel;
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Broadcasting\PresenceChannel;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 class TestPusherEvent implements ShouldBroadcast
 {
@@ -44,11 +45,13 @@ class TestPusherEvent implements ShouldBroadcast
 
     public function broadcastWith():array
     {
+        $sender = User::find($this->sender_id);
         return [
             'id'=>$this->message_id,
             'message_text'=>$this->message,
             'conversation_id'=>$this->conversation_id,
             'sender_id'=>$this->sender_id,
+            'sender_name' => $sender ? $sender->name : 'Unknown',
             'receiver_id'=>$this->receiverId,
             'sent_at' => now()->toDateTimeString(),
         ];
