@@ -55,4 +55,9 @@ class Conversation extends Model
     {
         return $this->hasMany(Message::class)->orderBy('created_at', 'asc');
     }
+
+    public function lastMessage()
+{
+    return $this->hasOne(Message::class)->latest('sent_at');
+}
 }

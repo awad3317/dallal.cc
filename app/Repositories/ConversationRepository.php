@@ -80,30 +80,22 @@ class ConversationRepository implements RepositoriesInterface
 
     public function getUserConversations($userId)
 {
-    // Retrieve conversations where the user is either the sender or the receiver
     $conversations = Conversation::where('sender_id', $userId)
         ->orWhere('receiver_id', $userId)
-        ->with(['sender', 'receiver', 'ad:id,title'])
+        ->with(['sender', 'receiver', 'ad:id,title', 'lastMessage'])
         ->get();
     
-    // Add an `other_user` object, count unread messages, and get last message for each conversation
     $conversations->map(function ($conversation) use ($userId) {
-        // Determine the other user in the conversation
         $conversation->other_user = $conversation->sender_id == $userId ? $conversation->receiver : $conversation->sender;
         
-        // Count unread messages where the current user is the receiver
         $conversation->unread_messages_count = $conversation->messages()
             ->where('receiver_id', $userId)
             ->where('is_read', false)
             ->count();
         
-        // Get the last message only
-        $lastMessage = $conversation->messages()
-            ->orderBy('id','asc')
-            ->first();
-            
-        // Add the last message to the messages array to maintain the same structure
-        $conversation->messages = $lastMessage ? [$lastMessage] : [];
+        // للحفاظ على نفس بنية الرد
+        $conversation->messages = $conversation->lastMessage ? [$conversation->lastMessage] : [];
+        unset($conversation->lastMessage); // إزالة العلاقة الإضافية
         
         return $conversation;
     });
