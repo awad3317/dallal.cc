@@ -46,7 +46,7 @@ class ConversationRepository implements RepositoriesInterface
             return $message;
         });
     
-        
+        $this->markMessagesAsRead($id,Auth::id());
         $conversation->setAttribute('messages', $messagesWithSenderFlag);
     
         return $conversation;
