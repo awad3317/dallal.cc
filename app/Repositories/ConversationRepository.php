@@ -84,7 +84,7 @@ class ConversationRepository implements RepositoriesInterface
         $conversations = Conversation::where('sender_id', $userId)
             ->orWhere('receiver_id', $userId)
             // Eager load sender, receiver, ad (only id and title), and lastMessage relationships
-            ->with(['sender:id,name', 'receiver:id,name', 'ad:id,title', 'lastMessage:id,message_text'])
+            ->with(['sender:id,name', 'receiver:id,name', 'ad:id,title', 'lastMessage'])
             ->get();
         // Process each conversation
         $conversations->map(function ($conversation) use ($userId) {
