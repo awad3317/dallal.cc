@@ -99,7 +99,7 @@ class ConversationRepository implements RepositoriesInterface
         
         // Get the last message only
         $lastMessage = $conversation->messages()
-            ->orderBy('id', 'desc')
+            ->orderBy('id','asc')
             ->first();
             
         // Add the last message to the messages array to maintain the same structure
