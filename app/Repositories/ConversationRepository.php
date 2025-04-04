@@ -95,7 +95,7 @@ class ConversationRepository implements RepositoriesInterface
                 ->where('receiver_id', $userId)
                 ->where('is_read', false)
                 ->count();
-        
+                $conversation->has_unread = $conversation->unread_messages_count > 0;
             // the last message in a messages array 
             $conversation->messages = $conversation->lastMessage ? [$conversation->lastMessage] : [];
             // Remove the temporary lastMessage relationship as it's now in messages array
@@ -103,6 +103,9 @@ class ConversationRepository implements RepositoriesInterface
         
             return $conversation;
         });
+        $conversations->unread_conversations_count = $conversations
+        ->where('has_unread', true)
+        ->count();
         return $conversations;
     }
 
