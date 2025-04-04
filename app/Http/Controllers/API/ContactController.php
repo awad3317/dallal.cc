@@ -76,6 +76,9 @@ class ContactController extends Controller
     public function show($id)
     {
         try {
+            if (!Auth::user()->has_role('admin')) {
+                return ApiResponseClass::sendError('ليس لديك صلاحية لعرض الرسالة', 403);
+            }
             $contact=$this->ContactRepository->getById($id);
             return ApiResponseClass::sendResponse($contact,' data getted  successfully.');
         } catch (Exception $e) {
@@ -97,6 +100,9 @@ class ContactController extends Controller
     public function destroy(string $id)
     {
         try {
+            if (!Auth::user()->has_role('admin')) {
+                return ApiResponseClass::sendError('ليس لديك صلاحية لحدف الرسالة', 403);
+            }
             $contact=$this->ContactRepository->getById($id);
             if($this->ContactRepository->delete($contact->id)){
                 return ApiResponseClass::sendResponse($contact, "{$contact->id} unsaved successfully.");
