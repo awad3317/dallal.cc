@@ -30,9 +30,9 @@ class UserController extends Controller
     public function index()
     {
         try {
-            if (!Auth::user()->has_role('admin')) {
-                return ApiResponseClass::sendError('ليس لديك صلاحية لعرض جميع المستخدمين على النظام', 403);
-            }
+            // if (!Auth::user()->has_role('admin')) {
+            //     return ApiResponseClass::sendError('ليس لديك صلاحية لعرض جميع المستخدمين على النظام', 403);
+            // }
             $Users=$this->UserRepository->index();
             return ApiResponseClass::sendResponse($Users, 'All Users retrieved successfully.');
         } catch (Exception $e) {
