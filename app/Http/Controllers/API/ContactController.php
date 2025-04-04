@@ -73,13 +73,13 @@ class ContactController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
         try {
-            $contacts=$this->ContactRepository->index();
-            return ApiResponseClass::sendResponse($contacts,'All Contacts retrieved successfully.');
+            $contact=$this->ContactRepository->getById($id);
+            return ApiResponseClass::sendResponse($contact,' data getted  successfully.');
         } catch (Exception $e) {
-            return ApiResponseClass::sendError('Error retrieving Contacts: ' . $e->getMessage());
+            return ApiResponseClass::sendError('Error returned Contact:  ' . $e->getMessage());
         }
     }
 
@@ -96,6 +96,14 @@ class ContactController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $contact=$this->ContactRepository->getById($id);
+            if($this->ContactRepository->delete($contact->id)){
+                return ApiResponseClass::sendResponse($contact, "{$contact->id} unsaved successfully.");
+            }
+            return ApiResponseClass::sendError("Contact with ID {$id} may not be found or not deleted. Try again.");
+        } catch (Exception $e) {
+            return ApiResponseClass::sendError('Error deleting Contact: ' . $e->getMessage());
+        }
     }
 }
