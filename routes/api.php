@@ -19,6 +19,7 @@ use App\Http\Controllers\API\SaleOptionController;
 use App\Http\Controllers\API\ConversationController;
 use App\Http\Controllers\API\Auth\userAuthController;
 use App\Http\Controllers\API\Auth\PermissionController;
+use App\Http\Controllers\API\SocialMediaLinkController;
 use App\Http\Controllers\API\Auth\forgetPasswordController;
 use App\Http\Controllers\API\Dashboard\UserDashboardController;
 use App\Http\Controllers\API\Dashboard\AdminDashboardController;
@@ -63,6 +64,7 @@ Route::middleware(['auth:sanctum','check.banned'])->group(function () {
     Route::apiResource('/image',ImageController::class)->except(['show','index']);
     Route::apiResource('/role',RoleController::class);
     Route::apiResource('/conversation',ConversationController::class)->except(['update','destroy']);
+    Route::apiResource('/SocialMediaLink',SocialMediaLinkController::class)->except(['index']);
     Route::post('/sendMessage',[ConversationController::class,'sendMessage']);
     Route::post('/checkConversationExists',[ConversationController::class,'checkConversationExists']);
     Route::get('/permission',[PermissionController::class,'index']);
@@ -97,6 +99,7 @@ Route::get('/saleOption',[SaleOptionController::class,'index']);
 Route::get('/bid',[BidController::class,'index']);
 
 Route::post('/contact',[ContactController::class,'store']);
+Route::get('/SocialMediaLink',[SocialMediaLinkController::class,'index']);
 
 
 
