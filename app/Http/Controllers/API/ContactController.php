@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Http\Request;
 use App\Classes\ApiResponseClass;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Repositories\ContactRepository;
 use Illuminate\Support\Facades\Validator;
 
@@ -23,7 +24,15 @@ class ContactController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            if (!Auth::user()->has_role('admin')) {
+                return ApiResponseClass::sendError('ليس لديك صلاحية لاطلاع على رسائل التواصل', 403);
+            }
+            $contacts=$this->ContactRepository->index();
+            return ApiResponseClass::sendResponse($contacts,'All Contacts retrieved successfully.');
+        } catch (Exception $e) {
+            return ApiResponseClass::sendError('Error retrieving Contacts: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -66,7 +75,12 @@ class ContactController extends Controller
      */
     public function show(string $id)
     {
-        //
+        try {
+            $contacts=$this->ContactRepository->index();
+            return ApiResponseClass::sendResponse($contacts,'All Contacts retrieved successfully.');
+        } catch (Exception $e) {
+            return ApiResponseClass::sendError('Error retrieving Contacts: ' . $e->getMessage());
+        }
     }
 
     /**

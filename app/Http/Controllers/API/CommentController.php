@@ -83,6 +83,9 @@ class CommentController extends Controller
     {
         try {
             $Comment=$this->CommentRepository->getById($id);
+            if ($Comment->user_id !== Auth::id() && !Auth::user()->has_role('admin')) {
+                return ApiResponseClass::sendError("ليس لديك صلاحية لحدف هدا التعليق", [], 403);
+            }
             if($this->CommentRepository->delete($Comment->id)){
                 return ApiResponseClass::sendResponse($Comment, "{$Comment->id} unsaved successfully.");
             }
