@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\Models\Category;
 
-class CategoriesTableSeeder extends Seeder
+class CategorySeeder extends Seeder
 {
     public function run()
     {
