@@ -164,6 +164,9 @@ class UserController extends Controller
     }
 
     public function assignRole(Request $request, $user_id){
+        if (!Auth::user()->has_role('admin')) {
+            return ApiResponseClass::sendError('ليس لديك صلاحية لاعطاء دور ل مستخدم', 403);
+        }
         $validator = Validator::make($request->all(), [
             'role' => ['required','string',Rule::exists('roles','name')]
         ],[
@@ -186,6 +189,9 @@ class UserController extends Controller
     }
 
     public function revokeRole(Request $request, $user_id) {
+        if (!Auth::user()->has_role('admin')) {
+                return ApiResponseClass::sendError('ليس لديك صلاحية لسحب دور من مستخدم', 403);
+            }
         $validator = Validator::make($request->all(), [
             'role' => ['required','string',Rule::exists('roles','name')]
         ],[
