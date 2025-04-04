@@ -62,7 +62,7 @@ class RegionController extends Controller
      */
     public function store(Request $request)
     {
-        if(!Auth::user()->has_permission('create-region')){
+        if(!Auth::user()->has_role('admin')){
             return ApiResponseClass::sendError("ليس لديك صلاحية الإضافة منطقة", [], 403);
         }
         $validator = Validator::make($request->all(), [
@@ -103,7 +103,7 @@ class RegionController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        if(!Auth::user()->has_permission('update-region')){
+        if(!Auth::user()->has_role('admin')){
             return ApiResponseClass::sendError("ليس لديك صلاحية لتعديل على منطقة", [], 403);
         }
         $validator = Validator::make($request->all(), [
@@ -132,7 +132,7 @@ class RegionController extends Controller
     public function destroy(string $id)
     {
         try {
-            if(!Auth::user()->has_permission('destroy-region')){
+            if(!Auth::user()->has_role('admin')){
                 return ApiResponseClass::sendError("ليس لديك صلاحية لحدف منطقة", [], 403);
             }
             $Region=$this->RegionRepository->getById($id);

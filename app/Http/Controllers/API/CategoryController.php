@@ -58,7 +58,7 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        if(!Auth::user()->has_permission('create-categorie')){
+        if(!Auth::user()->has_role('admin')){
             return ApiResponseClass::sendError("ليس لديك صلاحية الإضافة فئة جديده", [], 403);
         }
         $validator = Validator::make($request->all(), [
@@ -102,7 +102,7 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        if(!Auth::user()->has_permission('update-categorie')){
+        if(!Auth::user()->has_role('admin')){
             return ApiResponseClass::sendError("ليس لديك صلاحية لتعديل على فئة", [], 403);
         }
         $validator = Validator::make($request->all(), [
@@ -134,7 +134,7 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         try {
-            if(!Auth::user()->has_permission('destroy-categorie')){
+            if(!Auth::user()->has_role('admin')){
                 return ApiResponseClass::sendError("ليس لديك صلاحية لحدف فئة", [], 403);
             }
             $category=$this->CategoryRepository->getById($id);
