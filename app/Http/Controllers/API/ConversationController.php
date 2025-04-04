@@ -32,10 +32,7 @@ class ConversationController extends Controller
             $userId = Auth::id();
             $conversations = $this->ConversationRepository->getUserConversations($userId);
             $unreadCount = $conversations->where('has_unread', true)->count();
-    
-            $responseData = $conversations->toArray();
-            $responseData['unread_conversations_count'] = $unreadCount;
-            return ApiResponseClass::sendResponse($responseData, 'All conversations retrieved successfully.');
+            return ApiResponseClass::sendResponse($conversations, 'All conversations retrieved successfully.');
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error retrieving conversations: ' . $e->getMessage());
         }
