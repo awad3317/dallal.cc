@@ -18,7 +18,7 @@ class CheckBannedUser
         if (auth()->check() && auth()->user()->is_banned) {
             return response()->json([
                 'success' => false,
-                'message' => 'الحساب محظور',
+                'message' => 'الحساب محظور يرجى مراجعتنا لمعرفة سبب الحظر ',
             ], 403); 
         }
         return $next($request);
