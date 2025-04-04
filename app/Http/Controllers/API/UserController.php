@@ -206,6 +206,9 @@ class UserController extends Controller
 
     public function toggleBan(Request $request, $userId)
     {
+        if (!Auth::user()->has_role('admin')) {
+            return ApiResponseClass::sendError('ليس لديك صلاحية لحظر او فك حظر مستخدم', 403);
+        }
         $validator = Validator::make($request->all(), [
             'is_banned'=>['required','boolean']
         ],[
