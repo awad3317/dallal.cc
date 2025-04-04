@@ -38,7 +38,7 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        if(!Auth::user()->has_permission('create-role')){
+        if(!Auth::user()->has_role('admin')){
             return ApiResponseClass::sendError("ليس لديك صلاحية الإضافة دور جديد", [], 403);
         }
         $validator = Validator::make($request->all(), [
@@ -87,7 +87,7 @@ class RoleController extends Controller
     */
     public function update(Request $request, $id)
     {
-        if(!Auth::user()->has_permission('update-role')){
+        if(!Auth::user()->has_role('admin')){
             return ApiResponseClass::sendError("ليس لديك صلاحية لتعديل دور", [], 403);
         }
         $validator = Validator::make($request->all(), [
@@ -125,7 +125,7 @@ class RoleController extends Controller
     public function destroy($id)
     {
         try {
-            if(!Auth::user()->has_permission('destroy-role')){
+            if(!Auth::user()->has_role('admin')){
                 return ApiResponseClass::sendError("ليس لديك صلاحية لحدف دور", [], 403);
             }
             $role = $this->RoleRepository->getById($id);
