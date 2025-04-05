@@ -133,7 +133,7 @@ class AdRepository implements RepositoriesInterface
             $childCategories = Category::where('parent_id', $ad->category->parent->id)->pluck('id')->toArray();
         
             // 2. Get ads from any sibling category (same parent)
-            $remainingAdsNeeded = 3 - $similarAds->count();
+            $remainingAdsNeeded = 5 - $similarAds->count();
             $parentCategoryAds = Ad::with(['category:id,name', 'region:id,name', 'saleOption:id,name'])
                 ->whereIn('category_id', $childCategories) // Search in all sibling categories
                 ->where('id', '!=', $ad->id)
