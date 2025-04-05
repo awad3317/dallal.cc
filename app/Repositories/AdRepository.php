@@ -128,7 +128,7 @@ class AdRepository implements RepositoriesInterface
             ->get();
 
         // If we have less than 4 similar ads and there's a parent category
-        if ($similarAds->count() < 4 && $ad->category && $ad->category->parent) {
+        if ($similarAds->count() < 5 && $ad->category && $ad->category->parent) {
             // 1. Get all child categories under the same parent
             $childCategories = Category::where('parent_id', $ad->category->parent->id)->pluck('id')->toArray();
         
