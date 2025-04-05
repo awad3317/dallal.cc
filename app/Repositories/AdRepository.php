@@ -112,43 +112,25 @@ class AdRepository implements RepositoriesInterface
             return $Ad->delete();
         });
     }
-    public function getByIdWithSimilarAd($id, $user_id)
-{
-    // جلب الإعلان الرئيسي مع جميع العلاقات المطلوبة
-    $ad = Ad::with(['user', 'category.parent', 'region.parent', 'saleOption', 'bids.user:id,name', 'images', 'comments.user:id,name,image'])
-            ->withMax('bids', 'amount')
-            ->findOrFail($id);
-
-    // البحث عن إعلانات مشابهة من نفس الصنف
-    $similarAds = Ad::with(['category:id,name', 'region:id,name', 'saleOption:id,name'])
-        ->where('category_id',$ad->category->parent->id)
-        ->where('id', '!=', $ad->id)
-        ->inRandomOrder()
-        ->limit(5)
+    public function getByIdWithSimilarAd($id,$user_id)
+    {
+        $ad=Ad::with(['user','category.parent','region.parent','saleOption','bids.user:id,name','images','comments.user:id,name,image'])->withMax('bids','amount')->findOrFail($id);
+        $similarAds = Ad::with(['category:id,name','region:id,name','saleOption:id,name'])
+        ->where('category_id', $ad->category_id)
+        ->where('id', '!=', $ad->id) 
+        ->inRandomOrder() 
+        ->limit(5) 
         ->get();
-
-    // إذا لم يتم العثور على إعلانات مشابهة من نفس الصنف، نبحث في الصنف الأب
-    if (!$similarAds->isEmpty()) {
-        $similarAds = Ad::with(['category:id,name', 'region:id,name', 'saleOption:id,name'])
-            ->where('category_id', $ad->category->parent->id)
-            ->where('id', '!=', $ad->id)
-            ->inRandomOrder()
-            ->limit(5)
-            ->get();
+        $ad->similar_ads = $similarAds;
+        if ($user_id) {
+            $isLiked = Like::where('user_id', $user_id)
+                ->where('ad_id', $ad->id)
+                ->exists();
+            $ad->is_liked = $isLiked;
+        }
+        return $ad;
     }
 
-    $ad->similar_ads = $similarAds;
-
-    // التحقق إذا كان المستخدم قد أعجب بالإعلان
-    if ($user_id) {
-        $isLiked = Like::where('user_id', $user_id)
-            ->where('ad_id', $ad->id)
-            ->exists();
-        $ad->is_liked = $isLiked;
-    }
-
-    return $ad;
-}
     public function incrementViews($adId){
         Ad::where('id', $adId)->increment('views');
     }
