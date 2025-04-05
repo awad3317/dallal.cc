@@ -112,44 +112,52 @@ class AdRepository implements RepositoriesInterface
             return $Ad->delete();
         });
     }
-    public function getByIdWithSimilarAd($id,$user_id)
-    {
-        $ad=Ad::with(['user','category.parent','region.parent','saleOption','bids.user:id,name','images','comments.user:id,name,image'])->withMax('bids','amount')->findOrFail($id);
-        $similarAds = Ad::with(['category:id,name','region:id,name','saleOption:id,name'])
+    public function getByIdWithSimilarAd($id, $user_id)
+{
+    // جلب الإعلان الرئيسي مع جميع العلاقات
+    $ad = Ad::with(['user', 'category.parent', 'region.parent', 'saleOption', 'bids.user:id,name', 'images', 'comments.user:id,name,image'])
+            ->withMax('bids', 'amount')
+            ->findOrFail($id);
+
+    // جلب الإعلانات المشابهة من نفس الصنف
+    $similarAds = Ad::with(['category:id,name', 'region:id,name', 'saleOption:id,name'])
         ->where('category_id', $ad->category_id)
-        ->where('id', '!=', $ad->id) 
-        ->inRandomOrder() 
-        ->limit(5) 
+        ->where('id', '!=', $ad->id)
+        ->inRandomOrder()
+        ->limit(5)
         ->get();
-        if($similarAds->count() < 3 && $ad->category && $ad->category->parent){
-            $childCategoryIds = Category::where('parent_id', $ad->category->parent)
-                                   ->pluck('id')
-                                   ->toArray();
-            $similarAds = Ad::with(['category:id,name', 'region:id,name', 'saleOption:id,name'])
-            ->where(function($query) use ($ad, $childCategoryIds) {
-                // إعلانات من نفس الفئة
-                $query->where('category_id', $ad->category_id);
-                                       
-                // أو من أي فئة ابن تابعة لنفس الأب (إذا وجد أبناء)
-                if (!empty($childCategoryIds)) {
-                    $query->orWhereIn('category_id', $childCategoryIds);
-                }
-            })
-            ->where('id', '!=', $ad->id) // استبعاد الإعلان الحالي
+
+    // إذا كان عدد الإعلانات المشابهة أقل من 3 وكان هناك صنف أب
+    if ($similarAds->count() < 3 && $ad->category && $ad->category->parent) {
+        // 1. الحصول على جميع الأبناء التابعين لنفس الأب
+        $childCategories = Category::where('parent_id', $ad->category->parent->id)
+                                ->pluck('id')
+                                ->toArray();
+        
+        // 2. جلب الإعلانات من أي فئة ابن تابعة لنفس الأب
+        $remainingAdsNeeded = 3 - $similarAds->count();
+        $parentCategoryAds = Ad::with(['category:id,name', 'region:id,name', 'saleOption:id,name'])
+            ->whereIn('category_id', $childCategories) // البحث في جميع الأبناء
+            ->where('id', '!=', $ad->id)
             ->inRandomOrder()
-            ->limit(5)
+            ->limit($remainingAdsNeeded)
             ->get();
-        }
-        $ad->similar_ads = $similarAds;
-        if ($user_id) {
-            $isLiked = Like::where('user_id', $user_id)
-                ->where('ad_id', $ad->id)
-                ->exists();
-            $ad->is_liked = $isLiked;
-        }
-        return $ad;
+        
+        // دمج النتائج مع الإعلانات الأصلية
+        $similarAds = $similarAds->merge($parentCategoryAds);
     }
 
+    $ad->similar_ads = $similarAds->take(5); // تحديد الحد الأقصى
+
+    // التحقق من إعجاب المستخدم
+    if ($user_id) {
+        $ad->is_liked = Like::where('user_id', $user_id)
+                         ->where('ad_id', $ad->id)
+                         ->exists();
+    }
+
+    return $ad;
+}
     public function incrementViews($adId){
         Ad::where('id', $adId)->increment('views');
     }
