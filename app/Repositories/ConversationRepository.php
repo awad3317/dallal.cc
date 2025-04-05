@@ -29,7 +29,7 @@ class ConversationRepository implements RepositoriesInterface
     public function getById($id): Conversation
     {
         // Get the conversation with its relationships (messages, receiver, sender)
-        $conversation = Conversation::with(['messages','receiver','sender'])->findOrFail($id);
+        $conversation = Conversation::with(['messages','receiver','sender','ad'])->findOrFail($id);
         // Add other_user to the conversation
         $conversation->other_user = ($conversation->sender_id == Auth::id()) 
         ? $conversation->receiver 
