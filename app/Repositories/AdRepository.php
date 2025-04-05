@@ -122,6 +122,10 @@ class AdRepository implements RepositoriesInterface
     $similarAds = Ad::with(['category:id,name', 'region:id,name', 'saleOption:id,name'])
         ->where('category_id', $ad->category_id)
         ->where('id', '!=', $ad->id)
+        ->where(function($query) {
+            $query->whereNull('verified')
+                ->orWhere('verified', true);
+        })
         ->inRandomOrder()
         ->limit(5)
         ->get();
@@ -139,7 +143,11 @@ class AdRepository implements RepositoriesInterface
         $siblingAds = Ad::with(['category:id,name', 'region:id,name', 'saleOption:id,name'])
             ->whereIn('category_id', $childCategories)
             ->where('id', '!=', $ad->id)
-            ->whereNotIn('id', $similarAds->pluck('id')->toArray()) // Avoid duplicates
+            ->whereNotIn('id', $similarAds->pluck('id')->toArray())
+            ->where(function($query) {
+                $query->whereNull('verified')
+                    ->orWhere('verified', true);
+            })
             ->inRandomOrder()
             ->limit($remainingNeeded)
             ->get();
