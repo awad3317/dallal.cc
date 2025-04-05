@@ -114,44 +114,37 @@ class AdRepository implements RepositoriesInterface
     }
     public function getByIdWithSimilarAd($id, $user_id)
 {
-    // جلب الإعلان الرئيسي مع جميع العلاقات
+    // جلب الإعلان الرئيسي مع جميع العلاقات المطلوبة
     $ad = Ad::with(['user', 'category.parent', 'region.parent', 'saleOption', 'bids.user:id,name', 'images', 'comments.user:id,name,image'])
             ->withMax('bids', 'amount')
             ->findOrFail($id);
 
-    // الخطوة 1: جلب إعلانات مشابهة من نفس الصنف (الابن)
-    $similarFromSameCategory = Ad::with(['category:id,name', 'region:id,name', 'saleOption:id,name'])
+    // البحث عن إعلانات مشابهة من نفس الصنف
+    $similarAds = Ad::with(['category:id,name', 'region:id,name', 'saleOption:id,name'])
         ->where('category_id', $ad->category_id)
         ->where('id', '!=', $ad->id)
         ->inRandomOrder()
-        ->limit(5) // نجلب 5 لأننا قد نحتاج لبعضها لاحقاً
+        ->limit(5)
         ->get();
 
-    $similarAds = $similarFromSameCategory;
-
-    // الخطوة 2: إذا كان عدد الإعلانات من نفس الصنف أقل من 3، نكمل العدد من الصنف الأب
-    if ($similarFromSameCategory->count() < 3 && $ad->category && $ad->category->parent) {
-        $remainingNeeded = 3 - $similarFromSameCategory->count();
-        
-        $similarFromParentCategory = Ad::with(['category:id,name', 'region:id,name', 'saleOption:id,name'])
+    // إذا لم يتم العثور على إعلانات مشابهة من نفس الصنف، نبحث في الصنف الأب
+    if ($similarAds->isEmpty() && $ad->category && $ad->category->parent) {
+        $similarAds = Ad::with(['category:id,name', 'region:id,name', 'saleOption:id,name'])
             ->where('category_id', $ad->category->parent->id)
             ->where('id', '!=', $ad->id)
-            ->whereNotIn('id', $similarFromSameCategory->pluck('id')->toArray()) // نتجنب تكرار الإعلانات
             ->inRandomOrder()
-            ->limit($remainingNeeded)
+            ->limit(5)
             ->get();
-
-        $similarAds = $similarFromSameCategory->merge($similarFromParentCategory);
     }
 
-    // نحدد النتيجة لـ 5 إعلانات كحد أقصى (إذا كانت متوفرة)
-    $ad->similar_ads = $similarAds->take(5);
+    $ad->similar_ads = $similarAds;
 
-    // التحقق من إعجاب المستخدم بالإعلان
+    // التحقق إذا كان المستخدم قد أعجب بالإعلان
     if ($user_id) {
-        $ad->is_liked = Like::where('user_id', $user_id)
+        $isLiked = Like::where('user_id', $user_id)
             ->where('ad_id', $ad->id)
             ->exists();
+        $ad->is_liked = $isLiked;
     }
 
     return $ad;
