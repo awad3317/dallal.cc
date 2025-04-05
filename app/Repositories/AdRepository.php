@@ -127,13 +127,14 @@ class AdRepository implements RepositoriesInterface
             ->limit(5)
             ->get();
 
+            $remainingAdsNeeded = 5 - $similarAds->count();
         // If we have less than 4 similar ads and there's a parent category
         if ($similarAds->count() < 5 && $ad->category && $ad->category->parent) {
             // 1. Get all child categories under the same parent
             $childCategories = Category::where('parent_id', $ad->category->parent->id)->pluck('id')->toArray();
         
             // 2. Get ads from any sibling category (same parent)
-            $remainingAdsNeeded = 5 - $similarAds->count();
+            
             $parentCategoryAds = Ad::with(['category:id,name', 'region:id,name', 'saleOption:id,name'])
                 ->whereIn('category_id', $childCategories) // Search in all sibling categories
                 ->where('id', '!=', $ad->id)
@@ -146,7 +147,7 @@ class AdRepository implements RepositoriesInterface
         }
 
         // Limit to maximum 5 ads
-        $ad->similar_ads = $similarAds->take(5);
+        $ad->similar_ads = $similarAds->take($remainingAdsNeeded);
 
         // Check if user liked the ad
         if ($user_id) {
