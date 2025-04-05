@@ -39,6 +39,14 @@ class Ad extends Model
         'verified'
     ];
 
+    public function getPrimaryImageAttribute($value)
+    {
+        if (!str_starts_with($value, 'http')) {
+            return config('app.url') . '/' . $value;
+        }
+        return $value;
+    }
+
     /**
      * Get the user who created the ad.
      *

@@ -199,7 +199,7 @@ class AdController extends Controller
             if ($ad->user_id !== Auth::id()) {
                 return ApiResponseClass::sendError("ليس لديك صلاحية لتعديل هذا الإعلان", [], 403);
             }
-            $fields = $request->only(['category_id','region_id','title','description','price','status','sale_option_id','primary_image']);
+            $fields = $request->only(['category_id','region_id','title','description','price','status','sale_option_id']);
             if ($request->hasFile('primary_image')) {
                 // Delete old primary image
                 $this->ImageService->deleteImage($ad->primary_image);
