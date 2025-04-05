@@ -128,7 +128,7 @@ class AdRepository implements RepositoriesInterface
         ->get();
 
     // إذا لم يتم العثور على إعلانات مشابهة من نفس الصنف، نبحث في الصنف الأب
-    if ($similarAds->isEmpty()) {
+    if (!$similarAds->isEmpty()) {
         $similarAds = Ad::with(['category:id,name', 'region:id,name', 'saleOption:id,name'])
             ->where('category_id', $ad->category->parent->id)
             ->where('id', '!=', $ad->id)
