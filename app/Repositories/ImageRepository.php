@@ -29,7 +29,7 @@ class ImageRepository implements RepositoriesInterface
      */
     public function getById($id): Image
     {
-        return Image::with(['ad', 'user'])->findOrFail($id);
+        return Image::with(['ad'])->findOrFail($id);
     }
 
     /**
