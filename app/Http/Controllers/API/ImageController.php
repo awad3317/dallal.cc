@@ -75,10 +75,10 @@ class ImageController extends Controller
             return ApiResponseClass::sendValidationError($validator->errors()->first(), $validator->errors());
         }
         try {
-            $image = $request->file('image');
+            $fields=$request->only(['image']);
             $oldImage = $this->ImageRepository->getById($id);
             $this->ImageService->deleteImage($oldImage->image_url);
-            $imagePath = $this->ImageService->saveImage($image, 'additional_image');
+            $imagePath = $this->ImageService->saveImage($fields['image'], 'additional_image');
             unset($fields);
             $fields['image_url']=$imagePath;
             $Image=$this->ImageRepository->update($fields, $id);

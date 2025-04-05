@@ -61,7 +61,8 @@ Route::middleware(['auth:sanctum','check.banned'])->group(function () {
     
     Route::apiResource('/saleOption',SaleOptionController::class)->except(['index']);
     Route::apiResource('/bid',BidController::class)->except(['index']);
-    Route::apiResource('/image',ImageController::class)->except(['show','index']);
+    Route::apiResource('/image',ImageController::class)->except(['show','index','update']);
+    Route::post('image/{id}',[ImageController::class,'update']);
     Route::apiResource('/role',RoleController::class);
     Route::apiResource('/conversation',ConversationController::class)->except(['update','destroy']);
     Route::apiResource('/SocialMediaLink',SocialMediaLinkController::class)->except(['index']);
