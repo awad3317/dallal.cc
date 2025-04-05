@@ -116,7 +116,7 @@ class AdRepository implements RepositoriesInterface
     {
         $ad=Ad::with(['user','category.parent','region.parent','saleOption','bids.user:id,name','images','comments.user:id,name,image'])->withMax('bids','amount')->findOrFail($id);
         $similarAds = Ad::with(['category:id,name','region:id,name','saleOption:id,name'])
-        ->where('category_id', $ad->category_id)
+        ->where('category_id', $ad->category->parent->id)
         ->where('id', '!=', $ad->id) 
         ->inRandomOrder() 
         ->limit(5) 
