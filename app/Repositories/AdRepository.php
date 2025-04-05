@@ -113,49 +113,51 @@ class AdRepository implements RepositoriesInterface
         });
     }
     public function getByIdWithSimilarAd($id, $user_id)
-    {
-        // Get the main ad with all relationships
-        $ad = Ad::with(['user', 'category.parent', 'region.parent', 'saleOption', 'bids.user:id,name', 'images', 'comments.user:id,name,image'])
-                ->withMax('bids', 'amount')
-                ->findOrFail($id);
+{
+    $ad = Ad::with(['user', 'category.parent', 'region.parent', 'saleOption', 'bids.user:id,name', 'images', 'comments.user:id,name,image'])
+            ->withMax('bids', 'amount')
+            ->findOrFail($id);
 
-        // Get similar ads from the same category
-        $similarAds = Ad::with(['category:id,name', 'region:id,name', 'saleOption:id,name'])
-            ->where('category_id', $ad->category_id)
+    // First try to get 5 ads from same category
+    $similarAds = Ad::with(['category:id,name', 'region:id,name', 'saleOption:id,name'])
+        ->where('category_id', $ad->category_id)
+        ->where('id', '!=', $ad->id)
+        ->inRandomOrder()
+        ->limit(5)
+        ->get();
+
+    // If we don't have enough and there's a parent category
+    if ($similarAds->count() < 5 && $ad->category && $ad->category->parent) {
+        $childCategories = Category::where('parent_id', $ad->category->parent->id)
+                                ->pluck('id')
+                                ->toArray();
+        
+        // Calculate how many more we need
+        $remainingNeeded = 5 - $similarAds->count();
+        
+        // Get additional ads from sibling categories
+        $siblingAds = Ad::with(['category:id,name', 'region:id,name', 'saleOption:id,name'])
+            ->whereIn('category_id', $childCategories)
             ->where('id', '!=', $ad->id)
+            ->whereNotIn('id', $similarAds->pluck('id')->toArray()) // Avoid duplicates
             ->inRandomOrder()
-            ->limit(5)
+            ->limit($remainingNeeded)
             ->get();
-
-            $remainingAdsNeeded = 5 - $similarAds->count();
-        // If we have less than 4 similar ads and there's a parent category
-        if ($similarAds->count() < 5 && $ad->category && $ad->category->parent) {
-            // 1. Get all child categories under the same parent
-            $childCategories = Category::where('parent_id', $ad->category->parent->id)->pluck('id')->toArray();
-        
-            // 2. Get ads from any sibling category (same parent)
             
-            $parentCategoryAds = Ad::with(['category:id,name', 'region:id,name', 'saleOption:id,name'])
-                ->whereIn('category_id', $childCategories) // Search in all sibling categories
-                ->where('id', '!=', $ad->id)
-                ->inRandomOrder()
-                ->limit($remainingAdsNeeded)
-                ->get();
-        
-            // Merge results with original ads
-            $similarAds = $similarAds->merge($parentCategoryAds);
-        }
-
-        // Limit to maximum 5 ads
-        $ad->similar_ads = $similarAds->take($remainingAdsNeeded);
-
-        // Check if user liked the ad
-        if ($user_id) {
-            $ad->is_liked = Like::where('user_id', $user_id)->where('ad_id', $ad->id)->exists();
-        }
-
-        return $ad;
+        $similarAds = $similarAds->merge($siblingAds);
     }
+
+    // Final check to ensure we don't exceed 5
+    $ad->similar_ads = $similarAds->take(5);
+
+    if ($user_id) {
+        $ad->is_liked = Like::where('user_id', $user_id)
+                         ->where('ad_id', $ad->id)
+                         ->exists();
+    }
+
+    return $ad;
+}
     public function incrementViews($adId){
         Ad::where('id', $adId)->increment('views');
     }
