@@ -121,7 +121,7 @@ class AdRepository implements RepositoriesInterface
 
     // البحث عن إعلانات مشابهة من نفس الصنف
     $similarAds = Ad::with(['category:id,name', 'region:id,name', 'saleOption:id,name'])
-        ->where('category_id', $ad->category_id)
+        ->where('category_id',$ad->category->parent->id)
         ->where('id', '!=', $ad->id)
         ->inRandomOrder()
         ->limit(5)
