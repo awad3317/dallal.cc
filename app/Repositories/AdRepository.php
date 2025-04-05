@@ -116,11 +116,30 @@ class AdRepository implements RepositoriesInterface
     {
         $ad=Ad::with(['user','category.parent','region.parent','saleOption','bids.user:id,name','images','comments.user:id,name,image'])->withMax('bids','amount')->findOrFail($id);
         $similarAds = Ad::with(['category:id,name','region:id,name','saleOption:id,name'])
-        ->where('category_id', $ad->category->parent->id)
+        ->where('category_id', $ad->category_id)
         ->where('id', '!=', $ad->id) 
         ->inRandomOrder() 
         ->limit(5) 
         ->get();
+        if($similarAds->count() < 3 && $ad->category && $ad->category->parent){
+            $childCategoryIds = Category::where('parent_id', $ad->category->parent)
+                                   ->pluck('id')
+                                   ->toArray();
+            $similarAds = Ad::with(['category:id,name', 'region:id,name', 'saleOption:id,name'])
+            ->where(function($query) use ($ad, $childCategoryIds) {
+                // إعلانات من نفس الفئة
+                $query->where('category_id', $ad->category_id);
+                                       
+                // أو من أي فئة ابن تابعة لنفس الأب (إذا وجد أبناء)
+                if (!empty($childCategoryIds)) {
+                    $query->orWhereIn('category_id', $childCategoryIds);
+                }
+            })
+            ->where('id', '!=', $ad->id) // استبعاد الإعلان الحالي
+            ->inRandomOrder()
+            ->limit(5)
+            ->get();
+        }
         $ad->similar_ads = $similarAds;
         if ($user_id) {
             $isLiked = Like::where('user_id', $user_id)
