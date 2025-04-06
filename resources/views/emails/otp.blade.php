@@ -46,7 +46,7 @@
 </head>
 <body>
     <div class="header">
-        <img src="{{ asset('dalal-logo.svg') }}" alt="شعار منصة دلال" class="logo" width="50" height="50">
+        <img src="https://dallal.cc/dalal-logo.svg" alt="شعار منصة دلال" class="logo" width="50" height="50">
         <h1>رمز التحقق </h1>
     </div>
     
