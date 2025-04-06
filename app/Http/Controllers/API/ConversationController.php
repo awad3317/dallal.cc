@@ -26,12 +26,12 @@ class ConversationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
             $userId = Auth::id();
-            $conversations = $this->ConversationRepository->getUserConversations($userId);
-            $unreadCount = $conversations->where('has_unread', true)->count();
+            $filter = $request->query('filter', 'all');
+            $conversations = $this->ConversationRepository->getUserConversations($userId,$filter);
             return ApiResponseClass::sendResponse($conversations, 'All conversations retrieved successfully.');
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error retrieving conversations: ' . $e->getMessage());

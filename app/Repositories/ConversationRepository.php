@@ -78,14 +78,23 @@ class ConversationRepository implements RepositoriesInterface
         return Conversation::where('id', $id)->delete() > 0;
     }
 
-    public function getUserConversations($userId)
+    public function getUserConversations($userId,$filter = 'all')
     {
         // Retrieve all conversations where the user is either the sender or receiver
-        $conversations = Conversation::where('sender_id', $userId)
-            ->orWhere('receiver_id', $userId)
-            // Eager load sender, receiver, ad (only id and title), and lastMessage relationships
-            ->with(['sender:id,name', 'receiver:id,name', 'ad:id,title', 'lastMessage'])
-            ->get();
+        $query = Conversation::where('sender_id', $userId)
+        ->orWhere('receiver_id', $userId)
+        // Eager load sender, receiver, ad (only id and title), and lastMessage relationships
+        ->with(['sender:id,name', 'receiver:id,name', 'ad:id,title', 'lastMessage']);
+
+        // Apply filter if requested
+        if ($filter === 'unread') {
+            // Get only conversations with unread messages
+            $query->whereHas('messages', function($q) use ($userId) {
+                $q->where('receiver_id', $userId)->where('is_read', false);
+            });
+        }
+    
+    $conversations = $query->get();
         // Process each conversation
         $conversations->map(function ($conversation) use ($userId) {
             // Determine the other user in the conversation (not the current user)
@@ -103,9 +112,6 @@ class ConversationRepository implements RepositoriesInterface
         
             return $conversation;
         });
-        $conversations->unread_conversations_count = $conversations
-        ->where('has_unread', true)
-        ->count();
         return $conversations;
     }
 
