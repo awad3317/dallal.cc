@@ -253,4 +253,35 @@ class AdController extends Controller
         }
        
     }
+
+    public function updatePrimaryImage(Request $request,$id){
+        $validator = Validator::make($request->all(), [
+            'primary_image' => ['required', 'image', 'max:2048'],
+        ],[
+            'primary_image.required' =>'يجب رفع صورة',
+            'primary_image.image' =>'يجب أن يكون الملف صورة',
+            'primary_image.image' =>'يجب أن يكون حجم الصورة 2 MB'
+        ]);
+        if ($validator->fails()) {
+            return ApiResponseClass::sendValidationError($validator->errors()->first(), $validator->errors());
+        }
+        try {
+            $ad = $this->AdRepository->getById($id);
+            // Check if the authenticated user owns the ad
+            if ($ad->user_id !== Auth::id()) {
+                return ApiResponseClass::sendError("ليس لديك صلاحية لتعديل هذه الصورة", [], 403);
+            }
+            if ($request->hasFile('primary_image')) {
+                // Delete old primary image
+                $this->ImageService->deleteImage($ad->primary_image);
+                // Save new primary image
+                $fields['primary_image'] = $this->ImageService->saveImage($request->file('primary_image'));
+            }
+            // Update the ad
+            $updatedAd = $this->AdRepository->update($fields,$id);
+            return ApiResponseClass::sendResponse($updatedAd, 'تم تحديث الصورة بنجاح.');
+        } catch (Exception $e) {
+            return ApiResponseClass::sendError('حدث خطأ أثناء تحديث الصورة: ' . $e->getMessage());
+        }
+    }
 }

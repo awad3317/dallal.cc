@@ -56,6 +56,7 @@ Route::middleware(['auth:sanctum','check.banned'])->group(function () {
     
     Route::apiResource('/ad',AdController::class)->except(['index','show','update']);
     Route::post('/ad/{id}',[AdController::class,'update']);
+    Route::post('/updatePrimaryImage/{ad_id}',[AdController::class,'updatePrimaryImage']);
     Route::get('/ad/edit/{id}',[AdController::class,'edit']);
     
     Route::post('verifyAd/{id}',[AdController::class,'verifyAd']);
