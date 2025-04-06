@@ -87,7 +87,7 @@ class ConversationRepository implements RepositoriesInterface
         ->with(['sender:id,name', 'receiver:id,name', 'ad:id,title', 'lastMessage']);
 
         // Apply filter if requested
-        if ($filter === 'unread') {
+        if ($filter == 'unread') {
             // Get only conversations with unread messages
             $query->whereHas('messages', function($q) use ($userId) {
                 $q->where('receiver_id', $userId)->where('is_read', false);
