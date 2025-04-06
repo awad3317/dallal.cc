@@ -78,23 +78,14 @@ class ConversationRepository implements RepositoriesInterface
         return Conversation::where('id', $id)->delete() > 0;
     }
 
-    public function getUserConversations($userId,$filter = 'all')
+    public function getUserConversations($userId)
     {
         // Retrieve all conversations where the user is either the sender or receiver
-        $query = Conversation::where('sender_id', $userId)
-        ->orWhere('receiver_id', $userId)
-        // Eager load sender, receiver, ad (only id and title), and lastMessage relationships
-        ->with(['sender:id,name', 'receiver:id,name', 'ad:id,title', 'lastMessage']);
-
-        // Apply filter if requested
-        if ($filter == 'unread') {
-            // Get only conversations with unread messages
-            $query->whereHas('messages', function($q) use ($userId) {
-                $q->where('receiver_id', $userId)->where('is_read', false);
-            });
-        }
-    
-    $conversations = $query->get();
+        $conversations = Conversation::where('sender_id', $userId)
+            ->orWhere('receiver_id', $userId)
+            // Eager load sender, receiver, ad (only id and title), and lastMessage relationships
+            ->with(['sender:id,name', 'receiver:id,name', 'ad:id,title', 'lastMessage'])
+            ->get();
         // Process each conversation
         $conversations->map(function ($conversation) use ($userId) {
             // Determine the other user in the conversation (not the current user)
