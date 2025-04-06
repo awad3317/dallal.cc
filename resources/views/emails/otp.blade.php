@@ -69,7 +69,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="https://dallal.cc/dalal-logo.svg" alt="شعار منصة دلال" class="logo" width="50" height="50">
+            <img src="{{ config('app.url') }}/dalal-logo.svg" alt="شعار منصة دلال" class="logo" width="50" height="50">
             <h1>رمز التحقق</h1>
         </div>
         
