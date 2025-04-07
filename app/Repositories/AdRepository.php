@@ -117,7 +117,7 @@ class AdRepository implements RepositoriesInterface
                 ->withMax('bids', 'amount')
                 ->findOrFail($id);
         // Check if the ad is rejected (verified = false)
-        if ($ad->verified === false) {
+        if ($ad->verified == false) {
             return false;
         }
 

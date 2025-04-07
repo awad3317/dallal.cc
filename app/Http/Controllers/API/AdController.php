@@ -134,7 +134,7 @@ class AdController extends Controller
     {
         try{
             $ad = $this->AdRepository->getByIdWithSimilarAd($id,PersonalAccessToken::findToken($request->bearerToken())->tokenable_id ?? null);
-            if($ad === false){
+            if($ad == false){
                 return ApiResponseClass::sendError('This ad has been rejected and cannot be viewed');
             }
             // recordViewJob::dispatch(app(ViewService::class),$ad->id, Auth::id() ?? null);
