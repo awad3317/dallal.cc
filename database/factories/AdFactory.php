@@ -69,6 +69,6 @@ class AdFactory extends Factory
     5 => 'https://images.pexels.com/photos/788946/pexels-photo-788946.jpeg' // هاتف
         ];
 
-        return $categoryImages[$categoryId] ?? 'https://source.unsplash.com/random/800x600/?product';
+        return $categoryImages[$categoryId] ?? 'https://images.pexels.com/photos/788946/pexels-photo-788946.jpeg';
     }
 }
