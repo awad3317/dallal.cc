@@ -154,7 +154,8 @@ class AdController extends Controller
             $Ad=$this->AdRepository->edit($id);
             // Check if the authenticated user owns the ad
             if ($Ad->user_id !== Auth::id()) {
-                return ApiResponseClass::sendError("ليس لديك صلاحية لتعديل هذا الإعلان", [], 403);
+                // return ApiResponseClass::sendError("ليس لديك صلاحية لتعديل هذا الإعلان", [], 403);
+                return ApiResponseClass::sendResponse(null,'ليس لديك صلاحية لتعديل هدا الاعلان');
             }
             return ApiResponseClass::sendResponse($Ad,'data getted  successfully');
         }catch(Exception $e){
