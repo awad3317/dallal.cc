@@ -9,6 +9,7 @@ use Illuminate\Validation\Rule;
 use App\Classes\ApiResponseClass;
 use App\Repositories\AdRepository;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Repositories\ImageRepository;
 use Illuminate\Support\Facades\Validator;
 
@@ -44,6 +45,10 @@ class ImageController extends Controller
         try {
             $fields=$request->only(['ad_id','image']);
             $ad = $this->AdRepository->getById($fields['ad_id']);
+            // Check if the authenticated user owns the ad
+            if ($ad->user_id !== Auth::id()) {
+                return ApiResponseClass::sendError("ليس لديك صلاحية الإضافة صورة لهدا الإعلان", [], 403);
+            }
             if ($ad->images()->count() >= 7) {
                 return ApiResponseClass::sendError("تم الوصول إلى الحد الأقصى لعدد الصور المسموح به (7 صور) ولا يمكن إضافة المزيد.");
             }
@@ -77,6 +82,10 @@ class ImageController extends Controller
         try {
             $fields=$request->only(['image']);
             $oldImage = $this->ImageRepository->getById($id);
+            // Check if the authenticated user owns the ad
+            if ($oldImage->ad->user_id !== Auth::id()) {
+                return ApiResponseClass::sendError("ليس لديك صلاحية لتعديل صورة لهدا الإعلان", [], 403);
+            }
             $this->ImageService->deleteImage($oldImage->image_url);
             $imagePath = $this->ImageService->saveImage($fields['image'], 'additional_image');
             unset($fields);
@@ -95,6 +104,10 @@ class ImageController extends Controller
     {
         try {
             $Image=$this->ImageRepository->getById($id);
+            // Check if the authenticated user owns the ad
+            if ($Image->ad->user_id !== Auth::id()) {
+                return ApiResponseClass::sendError("ليس لديك صلاحية لحدف صورة لهدا الإعلان", [], 403);
+            }
             $this->ImageService->deleteImage($Image->image_url);
             if($this->ImageRepository->delete($Image->id)){
                 return ApiResponseClass::sendResponse($Image, "{$Image->id} unsaved successfully.");
