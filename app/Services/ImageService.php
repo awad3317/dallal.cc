@@ -31,8 +31,12 @@ class ImageService
     }
 
     public function deleteImage($image){
-        if (\File::exists($image)) {
-            \File::delete($image);
+        $baseUrl = config('app.url').'/';
+        $filePath = str_replace($baseUrl, '', $image);
+        $absolutePath = public_path($filePath);
+        if (\File::exists($absolutePath)) {
+            \File::delete($absolutePath);
+            
         }
         
     }
