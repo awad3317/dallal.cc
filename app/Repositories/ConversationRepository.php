@@ -79,32 +79,47 @@ class ConversationRepository implements RepositoriesInterface
     }
 
     public function getUserConversations($userId)
-    {
-        // Retrieve all conversations where the user is either the sender or receiver
-        $conversations = Conversation::where('sender_id', $userId)
-            ->orWhere('receiver_id', $userId)
-            // Eager load sender, receiver, ad (only id and title), and lastMessage relationships
-            ->with(['sender:id,name', 'receiver:id,name', 'ad:id,title', 'lastMessage'])
-            ->get();
-        // Process each conversation
-        $conversations->map(function ($conversation) use ($userId) {
-            // Determine the other user in the conversation (not the current user)
-            $conversation->other_user = $conversation->sender_id == $userId ? $conversation->receiver : $conversation->sender;
-            // Count unread messages where current user is the receiver
-            $conversation->unread_messages_count = $conversation->messages()
-                ->where('receiver_id', $userId)
-                ->where('is_read', false)
-                ->count();
-                $conversation->has_unread = $conversation->unread_messages_count > 0;
-            // the last message in a messages array 
-            $conversation->messages = $conversation->lastMessage ? [$conversation->lastMessage] : [];
-            // Remove the temporary lastMessage relationship as it's now in messages array
-            unset($conversation->lastMessage); 
+{
+    // Retrieve all conversations where the user is either the sender or receiver
+    $conversations = Conversation::where('sender_id', $userId)
+        ->orWhere('receiver_id', $userId)
+        // Eager load sender, receiver, ad (only id and title), and lastMessage relationships
+        ->with(['sender:id,name', 'receiver:id,name', 'ad:id,title', 'lastMessage'])
+        ->get();
+
+    $unreadConversationsCount = 0; // Initialize counter for unread conversations
+    
+    // Process each conversation
+    $conversations->map(function ($conversation) use ($userId, &$unreadConversationsCount) {
+        // Determine the other user in the conversation (not the current user)
+        $conversation->other_user = $conversation->sender_id == $userId ? $conversation->receiver : $conversation->sender;
         
-            return $conversation;
-        });
-        return $conversations;
-    }
+        // Count unread messages where current user is the receiver
+        $conversation->unread_messages_count = $conversation->messages()
+            ->where('receiver_id', $userId)
+            ->where('is_read', false)
+            ->count();
+            
+        $conversation->has_unread = $conversation->unread_messages_count > 0;
+        
+        // If this conversation has unread messages, increment the counter
+        if ($conversation->has_unread) {
+            $unreadConversationsCount++;
+        }
+        
+        // the last message in a messages array 
+        $conversation->messages = $conversation->lastMessage ? [$conversation->lastMessage] : [];
+        // Remove the temporary lastMessage relationship as it's now in messages array
+        unset($conversation->lastMessage); 
+    
+        return $conversation;
+    });
+
+    return [
+        'conversations' => $conversations,
+        'unread_conversations_count' => $unreadConversationsCount
+    ];
+}
 
     public function checkConversationExists($adId)
     {
