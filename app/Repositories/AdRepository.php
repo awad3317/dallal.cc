@@ -94,8 +94,12 @@ class AdRepository implements RepositoriesInterface
         return DB::transaction(function () use ($id) {
             $Ad = Ad::with(['bids', 'images', 'comments', 'views', 'likes', 'favoritedBy','conversations'])->findOrFail($id);
             foreach ($Ad->images as $image) {
-                if (\File::exists($image->image_url)) {
-                    \File::delete($image->image_url);
+                $baseUrl = config('app.url').'/';
+                $filePath = str_replace($baseUrl, '', $image);
+                $absolutePath = public_path($filePath);
+                if (\File::exists($absolutePath)) {
+                    \File::delete($absolutePath);
+                    
                 }
             }
             if(\File::exists($Ad->primary_image)){
