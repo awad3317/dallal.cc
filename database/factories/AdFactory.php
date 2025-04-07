@@ -62,16 +62,11 @@ class AdFactory extends Factory
     private function getCategoryImage($categoryId)
     {
         $categoryImages = [
-            1 => 'https://source.unsplash.com/random/800x600/?car',
-            2 => 'https://source.unsplash.com/random/800x600/?laptop',
-            3 => 'https://source.unsplash.com/random/800x600/?apartment',
-            4 => 'https://source.unsplash.com/random/800x600/?furniture',
-            5 => 'https://source.unsplash.com/random/800x600/?phone',
-            6 => 'https://source.unsplash.com/random/800x600/?motorcycle',
-            7 => 'https://source.unsplash.com/random/800x600/?camera',
-            8 => 'https://source.unsplash.com/random/800x600/?watch',
-            9 => 'https://source.unsplash.com/random/800x600/?game',
-            10 => 'https://source.unsplash.com/random/800x600/?book'
+            1  => 'https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg', // سيارة
+    2 => 'https://images.pexels.com/photos/18105/pexels-photo.jpg', // لابتوب
+    3 => 'https://images.pexels.com/photos/276724/pexels-photo-276724.jpeg', // شقة
+    4 => 'https://images.pexels.com/photos/1350789/pexels-photo-1350789.jpeg', // أثاث
+    5 => 'https://images.pexels.com/photos/788946/pexels-photo-788946.jpeg' // هاتف
         ];
 
         return $categoryImages[$categoryId] ?? 'https://source.unsplash.com/random/800x600/?product';
