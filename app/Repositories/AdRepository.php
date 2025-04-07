@@ -101,6 +101,9 @@ class AdRepository implements RepositoriesInterface
                     \File::delete($absolutePath);
                     
                 }
+                if (\File::exists($image->image_url)) {
+                    \File::delete($image->image_url);
+                }
             }
             if(\File::exists($Ad->primary_image)){
                 \File::delete($Ad->primary_image);
