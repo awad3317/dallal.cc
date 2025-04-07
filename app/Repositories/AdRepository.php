@@ -116,6 +116,11 @@ class AdRepository implements RepositoriesInterface
         $ad = Ad::with(['user', 'category.parent', 'region.parent', 'saleOption', 'bids.user:id,name', 'images', 'comments.user:id,name,image'])
                 ->withMax('bids', 'amount')
                 ->findOrFail($id);
+        // Check if the ad is rejected (verified = false)
+        if ($ad->verified === false) {
+            return false;
+        }
+
 
         // First try to get 5 ads from same category
         $similarAds = Ad::with(['category:id,name', 'region:id,name', 'saleOption:id,name'])
