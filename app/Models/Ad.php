@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Mehradsadeghi\FilterQueryString\FilterQueryString;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 
 /**
 * Ad model representing classified advertisements.
@@ -11,6 +13,7 @@ use Mehradsadeghi\FilterQueryString\FilterQueryString;
 class Ad extends Model
 {
     use FilterQueryString;
+    use HasFactory;
 
     /**
      * Filterable fields for query string filtering.
