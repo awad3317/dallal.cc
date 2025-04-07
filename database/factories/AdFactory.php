@@ -5,7 +5,7 @@ namespace Database\Factories;
 use App\Models\Ad;
 use App\Models\User;
 use App\Models\Category;
-use App\Models\Region;
+use App\Models\region;
 use App\Models\SaleOption;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -29,7 +29,7 @@ class AdFactory extends Factory
         return [
             'user_id' => User::inRandomOrder()->first()->id,
             'category_id' => $category->id,
-            'region_id' => Region::inRandomOrder()->first()->id,
+            'region_id' => region::inRandomOrder()->first()->id,
             'title' => $this->faker->randomElement($arabicData['titles']),
             'description' => $this->faker->randomElement($arabicData['descriptions']),
             'price' => $this->faker->numberBetween(100, 100000),
