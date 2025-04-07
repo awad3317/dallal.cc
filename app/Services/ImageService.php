@@ -15,30 +15,20 @@ class ImageService
      * @param string $folder
      * @return string
      */
-    public function saveImage($image, $folder = 'Primary_images',$quality = 75)
+    public function saveImage($image, $folder = 'Primary_images')
     {
 
-        // // Generate a unique filename
-        // $filename = uniqid('', true) . '.' . $image->getClientOriginalExtension();
-        // $filePath = $folder . '/' . $filename;
-
-        // // Save the file to the specified folder
-        // $image->storeAs($folder, $filename, 'public');
-        // // $filePath = Storage::putFileAs($folder, $image, $filename);
-
-        // // Return the full file path
-        // return 'storage/' . $filePath;
-        // // return 'storage/' . $filename;
-
-        //---------------------------------------------------------------------
-        $filename = uniqid('', true) . '.webp';
+        // Generate a unique filename
+        $filename = uniqid('', true) . '.' . $image->getClientOriginalExtension();
         $filePath = $folder . '/' . $filename;
-        $fullPath = Storage::disk('public')->path($filePath);
-        Storage::disk('public')->makeDirectory($folder);
-        $img = Image::make($image);
-        $img->encode('webp', $quality)->save($fullPath);
-        return 'storage/' . $filePath;
 
+        // Save the file to the specified folder
+        $image->storeAs($folder, $filename, 'public');
+        // $filePath = Storage::putFileAs($folder, $image, $filename);
+
+        // Return the full file path
+        return 'storage/' . $filePath;
+        // return 'storage/' . $filename;
     }
 
     public function deleteImage($image){
