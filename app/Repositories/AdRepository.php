@@ -50,7 +50,7 @@ class AdRepository implements RepositoriesInterface
                 [
                     $latitude, 
                     $longitude, 
-                    10
+                    $latitude
                 ]
             )
             ->whereRaw('(6371 * acos(cos(radians(?)) * cos(radians(regions.latitude)) * 
@@ -60,12 +60,11 @@ class AdRepository implements RepositoriesInterface
                     $latitude,
                     $longitude,
                     $latitude,
-                    10
+                    10 
                 ]
-            )
-            ->orderBy('distance');
-
-        }
+                );
+            }
+        
         return $query->with(['category.parent', 'region.parent', 'saleOption'])
         ->where(function($query) {
             $query->whereNull('verified')->orWhere('verified', true);
