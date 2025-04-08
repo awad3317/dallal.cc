@@ -308,22 +308,31 @@ class AdController extends Controller
     
         try {
             $ads = Ad::select('ads.*')
-                ->join('regions', 'ads.region_id', '=', 'regions.id')
-                ->whereNotNull('regions.latitude')
-                ->whereNotNull('regions.longitude')
-                ->selectRaw(
-                    '(6371 * acos(cos(radians(?)) * cos(radians(regions.latitude)) * 
-                    cos(radians(regions.longitude) - radians(?)) + 
-                    sin(radians(?)) * sin(radians(regions.latitude)))) AS distance',
-                    [
-                        $request->latitude, 
-                        $request->longitude, 
-                        $request->latitude
-                    ]
-                )
-                ->having('distance', '<', 20)
-                ->orderBy('distance')
-                ->get();
+    ->join('regions', 'ads.region_id', '=', 'regions.id')
+    ->whereNotNull('regions.latitude')
+    ->whereNotNull('regions.longitude')
+    ->selectRaw(
+        '(6371 * acos(cos(radians(?)) * cos(radians(regions.latitude)) * 
+        cos(radians(regions.longitude) - radians(?)) + 
+        sin(radians(?)) * sin(radians(regions.latitude)))) AS distance',
+        [
+            $request->latitude, 
+            $request->longitude, 
+            $request->latitude
+        ]
+    )
+    ->whereRaw('(6371 * acos(cos(radians(?)) * cos(radians(regions.latitude)) * 
+        cos(radians(regions.longitude) - radians(?)) + 
+        sin(radians(?)) * sin(radians(regions.latitude)))) < ?',
+        [
+            $request->latitude,
+            $request->longitude,
+            $request->latitude,
+            $request->radius ?? 20 // استخدام القيمة الافتراضية 20 إذا لم يُرسل radius
+        ]
+    )
+    ->orderBy('distance')
+    ->get();
     
             return ApiResponseClass::sendResponse($ads, 'تم جلب الإعلانات بنجاح');
     
