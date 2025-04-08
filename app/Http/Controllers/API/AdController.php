@@ -328,7 +328,7 @@ class AdController extends Controller
             $request->latitude,
             $request->longitude,
             $request->latitude,
-            $request->radius ?? 20 // استخدام القيمة الافتراضية 20 إذا لم يُرسل radius
+            $request->radius ?? 10 
         ]
     )->with(['region','saleOption','category'])
     ->orderBy('distance')
