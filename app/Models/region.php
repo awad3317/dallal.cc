@@ -14,7 +14,7 @@ class region extends Model
      *
      * @var array
      */
-    protected $fillable = ['name', 'parent_id'];
+    protected $fillable = ['name', 'parent_id','latitude', 'longitude'];
 
     /**
      * Get the parent region of this region (for hierarchical structures).

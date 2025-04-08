@@ -14,8 +14,11 @@ return new class extends Migration
         Schema::create('regions', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->decimal('latitude', 10, 7)->nullable()->comment('خط العرض');
+            $table->decimal('longitude', 10, 7)->nullable()->comment('خط الطول');
             $table->foreignId('parent_id')->nullable()->constrained('regions')->onDelete('cascade');
             $table->timestamps();
+            $table->spatialIndex(['latitude', 'longitude']); 
         });
     }
 

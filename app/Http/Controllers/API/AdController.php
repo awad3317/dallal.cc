@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use Exception;
+use App\Models\Ad;
 use App\Jobs\recordViewJob;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rules\File;
 use App\Services\ViewService;
 use App\Services\ImageService;
 use Illuminate\Validation\Rule;
@@ -13,6 +13,7 @@ use App\Classes\ApiResponseClass;
 use App\Repositories\AdRepository;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rules\File;
 use Laravel\Sanctum\PersonalAccessToken;
 use Illuminate\Support\Facades\Validator;
 
@@ -290,6 +291,44 @@ class AdController extends Controller
             return ApiResponseClass::sendResponse($updatedAd, 'تم تحديث الصورة بنجاح.');
         } catch (Exception $e) {
             return ApiResponseClass::sendError('حدث خطأ أثناء تحديث الصورة: ' . $e->getMessage());
+        }
+    }
+
+    public function nearbyAds(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'latitude' => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between:-180,180',
+            'radius' => 'sometimes|numeric|min:1|max:100' 
+        ]);
+        
+        if ($validator->fails()) {
+            return ApiResponseClass::sendValidationError($validator->errors()->first(), $validator->errors());
+        }
+    
+        try {
+            $ads = Ad::select('ads.*')
+                ->join('regions', 'ads.region_id', '=', 'regions.id')
+                ->whereNotNull('regions.latitude')
+                ->whereNotNull('regions.longitude')
+                ->selectRaw(
+                    '(6371 * acos(cos(radians(?)) * cos(radians(regions.latitude)) * 
+                    cos(radians(regions.longitude) - radians(?)) + 
+                    sin(radians(?)) * sin(radians(regions.latitude)))) AS distance',
+                    [
+                        $request->latitude, 
+                        $request->longitude, 
+                        $request->latitude
+                    ]
+                )
+                ->having('distance', '<', 20)
+                ->orderBy('distance')
+                ->get();
+    
+            return ApiResponseClass::sendResponse($ads, 'تم جلب الإعلانات بنجاح');
+    
+        } catch (\Exception $ex) {
+            return ApiResponseClass::rollback($ex, 'حدث خطأ أثناء جلب الإعلانات القريبة');
         }
     }
 }

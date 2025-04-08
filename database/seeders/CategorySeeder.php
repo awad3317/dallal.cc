@@ -270,7 +270,7 @@ class CategorySeeder extends Seeder
                 'parent_id' => 45,
             ],
 
-                   [
+            [
                 'name' => 'أطعمة ومشروبات',
                 'icon' => 'FaUtensilSpoon',
                 'parent_id' => null,
@@ -294,7 +294,190 @@ class CategorySeeder extends Seeder
                 'name' => 'فواكه وخضروات',
                 'icon' => 'FaCarrot',
                 'parent_id' => 50,
-            ]
+            ],
+            [
+                'name' => 'أدوات منزلية',
+                'icon' => 'FaHome',
+                'parent_id' => null,
+            ],
+            [
+                'name' => 'أدوات المطبخ',
+                'icon' => 'FaUtensils',
+                'parent_id' => 55, 
+            ],
+            [
+                'name' => 'أدوات الحدائق',
+                'icon' => 'FaSeedling',
+                'parent_id' => 55,
+            ],
+            [
+                'name' => 'أدوات التنظيف',
+                'icon' => 'FaBroom',
+                'parent_id' => 55,
+            ],
+
+            [
+                'name' => 'أجهزة رياضية',
+                'icon' => 'FaDumbbell',
+                'parent_id' => null,
+            ],
+            [
+                'name' => 'أجهزة المشي',
+                'icon' => 'FaWalking',
+                'parent_id' => 59,
+            ],
+            [
+                'name' => 'أوزان رياضية',
+                'icon' => 'FaWeight',
+                'parent_id' => 59,
+            ],
+
+            [
+                'name' => 'أدوات ومعدات',
+                'icon' => 'FaTools',
+                'parent_id' => null,
+            ],
+            [
+                'name' => 'أدوات البناء',
+                'icon' => 'FaHammer',
+                'parent_id' => 62,
+            ],
+            [
+                'name' => 'معدات صناعية',
+                'icon' => 'FaIndustry',
+                'parent_id' => 62,
+            ],
+            [
+                'name' => 'أدوات النجارة',
+                'icon' => 'FaTree',
+                'parent_id' => 62,
+            ],
+
+            [
+                'name' => 'مواد غذائية',
+                'icon' => 'FaShoppingBasket',
+                'parent_id' => null,
+            ],
+            [
+                'name' => 'تمور',
+                'icon' => 'FaAppleAlt',
+                'parent_id' => 66,
+            ],
+            [
+                'name' => 'عسل',
+                'icon' => 'FaHoneyPot',
+                'parent_id' => 66,
+            ],
+            [
+                'name' => 'مكسرات',
+                'icon' => 'FaAcorn',
+                'parent_id' => 66,
+            ],
+
+            [
+                'name' => 'أغراض الأطفال',
+                'icon' => 'FaBaby',
+                'parent_id' => null,
+            ],
+            [
+                'name' => 'عربيات أطفال',
+                'icon' => 'FaBabyCarriage',
+                'parent_id' => 70,
+            ],
+            [
+                'name' => 'ألعاب أطفال',
+                'icon' => 'FaPuzzlePiece',
+                'parent_id' => 70,
+            ],
+            [
+                'name' => 'ملابس أطفال',
+                'icon' => 'FaChild',
+                'parent_id' => 70,
+            ],
+
+            [
+                'name' => 'أجهزة طبية',
+                'icon' => 'FaClinicMedical',
+                'parent_id' => null,
+            ],
+            [
+                'name' => 'أجهزة قياس الضغط',
+                'icon' => 'FaHeartbeat',
+                'parent_id' => 74,
+            ],
+            [
+                'name' => 'كراسي متحركة',
+                'icon' => 'FaWheelchair',
+                'parent_id' => 74,
+            ],
+            [
+                'name' => 'مستلزمات طبية',
+                'icon' => 'FaSyringe',
+                'parent_id' => 74,
+            ],
+
+            [
+                'name' => 'تحف وأعمال فنية',
+                'icon' => 'FaPalette',
+                'parent_id' => null,
+            ],
+            [
+                'name' => 'لوحات فنية',
+                'icon' => 'FaPaintBrush',
+                'parent_id' => 78,
+            ],
+            [
+                'name' => 'تحف قديمة',
+                'icon' => 'FaMonument',
+                'parent_id' => 78,
+            ],
+            [
+                'name' => 'ساعات حائط',
+                'icon' => 'FaClock',
+                'parent_id' => 78,
+            ],
+
+            [
+                'name' => 'مستلزمات التجميل',
+                'icon' => 'FaSprayCan',
+                'parent_id' => null,
+            ],
+            [
+                'name' => 'عطور',
+                'icon' => 'FaWind',
+                'parent_id' => 82,
+            ],
+            [
+                'name' => 'أدوات تجميل',
+                'icon' => 'FaEye',
+                'parent_id' => 82,
+            ],
+            [
+                'name' => 'كريمات عناية',
+                'icon' => 'FaPumpSoap',
+                'parent_id' => 82,
+            ],
+
+            [
+                'name' => 'مقتنيات متنوعة',
+                'icon' => 'FaBoxOpen',
+                'parent_id' => null,
+            ],
+            [
+                'name' => 'عملات وطوابع',
+                'icon' => 'FaMoneyBillWave',
+                'parent_id' => 86,
+            ],
+            [
+                'name' => 'مجوهرات',
+                'icon' => 'FaRing',
+                'parent_id' => 86,
+            ],
+            [
+                'name' => 'ساعات يد',
+                'icon' => 'FaStopwatch',
+                'parent_id' => 86,
+            ],
         ];
 
         foreach ($categories as $category) {

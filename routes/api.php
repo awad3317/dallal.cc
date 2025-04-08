@@ -56,6 +56,8 @@ Route::middleware(['auth:sanctum','check.banned'])->group(function () {
     
     Route::apiResource('/ad',AdController::class)->except(['index','show','update']);
     Route::post('/ad/{id}',[AdController::class,'update']);
+    
+
     Route::post('/updatePrimaryImage/{ad_id}',[AdController::class,'updatePrimaryImage']);
     Route::get('/ad/edit/{id}',[AdController::class,'edit']);
     
@@ -97,6 +99,7 @@ Route::post('/resetPassword', [forgetPasswordController::class,'resetPassword'])
 
 
 Route::get('/ad',[AdController::class,'index']);
+Route::post('/nearbyAds',[AdController::class,'nearbyAds']);
 Route::get('/ad/{id}',[AdController::class,'show']);
 Route::get('/saleOption',[SaleOptionController::class,'index']);
 Route::get('/bid',[BidController::class,'index']);
