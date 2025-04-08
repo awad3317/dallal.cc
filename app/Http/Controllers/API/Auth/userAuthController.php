@@ -50,7 +50,7 @@ class userAuthController extends Controller
         $fields = $request->only(['name', 'email', 'password', 'phone_number']);
        
         // Create the avatar using the service
-        $fields['image'] = $this->AvatarService->createAvatar($fields['name']);
+        // $fields['image'] = $this->AvatarService->createAvatar($fields['name']);
 
         // Store the new user using the UserRepository
         $user=$this->UserRepository->store($fields);
