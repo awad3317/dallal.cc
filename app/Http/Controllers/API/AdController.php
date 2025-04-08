@@ -328,7 +328,7 @@ class AdController extends Controller
             return ApiResponseClass::sendResponse($ads, 'تم جلب الإعلانات بنجاح');
     
         }catch (Exception $e) {
-            return ApiResponseClass::sendError('حدث خطأ أثناء تحديث الصورة: ' . $e->getMessage());
+            return ApiResponseClass::sendError('حدث خطا     : ' . $e->getMessage());
         }
     }
 }
