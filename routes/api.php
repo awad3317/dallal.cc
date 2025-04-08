@@ -43,7 +43,9 @@ Route::middleware(['auth:sanctum','check.banned'])->group(function () {
     Route::get('/getAds',[AdminDashboardController::class,'getAds']);
     Route::get('/getStatisticsByYear/{year}',[AdminDashboardController::class,'getStatisticsByYear']);
     
-    Route::apiResource('/contact',ContactController::class)->except(['store','update']);   
+    Route::apiResource('/contact',ContactController::class)->except(['store','update']); 
+    Route::post('/contactStore',[ContactController::class,'contactStore']);  
+    
 
     Route::apiResource('/region',RegionController::class)->except(['index']);
     Route::apiResource('/category',CategoryController::class)->except(['inedx']);
@@ -105,6 +107,8 @@ Route::get('/saleOption',[SaleOptionController::class,'index']);
 Route::get('/bid',[BidController::class,'index']);
 
 Route::post('/contact',[ContactController::class,'store']);
+Route::get('/contactIndex',[ContactController::class,'contactIndex']);
+
 Route::get('/SocialMediaLink',[SocialMediaLinkController::class,'index']);
 
 
