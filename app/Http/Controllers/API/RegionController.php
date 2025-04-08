@@ -67,7 +67,9 @@ class RegionController extends Controller
         }
         $validator = Validator::make($request->all(), [
             'name' => ['required','string',Rule::unique('regions','name')],
-            'parent_id' => ['nullable',Rule::exists('regions','id')]
+            'parent_id' => ['nullable',Rule::exists('regions','id')],
+            'latitude' => ['required','numeric','between:-90,90'],
+            'longitude' =>['required','numeric','between:-180,180']
         ], [
            'name.required'=>'يجب إدخال أسم المنطقة',
            'name.string'=>'يجب أن يكون الاسم نصاً',
@@ -77,7 +79,7 @@ class RegionController extends Controller
             return ApiResponseClass::sendValidationError($validator->errors()->first(), $validator->errors());
         }
         try {
-            $fields=$request->only(['name','parent_id']);
+            $fields=$request->only(['name','parent_id','latitude','longitude']);
             $Region=$this->RegionRepository->store($fields);
             return ApiResponseClass::sendResponse($Region,'Region saved successfully.');
         } catch (Exception $e) {
@@ -108,7 +110,9 @@ class RegionController extends Controller
         }
         $validator = Validator::make($request->all(), [
             'name' => ['required','string',Rule::unique('regions','name')->ignore($id)],
-            'parent_id' => ['nullable',Rule::exists('regions','id')]
+            'parent_id' => ['nullable',Rule::exists('regions','id')],
+            'latitude' => ['required','numeric','between:-90,90'],
+            'longitude' =>['required','numeric','between:-180,180']
         ], [
            'name.required'=>'يجب إدخال أسم المنطقة',
            'name.string'=>'يجب أن يكون الاسم نصاً',
@@ -118,7 +122,7 @@ class RegionController extends Controller
             return ApiResponseClass::sendValidationError($validator->errors()->first(), $validator->errors());
         }
         try {
-            $fields=$request->only(['name','parent_id']);
+            $fields=$request->only(['name','parent_id','latitude','longitude']);
             $Region=$this->RegionRepository->update($fields,$id);
             return ApiResponseClass::sendResponse($Region,'Region is updated successfully.');
         } catch (Exception $e) {
