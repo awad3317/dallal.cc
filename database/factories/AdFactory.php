@@ -29,7 +29,7 @@ class AdFactory extends Factory
         return [
             'user_id' => User::inRandomOrder()->first()->id,
             'category_id' => $category->id,
-            'region_id' => region::inRandomOrder()->first()->id,
+            'region_id' => Region::where('parent_id','!=',null)->inRandomOrder()->first()->id,
             'title' => $this->faker->randomElement($arabicData['titles']),
             'description' => $this->faker->randomElement($arabicData['descriptions']),
             'price' => $this->faker->numberBetween(100, 100000),
