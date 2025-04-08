@@ -39,6 +39,7 @@ class SaleOptionController extends Controller
     {
         $fields=$request->validate([
             'name' => ['required','string','max:255',Rule::unique('sale_options','name')],
+            'description' => ['required','string'],
         ]);
         try {
             $SaleOption=$this->SaleOptionRepository->store($fields);
@@ -68,6 +69,7 @@ class SaleOptionController extends Controller
     {
         $fields=$request->validate([
             'name' => ['sometimes','string','max:255',Rule::unique('sale_options','name')->ignore($id)],
+            'description' => ['sometimes','string'],
         ]);
         try {
             $SaleOption=$this->SaleOptionRepository->update($fields,$id);

@@ -18,8 +18,8 @@ class SaleOptionSeeder extends Seeder
 
         
         $saleOptions = [
-            ['name' => 'قابل للتفاوض'],
-            ['name' => 'سوم'],
+            ['name' => 'قابل للتفاوض','description'=>'السعر قابل للتفاوض مع المشتري'],
+            ['name' => 'المزايدة','description'=>'السماح للمشترين بتقديم عروض اعلى'],
         ];
 
         
