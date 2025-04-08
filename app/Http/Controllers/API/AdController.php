@@ -330,7 +330,10 @@ class AdController extends Controller
             $request->latitude,
             $request->radius ?? 10 
         ]
-    )->with(['region','saleOption','category'])
+    )->with(['category.parent', 'region.parent', 'saleOption'])->where(function($query) {
+        $query->whereNull('verified')->orWhere('verified', true);
+    })
+    ->withMax('bids', 'amount')
     ->orderBy('distance')
     ->paginate(12);
     
