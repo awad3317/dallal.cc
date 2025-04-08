@@ -89,12 +89,7 @@ class userAuthController extends Controller
             // Send an email with the OTP code to the user's email address
             // SendOtpEmailJob::dispatch($user->email, $otp);
             Mail::to($user->email)->send(new OtpMail($otp));
-            $response = [
-                'success' => false,
-                'message' => "'البريد الإلكتروني غير محقق. تم إرسال رمز التحقق'.$user->email",
-                'OTP'=>'required'
-            ];
-            return response()->json($response, 200);
+           return ApiResponseClass::sendResponse($user,'the user account');
         }
 
         // Check if the user exists and if the password is correct
