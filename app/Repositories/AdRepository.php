@@ -18,9 +18,10 @@ class AdRepository implements RepositoriesInterface
     {
         //
     }
-    public function index($region_id, $category_id,$latitude,$longitude)
+    public function index($region_id, $category_id, $latitude = null, $longitude = null)
     {
-        $query = Ad::query();
+        $query = Ad::query()->select('ads.*'); // تحديد الجدول الرئيسي
+    
         if ($region_id) {
             $region = Region::with('children')->find($region_id);
             if ($region) {
@@ -30,6 +31,7 @@ class AdRepository implements RepositoriesInterface
                 $query->whereIn('region_id', $regionIds);
             }
         }
+    
         if ($category_id) {
             $category = Category::with('children')->find($category_id);
             if ($category) {
@@ -39,40 +41,29 @@ class AdRepository implements RepositoriesInterface
                 $query->whereIn('category_id', $categoryIds);
             }
         }
-        if($latitude && $longitude){
+    
+        if ($latitude && $longitude) {
             $query->join('regions', 'ads.region_id', '=', 'regions.id')
-            ->whereNotNull('regions.latitude')
-            ->whereNotNull('regions.longitude')
-            ->selectRaw(
-                '(6371 * acos(cos(radians(?)) * cos(radians(regions.latitude)) * 
-                cos(radians(regions.longitude) - radians(?)) + 
-                sin(radians(?)) * sin(radians(regions.latitude)))) AS distance',
-                [
-                    $latitude, 
-                    $longitude, 
-                    $latitude
-                ]
-            )
-            ->whereRaw('(6371 * acos(cos(radians(?)) * cos(radians(regions.latitude)) * 
-                cos(radians(regions.longitude) - radians(?)) + 
-                sin(radians(?)) * sin(radians(regions.latitude)))) < ?',
-                [
-                    $latitude,
-                    $longitude,
-                    $latitude,
-                    10 
-                ]
-                );
-            }
-        
+                ->whereNotNull('regions.latitude')
+                ->whereNotNull('regions.longitude')
+                ->selectRaw('ads.*, (6371 * acos(cos(radians(?)) * cos(radians(regions.latitude)) * 
+                    cos(radians(regions.longitude) - radians(?)) + 
+                    sin(radians(?)) * sin(radians(regions.latitude)))) AS distance',
+                    [$latitude, $longitude, $latitude])
+                ->whereRaw('(6371 * acos(cos(radians(?)) * cos(radians(regions.latitude)) * 
+                    cos(radians(regions.longitude) - radians(?)) + 
+                    sin(radians(?)) * sin(radians(regions.latitude)))) < ?',
+                    [$latitude, $longitude, $latitude, 10]);
+        }
+    
         return $query->with(['category.parent', 'region.parent', 'saleOption'])
-        ->where(function($query) {
-            $query->whereNull('verified')->orWhere('verified', true);
-        })
-        ->withMax('bids', 'amount')
-        ->filter()
-        ->orderBy('created_at', 'desc')
-        ->paginate(12);
+            ->where(function($query) {
+                $query->whereNull('verified')->orWhere('verified', true);
+            })
+            ->withMax('bids', 'amount')
+            ->filter()
+            ->orderBy('ads.created_at', 'desc') // تحديد الجدول هنا
+            ->paginate(12);
     }
 
     public function indexAdminDashboard($region_id, $category_id)
