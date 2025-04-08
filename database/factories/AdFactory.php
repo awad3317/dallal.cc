@@ -28,7 +28,7 @@ class AdFactory extends Factory
         $categoryImage = $this->getCategoryImage($category->id);
         return [
             'user_id' => User::inRandomOrder()->first()->id,
-            'category_id' => $category->id,
+            'category_id' =>Category::where('parent_id','!=',null)->inRandomOrder()->first()->id,
             'region_id' => Region::where('parent_id','!=',null)->inRandomOrder()->first()->id,
             'title' => $this->faker->randomElement($arabicData['titles']),
             'description' => $this->faker->randomElement($arabicData['descriptions']),
