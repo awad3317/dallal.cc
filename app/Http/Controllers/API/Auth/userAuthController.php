@@ -90,7 +90,7 @@ class userAuthController extends Controller
             // SendOtpEmailJob::dispatch($user->email, $otp);
             Mail::to($user->email)->send(new OtpMail($otp));
             $user->token="not token";
-           return ApiResponseClass::sendResponse($user, "'البريد الإلكتروني غير محقق. تم إرسال رمز التحقق'.$user->email");
+           return ApiResponseClass::sendResponse(['user' => $user], "'البريد الإلكتروني غير محقق. تم إرسال رمز التحقق'.$user->email");
         }
 
         // Check if the user exists and if the password is correct
