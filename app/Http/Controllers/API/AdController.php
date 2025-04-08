@@ -330,9 +330,9 @@ class AdController extends Controller
             $request->latitude,
             $request->radius ?? 20 // استخدام القيمة الافتراضية 20 إذا لم يُرسل radius
         ]
-    )
+    )->with(['region','saleOption','category'])
     ->orderBy('distance')
-    ->get();
+    ->paginate(12);
     
             return ApiResponseClass::sendResponse($ads, 'تم جلب الإعلانات بنجاح');
     
