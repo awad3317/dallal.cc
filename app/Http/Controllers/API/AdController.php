@@ -33,7 +33,7 @@ class AdController extends Controller
     public function index(Request $request)
     {
         try {
-            $ads = $this->AdRepository->index($request->region_id,$request->category_id);
+            $ads = $this->AdRepository->index($request->region_id,$request->category_id,$request->latitude,$request->longitude);
             return ApiResponseClass::sendResponse($ads, 'All ads retrieved successfully.');
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error retrieving ads: ' . $e->getMessage());

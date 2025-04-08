@@ -18,7 +18,7 @@ class AdRepository implements RepositoriesInterface
     {
         //
     }
-    public function index($region_id, $category_id)
+    public function index($region_id, $category_id,$latitude,$longitude)
     {
         $query = Ad::query();
         if ($region_id) {
@@ -38,6 +38,33 @@ class AdRepository implements RepositoriesInterface
                 $categoryIds = $categoryIds->merge($allCategoryIds);
                 $query->whereIn('category_id', $categoryIds);
             }
+        }
+        if($latitude && $longitude){
+            $query->join('regions', 'ads.region_id', '=', 'regions.id')
+            ->whereNotNull('regions.latitude')
+            ->whereNotNull('regions.longitude')
+            ->selectRaw(
+                '(6371 * acos(cos(radians(?)) * cos(radians(regions.latitude)) * 
+                cos(radians(regions.longitude) - radians(?)) + 
+                sin(radians(?)) * sin(radians(regions.latitude)))) AS distance',
+                [
+                    $latitude, 
+                    $longitude, 
+                    10
+                ]
+            )
+            ->whereRaw('(6371 * acos(cos(radians(?)) * cos(radians(regions.latitude)) * 
+                cos(radians(regions.longitude) - radians(?)) + 
+                sin(radians(?)) * sin(radians(regions.latitude)))) < ?',
+                [
+                    $latitude,
+                    $longitude,
+                    $latitude,
+                    10
+                ]
+            )
+            ->orderBy('distance');
+
         }
         return $query->with(['category.parent', 'region.parent', 'saleOption'])
         ->where(function($query) {
