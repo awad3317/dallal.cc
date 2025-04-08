@@ -90,21 +90,21 @@ class UserController extends Controller
             return ApiResponseClass::sendValidationError($validator->errors()->first(),$validator->errors());
         }
         try {
-            $fields=$request->only(['username','name','phone_number','image']);
-            if ($request->hasFile('image')) {
-                $fields['image']=$this->ImageService->saveImage($fields['image'],'images_users');
-            }
-            elseif($request->has('name')){
-                $user = $this->UserRepository->getById($id);
-                if ($request->input('name') !== $user->name) {
-                    if ($this->AvatarService->isDefaultAvatar($user->image)) 
-                    {
-                        $this->ImageService->deleteImage($user->image);
-                        $newDefaultAvatar = $this->AvatarService->createAvatar($request->input('name'));
-                        $fields['image'] = $newDefaultAvatar;
-                    }
-                }
-            }
+            $fields=$request->only(['username','name','phone_number']);
+            // if ($request->hasFile('image')) {
+            //     $fields['image']=$this->ImageService->saveImage($fields['image'],'images_users');
+            // }
+            // elseif($request->has('name')){
+            //     $user = $this->UserRepository->getById($id);
+            //     if ($request->input('name') !== $user->name) {
+            //         if ($this->AvatarService->isDefaultAvatar($user->image)) 
+            //         {
+            //             $this->ImageService->deleteImage($user->image);
+            //             $newDefaultAvatar = $this->AvatarService->createAvatar($request->input('name'));
+            //             $fields['image'] = $newDefaultAvatar;
+            //         }
+            //     }
+            // }
             $User=$this->UserRepository->update($fields,$id);
             return ApiResponseClass::sendResponse($User,'User is updated successfully.');
         } catch (Exception $e) {
