@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             UserSeeder::class,
             SocialMediaLinksSeeder::class,
+            AdSeeder::class
         ]);
     }
 }
