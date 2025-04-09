@@ -21,7 +21,7 @@ class User extends Authenticatable implements LaratrustUser
      *
      * @var array
      */
-    protected $filters = ['like'];
+    protected $filters = ['like','is_banned'];
 
     /**
      * The attributes that are mass assignable.
