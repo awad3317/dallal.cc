@@ -87,7 +87,7 @@ class AdRepository implements RepositoriesInterface
                 $query->whereIn('category_id', $categoryIds);
             }
         }
-        return  $query->with(['category.parent', 'region.parent', 'saleOption'])->withMax('bids', 'amount')->filter()->paginate(10);
+        return  $query->with(['category.parent', 'region.parent', 'saleOption'])->withMax('bids', 'amount')->filter()->paginate(12);
     }
 
     public function getById($id): Ad

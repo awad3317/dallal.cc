@@ -34,7 +34,7 @@ class UserDashboardController extends Controller
     {
         try {
             $user = $this->UserRepository->getById(Auth::id());
-            $ads = $user->ads()->with(['category', 'region', 'saleOption'])->withMax('bids', 'amount')->paginate(10); 
+            $ads = $user->ads()->with(['category', 'region', 'saleOption'])->withMax('bids', 'amount')->paginate(12); 
             return ApiResponseClass::sendResponse($ads, 'ads retrieved successfully.');
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error retrieving ads: ' . $e->getMessage());
@@ -49,7 +49,7 @@ class UserDashboardController extends Controller
             $favorites = $user->likes()->where(function($query) {
                 $query->whereNull('verified')
                       ->orWhere('verified', true);
-            })->with(['category', 'region', 'saleOption'])->withMax('bids', 'amount')->paginate(10);  
+            })->with(['category', 'region', 'saleOption'])->withMax('bids', 'amount')->paginate(12);  
             return ApiResponseClass::sendResponse($favorites, 'favorites retrieved successfully.');
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error retrieving favorites: ' . $e->getMessage());
