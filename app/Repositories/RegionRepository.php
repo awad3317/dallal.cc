@@ -16,7 +16,7 @@ class RegionRepository implements RepositoriesInterface
     }
     public function index(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
-        return region::paginate(10);
+        return region::filter()->paginate(10);
     }
 
     public function getById($id): region

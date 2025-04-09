@@ -16,7 +16,7 @@ class CategoryRepository implements RepositoriesInterface
     }
     public function index(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
-        return Category::paginate(10);
+        return Category::filter()->paginate(10);
     }
 
     public function getById($id): Category
