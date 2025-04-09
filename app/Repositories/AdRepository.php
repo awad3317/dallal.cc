@@ -20,7 +20,7 @@ class AdRepository implements RepositoriesInterface
     }
     public function index($region_id, $category_id, $latitude = null, $longitude = null)
     {
-        $query = Ad::query()->select('ads.*'); // تحديد الجدول الرئيسي
+        $query = Ad::query()->select('ads.*');
     
         if ($region_id) {
             $region = Region::with('children')->find($region_id);

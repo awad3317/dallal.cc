@@ -9,11 +9,19 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Laratrust\Contracts\LaratrustUser;
 use Laratrust\Traits\HasRolesAndPermissions;
+use Mehradsadeghi\FilterQueryString\FilterQueryString;
 
 class User extends Authenticatable implements LaratrustUser
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens, HasRolesAndPermissions;
+    use HasFactory, Notifiable, HasApiTokens, HasRolesAndPermissions, FilterQueryString;
+
+     /**
+     * Filterable fields for query string filtering.
+     *
+     * @var array
+     */
+    protected $filters = ['like'];
 
     /**
      * The attributes that are mass assignable.

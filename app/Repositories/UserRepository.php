@@ -18,7 +18,7 @@ class UserRepository implements RepositoriesInterface
     }
     public function index(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
-        return User::with(['role'])->paginate(10);
+        return User::with(['role'])->filter()->paginate(10);
     }
 
     public function getById($id): User
