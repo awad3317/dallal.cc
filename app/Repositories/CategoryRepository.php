@@ -14,9 +14,12 @@ class CategoryRepository implements RepositoriesInterface
     {
         //
     }
-    public function index(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
+    public function index($name=null): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
-        return Category::filter()->paginate(10);
+        if($name){
+            return Category::where('name', 'LIKE', "%{$name}%")->paginate(10);
+        }
+        return Category::paginate(10);
     }
 
     public function getById($id): Category

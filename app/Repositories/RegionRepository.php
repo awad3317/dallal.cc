@@ -14,9 +14,13 @@ class RegionRepository implements RepositoriesInterface
     {
         //
     }
-    public function index(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
+    public function index($name=null): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
-        return region::filter()->paginate(10);
+        if($name){
+            return region::where('name', 'LIKE', "%{$name}%")->paginate(10);
+        }
+        return region::paginate(10);
+        
     }
 
     public function getById($id): region

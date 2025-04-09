@@ -23,10 +23,10 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $Categories=$this->CategoryRepository->index();
+            $Categories=$this->CategoryRepository->index($request->name);
             return ApiResponseClass::sendResponse($Categories, 'All Categories retrieved successfully.');
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error retrieving Categories: ' . $e->getMessage());

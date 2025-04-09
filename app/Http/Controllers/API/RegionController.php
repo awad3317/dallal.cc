@@ -23,10 +23,10 @@ class RegionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $Regions=$this->RegionRepository->index();
+            $Regions=$this->RegionRepository->index($request->name);
             return ApiResponseClass::sendResponse($Regions, 'All Regions retrieved successfully.');
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error retrieving Regions: ' . $e->getMessage());

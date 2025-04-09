@@ -3,22 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Mehradsadeghi\FilterQueryString\FilterQueryString;
 
 /**
  * Region model representing geographical regions with hierarchical relationships.
  */
 class region extends Model
 {
-    use FilterQueryString;
-
-    /**
-     * Filterable fields for query string filtering.
-     *
-     * @var array
-     */
-    protected $filters = ['like'];
-
     /**
      * The attributes that are mass assignable.
      *
