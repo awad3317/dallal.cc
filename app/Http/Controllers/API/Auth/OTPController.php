@@ -23,10 +23,18 @@ class OTPController extends Controller
     }
 
     public function resendOTP(Request $request) {
-        $fields=$request->validate([
+        $validator = Validator::make($request->all(), [
             'email' => ['required','email',Rule::exists('users','email')],
-        ]);
+         ],[
+            'email.required'=>'يجب كتابة البريد الإلكتروني',
+            'email.email'=>'يجب ان يكون المدخل بريد الإلكتروني',
+            'email.exists'=> 'البريد الإلكتروني غير موجود في النظام',
+         ]);
+         if ($validator->fails()) {
+            return ApiResponseClass::sendValidationError($validator->errors()->first(),$validator->errors());
+         }
         try {
+            $fields=$request->only(['email']);
             $otp=$this->otpService->generateOTP($fields['email']);
             // SendOtpEmailJob::dispatch($fields['email'], $otp);
             Mail::to($fields['email'])->send(new OtpMail($otp));
