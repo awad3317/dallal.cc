@@ -66,7 +66,7 @@ class AdRepository implements RepositoriesInterface
             ->paginate(12);
     }
 
-    public function indexAdminDashboard($region_id, $category_id)
+    public function indexAdminDashboard($region_id, $category_id,$verified)
     {
         $query = Ad::query();
         if ($region_id) {
@@ -85,6 +85,19 @@ class AdRepository implements RepositoriesInterface
                 $allCategoryIds = Category::whereIn('parent_id', $categoryIds)->pluck('id');
                 $categoryIds = $categoryIds->merge($allCategoryIds);
                 $query->whereIn('category_id', $categoryIds);
+            }
+        }
+        if ($verified !== null) {
+            switch ($verified) {
+                case 0: 
+                    $query->where('verified', false);
+                    break;
+                case 1: 
+                    $query->where('verified', true);
+                    break;
+                case 2:
+                    $query->whereNull('verified');
+                    break;
             }
         }
         return  $query->with(['category.parent', 'region.parent', 'saleOption'])->withMax('bids', 'amount')->filter()->paginate(12);
