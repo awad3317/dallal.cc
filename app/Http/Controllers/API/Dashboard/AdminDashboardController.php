@@ -28,7 +28,7 @@ class AdminDashboardController extends Controller
             if (!Auth::user()->has_role('admin')) {
                 return ApiResponseClass::sendError('Unauthorized', 403);
             }
-            $ads = $this->AdRepository->indexAdminDashboard($request->region_id,$request->category_id,$request->$verified);
+            $ads = $this->AdRepository->indexAdminDashboard($request->region_id,$request->category_id,$request->verified);
             return ApiResponseClass::sendResponse($ads, 'All ads retrieved successfully.');
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error retrieving ads: ' . $e->getMessage());
