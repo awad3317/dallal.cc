@@ -13,10 +13,7 @@ class SaleOptionSeeder extends Seeder
      */
     public function run(): void
     {
-        
-        DB::table('sale_options')->truncate();
 
-        
         $saleOptions = [
             ['name' => 'قابل للتفاوض','description'=>'السعر قابل للتفاوض مع المشتري'],
             ['name' => 'المزايدة','description'=>'السماح للمشترين بتقديم عروض اعلى'],
