@@ -103,16 +103,6 @@ class UserRepository implements RepositoriesInterface
 
     public function getUsersStatisticsByYear($year)
     {
-        if (config('database.default') === 'sqlite') {
-            return User::select(
-                    DB::raw('strftime("%m", created_at) as month'),
-                    DB::raw('COUNT(*) as users_count')
-                )
-                ->where(DB::raw('strftime("%Y", created_at)'), $year)
-                ->groupBy(DB::raw('strftime("%m", created_at)'))
-                ->orderBy(DB::raw('strftime("%m", created_at)'))
-                ->get();
-        } else {
             return User::select(
                     DB::raw('MONTH(created_at) as month'),
                     DB::raw('COUNT(*) as users_count')
@@ -121,7 +111,6 @@ class UserRepository implements RepositoriesInterface
                 ->groupBy(DB::raw('MONTH(created_at)'))
                 ->orderBy(DB::raw('MONTH(created_at)'))
                 ->get();
-        }
     }
 
 }
