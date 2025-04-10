@@ -16,3 +16,4 @@ $app->make('Illuminate\Contracts\Console\Kernel')->bootstrap();
 $users = User::where('id','=',3)->get();
 
 Mail::to($users->email)->send(new WelcomeMail($users));
+echo "تم إرسال رسالة ترحيبية إلى: {$user->email}\n";

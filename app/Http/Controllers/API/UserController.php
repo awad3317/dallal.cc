@@ -87,6 +87,8 @@ class UserController extends Controller
             'phone_number.max' => 'يجب ألا يتجاوز رقم الهاتف 15 رقمًا.',
             'image.image' => 'يجب أن يكون الملف المرفوع صورة.',
             'image.max' => 'يجب ألا يتجاوز حجم الصورة 2 ميجابايت.',
+            'receive_site_notifications.boolean'=>'يجب ان يكون الاشعارات عبر الموقع اما 1 مقبول او 0 غير مقبول',
+            'receive_email_notifications.boolean'=>'يجب ان ي',
         ]);
         if ($validator->fails()) {
             return ApiResponseClass::sendValidationError($validator->errors()->first(),$validator->errors());
