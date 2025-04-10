@@ -39,6 +39,8 @@ class User extends Authenticatable implements LaratrustUser
         'email_verified',
         'role_id',
         'is_banned',
+        'receive_site_notifications',
+        'receive_email_notifications',
     ];
 
 
