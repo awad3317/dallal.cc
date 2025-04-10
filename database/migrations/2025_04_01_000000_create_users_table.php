@@ -22,6 +22,8 @@ return new class extends Migration
             $table->timestamp('last_login')->nullable();
             $table->boolean('email_verified')->default(false);
             $table->boolean('is_banned')->default(false);
+            $table->boolean('receive_site_notifications')->default(true);
+            $table->boolean('receive_email_notifications')->default(true);
             $table->unsignedBigInteger('role_id')->nullable();
             $table->foreign('role_id')->references('id')->on('roles')->onDelete('set null');
             $table->timestamps();
