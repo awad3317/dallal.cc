@@ -14,12 +14,10 @@ class WelcomeMail extends Mailable
 {
     use Queueable, SerializesModels;
     public $user;
-    public $unread_count;
 
-    public function __construct(User $user,$unread_count)
+    public function __construct(User $user)
     {
         $this->user = $user;
-        $this->unread_count=$unread_count;
     }
 
     /**
