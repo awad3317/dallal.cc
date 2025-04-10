@@ -15,7 +15,7 @@ if ($users->isEmpty()) {
 }
 foreach ($users as $user) {
     try {
-        // الحصول على المحادثات غير المقروءة مع معلومات المرسلين
+        
         $unreadConversations = Conversation::with(['sender', 'receiver', 'messages' => function($q) use ($user) {
                 $q->where('receiver_id', $user->id)
                   ->where('is_read', false);
@@ -26,19 +26,17 @@ foreach ($users as $user) {
             })
             ->get()
             ->filter(function($conversation) use ($user) {
-                // تحديد الطرف الآخر في المحادثة
+                
                 $conversation->other_user = $conversation->sender_id == $user->id 
                     ? $conversation->receiver 
                     : $conversation->sender;
                 
-                // حساب عدد الرسائل غير المقروءة
                 $conversation->unread_count = $conversation->messages->count();
                 
                 return $conversation->unread_count > 0;
             });
 
         if ($unreadConversations->isNotEmpty()) {
-            // تجهيز بيانات المرسلين
             $senders = $unreadConversations->map(function($conv) {
                 return [
                     'name' => $conv->other_user->name,
@@ -46,7 +44,7 @@ foreach ($users as $user) {
                 ];
             });
 
-            // إرسال البريد مع قائمة المرسلين
+            
             Mail::to($user->email)->send(new WelcomeMail([
                 'user' => $user,
                 'senders' => $senders,
