@@ -13,13 +13,11 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 class WelcomeMail extends Mailable
 {
     use Queueable, SerializesModels;
-    public $user;
-    public $unreadCount;
+    public $mailData;
 
-    public function __construct(User $user,$unreadCount)
+    public function __construct($mailData)
     {
-        $this->user = $user;
-        $this->unreadCount=$unreadCount;
+        $this->mailData = $mailData;
     }
 
     /**
@@ -28,7 +26,7 @@ class WelcomeMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Welcome Mail',
+            subject: 'لديك رسائل جديدة من عدة أشخاص',
         );
     }
 

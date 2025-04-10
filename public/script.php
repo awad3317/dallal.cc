@@ -15,31 +15,47 @@ if ($users->isEmpty()) {
 }
 foreach ($users as $user) {
     try {
-        $unreadCount = Conversation::where(function($query) use ($user) {
-            $query->where('sender_id', $user->id)
-                  ->orWhere('receiver_id', $user->id);
-        })
-        ->whereHas('messages', function($query) use ($user) {
-            $query->where('receiver_id', $user->id)
+        // الحصول على المحادثات غير المقروءة مع معلومات المرسلين
+        $unreadConversations = Conversation::with(['sender', 'receiver', 'messages' => function($q) use ($user) {
+                $q->where('receiver_id', $user->id)
                   ->where('is_read', false);
-        })
-        ->count();
-        if ($unreadCount > 0){
-            Mail::to($user->email)->send(new WelcomeMail($user,$unreadCount));
-            echo "تم إرسال رسالة ترحيبية إلى: {$user->email}\n";
+            }])
+            ->where(function($query) use ($user) {
+                $query->where('sender_id', $user->id)
+                      ->orWhere('receiver_id', $user->id);
+            })
+            ->get()
+            ->filter(function($conversation) use ($user) {
+                // تحديد الطرف الآخر في المحادثة
+                $conversation->other_user = $conversation->sender_id == $user->id 
+                    ? $conversation->receiver 
+                    : $conversation->sender;
+                
+                // حساب عدد الرسائل غير المقروءة
+                $conversation->unread_count = $conversation->messages->count();
+                
+                return $conversation->unread_count > 0;
+            });
+
+        if ($unreadConversations->isNotEmpty()) {
+            // تجهيز بيانات المرسلين
+            $senders = $unreadConversations->map(function($conv) {
+                return [
+                    'name' => $conv->other_user->name,
+                    'unread_count' => $conv->unread_count
+                ];
+            });
+
+            // إرسال البريد مع قائمة المرسلين
+            Mail::to($user->email)->send(new WelcomeMail([
+                'user' => $user,
+                'senders' => $senders,
+                'total_unread' => $unreadConversations->sum('unread_count')
+            ]));
+            
+            echo "تم إرسال إشعار إلى: {$user->email} - عدد المرسلين: {$senders->count()}\n";
         }
-       
     } catch (\Exception $e) {
         echo "حدث خطأ أثناء الإرسال إلى {$user->email}: " . $e->getMessage() . "\n";
     }
 }
-// if ($user) {
-//     try {
-//         Mail::to($user->email)->send(new WelcomeMail($user));
-//         echo "تم إرسال رسالة ترحيبية إلى: {$user->email}\n";
-//     } catch (\Exception $e) {
-//         echo "حدث خطأ أثناء الإرسال: " . $e->getMessage() . "\n";
-//     }
-// } else {
-//     echo "لم يتم العثور على المستخدم ذو ID 3\n";
-// }
