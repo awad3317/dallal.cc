@@ -74,6 +74,8 @@ class UserController extends Controller
             'name' => ['sometimes','string','max:100'],
             'phone_number' => ['sometimes','string','min:10','max:15',],
             'image' => ['sometimes','image','max:2048'],
+            'receive_site_notifications'=> ['sometimes','boolean'],
+            'receive_email_notifications'=> ['sometimes','boolean']
         ],[
             'username.string' => 'يجب أن يكون اسم المستخدم نصًا.',
             'username.regex' => 'يجب أن يحتوي اسم المستخدم على أحرف إنجليزية وأرقام وشرطة سفلية (_) فقط.',
@@ -90,7 +92,7 @@ class UserController extends Controller
             return ApiResponseClass::sendValidationError($validator->errors()->first(),$validator->errors());
         }
         try {
-            $fields=$request->only(['username','name','phone_number']);
+            $fields=$request->only(['username','name','phone_number','receive_email_notifications','receive_email_notifications']);
             // if ($request->hasFile('image')) {
             //     $fields['image']=$this->ImageService->saveImage($fields['image'],'images_users');
             // }
