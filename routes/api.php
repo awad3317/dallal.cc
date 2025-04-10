@@ -69,12 +69,12 @@ Route::middleware(['auth:sanctum','check.banned'])->group(function () {
     Route::apiResource('/bid',BidController::class)->except(['index']);
     Route::apiResource('/image',ImageController::class)->except(['show','index','update']);
     Route::post('/image/{id}',[ImageController::class,'update']);
-    Route::apiResource('/role',RoleController::class);
+    Route::apiResource('/role',RoleController::class)->except(['destroy','update','store']);
     Route::apiResource('/conversation',ConversationController::class)->except(['update','destroy']);
     Route::apiResource('/SocialMediaLink',SocialMediaLinkController::class)->except(['index']);
     Route::post('/sendMessage',[ConversationController::class,'sendMessage']);
     Route::post('/checkConversationExists',[ConversationController::class,'checkConversationExists']);
-    Route::get('/permission',[PermissionController::class,'index']);
+    // Route::get('/permission',[PermissionController::class,'index']);
     Route::apiResource('/favorite',FavoriteController::class)->except(['show','update']);
     Route::post('/like',[LikeController::class,'store']);
     Route::delete('/like/{ad_id}',[LikeController::class,'destroy']);
