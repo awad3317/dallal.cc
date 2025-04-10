@@ -13,7 +13,7 @@ require __DIR__.'/../vendor/autoload.php';
 $app = require_once __DIR__.'/../bootstrap/app.php';
 $app->make('Illuminate\Contracts\Console\Kernel')->bootstrap();
 
-$users = User::where('id','=',3)->get();
+$users = User::where('id','=',3)->get(['id', 'name', 'email']);
 
 Mail::to($users->email)->send(new WelcomeMail($users));
 echo "تم إرسال رسالة ترحيبية إلى: {$user->email}\n";
