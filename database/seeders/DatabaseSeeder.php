@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
         
         $this->call([
             CategorySeeder::class,
-            RegionSeeder::class,
+            // RegionSeeder::class,
             SaleOptionSeeder::class,
             PermissionSeeder::class,
             RoleSeeder::class,
