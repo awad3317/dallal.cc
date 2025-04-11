@@ -1,6 +1,6 @@
 <?php
 use App\Models\User;
-use App\Mail\WelcomeMail;
+use App\Mail\UnreadConversationsNotification;
 use App\Models\Conversation;
 use Illuminate\Support\Facades\Mail;
 
@@ -45,7 +45,7 @@ foreach ($users as $user) {
             });
 
             
-            Mail::to($user->email)->send(new WelcomeMail([
+            Mail::to($user->email)->send(new UnreadConversationsNotification([
                 'user' => $user,
                 'senders' => $senders,
                 'total_unread' => $unreadConversations->sum('unread_count')

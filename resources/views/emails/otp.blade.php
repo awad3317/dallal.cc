@@ -44,7 +44,7 @@
         .otp-code {
             font-size: 28px;
             font-weight: bold;
-            color: #e74c3c;
+            color: :#f5c651;
             text-align: center;
             margin: 25px 0;
             padding: 15px;

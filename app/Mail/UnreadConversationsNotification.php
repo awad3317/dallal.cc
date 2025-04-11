@@ -10,7 +10,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class WelcomeMail extends Mailable
+class UnreadConversationsNotification extends Mailable
 {
     use Queueable, SerializesModels;
     public $mailData;
@@ -26,7 +26,7 @@ class WelcomeMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'لديك رسائل جديدة من عدة أشخاص',
+            subject: 'لديك رسائل جديدة',
         );
     }
 
@@ -36,7 +36,7 @@ class WelcomeMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.Welcome',
+            view: 'emails.unread_conversations',
         );
     }
 
