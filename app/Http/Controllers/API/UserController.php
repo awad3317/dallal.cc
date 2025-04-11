@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Exception;
 use Illuminate\Http\Request;
-use App\Services\AvatarService;
+// use App\Services\AvatarService;
 use Illuminate\Validation\Rule;
 use App\Classes\ApiResponseClass;
 use App\Http\Controllers\Controller;
