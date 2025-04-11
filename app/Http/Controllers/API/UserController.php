@@ -18,7 +18,7 @@ class UserController extends Controller
      /**
      * Create a new class instance.
      */
-    public function __construct(private UserRepository $UserRepository,private AvatarService $AvatarService,private RoleRepository $RoleRepository)
+    public function __construct(private UserRepository $UserRepository,private RoleRepository $RoleRepository)
     {
         //
     }
