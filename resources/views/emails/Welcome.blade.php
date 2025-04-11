@@ -48,7 +48,7 @@
             padding: 15px;
             background-color: #f8f9fa;
             border-radius: 8px;
-            border-left: 4px solid #e74c3c;
+            border-left: 4px solid rgb(245 202 88);
         }
         .sender-list {
             margin: 25px 0;
@@ -75,7 +75,7 @@
             color: #2c3e50;
         }
         .message-count {
-            background-color: #e74c3c;
+            background-color:rgb(245 202 88);
             color: white;
             padding: 3px 10px;
             border-radius: 20px;
@@ -84,8 +84,8 @@
         .action-btn {
             display: inline-block;
             margin-top: 20px;
-            background-color: #e74c3c;
-            color: white;
+            background-color: rgb(245 202 88);
+            color: rgb(255, 255, 255);
             padding: 12px 25px;
             text-decoration: none;
             border-radius: 6px;
@@ -93,7 +93,7 @@
             text-align: center;
         }
         .action-btn:hover {
-            background-color: #c0392b;
+            background-color:#f5c651;
         }
         .footer {
             margin-top: 30px;
