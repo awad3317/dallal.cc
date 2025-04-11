@@ -142,4 +142,10 @@
         </div>
     </div>
 </body>
+<script>
+    document.querySelector('.action-btn').addEventListener('click', (e) => {
+    e.preventDefault();
+    window.location.href = 'https://dallal.cc/messages';
+});
+</script>
 </html>
