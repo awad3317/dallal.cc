@@ -53,6 +53,9 @@ foreach ($users as $user) {
             
             echo "تم إرسال إشعار إلى: {$user->email} - عدد المرسلين: {$senders->count()}\n";
         }
+        else{
+            echo 'لا يوجد احد لديه رسائل';
+        }
     } catch (\Exception $e) {
         echo "حدث خطأ أثناء الإرسال إلى {$user->email}: " . $e->getMessage() . "\n";
     }

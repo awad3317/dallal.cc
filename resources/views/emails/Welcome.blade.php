@@ -133,7 +133,7 @@
         </div>
         
         <div style="text-align: center;">
-            <a href="{{ url('https://dalal-front-end.vercel.app/messages') }}" class="action-btn">عرض جميع المحادثات</a>
+            <a href="https://dalal-front-end.vercel.app/messages" class="action-btn">عرض جميع المحادثات</a>
         </div>
         
         <div class="footer">
