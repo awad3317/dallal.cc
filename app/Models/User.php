@@ -130,17 +130,6 @@ class User extends Authenticatable implements LaratrustUser
     }
 
     /**
-    * Get all ads favorited by the user (many-to-many relationship via favorites pivot table).
-    * Includes timestamps to track when favorites were added.
-    *
-    * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-    */
-    public function favorites()
-    {
-        return $this->belongsToMany(Ad::class, 'favorites', 'user_id', 'ad_id')->withTimestamps();
-    }
-
-    /**
     * Get the role assigned to the user (belongs-to relationship).
     *
     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

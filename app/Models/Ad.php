@@ -150,14 +150,4 @@ class Ad extends Model
         return $this->hasMany(Conversation::class);
     }
 
-    /**
-     * Get all users who have favorited this ad.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function favoritedBy()
-    {
-        return $this->belongsToMany(User::class, 'favorites', 'ad_id', 'user_id')->withTimestamps();
-    }
-
 }
