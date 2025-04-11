@@ -88,13 +88,13 @@ class UserController extends Controller
             'image.image' => 'يجب أن يكون الملف المرفوع صورة.',
             'image.max' => 'يجب ألا يتجاوز حجم الصورة 2 ميجابايت.',
             'receive_site_notifications.boolean'=>'يجب ان يكون الاشعارات عبر الموقع اما 1 مقبول او 0 غير مقبول',
-            'receive_email_notifications.boolean'=>'يجب ان ي',
+            'receive_email_notifications.boolean'=>'يجب أن يكون الاشعارات عبر البريد الالكتروني إما 1 مقبول او 0 غير مقبول',
         ]);
         if ($validator->fails()) {
             return ApiResponseClass::sendValidationError($validator->errors()->first(),$validator->errors());
         }
         try {
-            $fields=$request->only(['username','name','phone_number','receive_email_notifications','receive_email_notifications']);
+            $fields=$request->only(['username','name','phone_number','receive_email_notifications','receive_site_notifications']);
             // if ($request->hasFile('image')) {
             //     $fields['image']=$this->ImageService->saveImage($fields['image'],'images_users');
             // }
