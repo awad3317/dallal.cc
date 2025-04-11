@@ -6,7 +6,6 @@ use App\Mail\OtpMail;
 use App\Services\OtpService;
 use Illuminate\Http\Request;
 use App\Jobs\SendOtpEmailJob;
-use App\Services\AvatarService;
 use Illuminate\Validation\Rule;
 use App\Classes\ApiResponseClass;
 use App\Http\Controllers\Controller;
@@ -19,7 +18,7 @@ use Illuminate\Support\Facades\Validator;
 
 class userAuthController extends Controller
 {
-    public function __construct(private UserRepository $UserRepository,private OtpService $otpService,private AvatarService $AvatarService)
+    public function __construct(private UserRepository $UserRepository,private OtpService $otpService)
     {
         //
     }
@@ -48,9 +47,6 @@ class userAuthController extends Controller
            return ApiResponseClass::sendValidationError($validator->errors()->first(),$validator->errors());
         }
         $fields = $request->only(['name', 'email', 'password', 'phone_number']);
-       
-        // Create the avatar using the service
-        // $fields['image'] = $this->AvatarService->createAvatar($fields['name']);
 
         // Store the new user using the UserRepository
         $user=$this->UserRepository->store($fields);

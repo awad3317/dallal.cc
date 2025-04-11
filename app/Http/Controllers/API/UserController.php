@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use Exception;
 use Illuminate\Http\Request;
-use App\Services\ImageService;
 use App\Services\AvatarService;
 use Illuminate\Validation\Rule;
 use App\Classes\ApiResponseClass;
@@ -19,7 +18,7 @@ class UserController extends Controller
      /**
      * Create a new class instance.
      */
-    public function __construct(private UserRepository $UserRepository,private ImageService $ImageService,private AvatarService $AvatarService,private RoleRepository $RoleRepository)
+    public function __construct(private UserRepository $UserRepository,private AvatarService $AvatarService,private RoleRepository $RoleRepository)
     {
         //
     }
@@ -73,7 +72,6 @@ class UserController extends Controller
             'username' => ['sometimes','string','regex:/^[A-Za-z0-9_]+$/', Rule::unique('users')->ignore($id)],
             'name' => ['sometimes','string','max:100'],
             'phone_number' => ['sometimes','string','min:10','max:15',],
-            'image' => ['sometimes','image','max:2048'],
             'receive_site_notifications'=> ['sometimes','boolean'],
             'receive_email_notifications'=> ['sometimes','boolean']
         ],[
@@ -85,8 +83,6 @@ class UserController extends Controller
             'phone_number.string' => 'يجب أن يكون رقم الهاتف نصًا.',
             'phone_number.min' => 'يجب أن يتكون رقم الهاتف من 10 أرقام على الأقل.',
             'phone_number.max' => 'يجب ألا يتجاوز رقم الهاتف 15 رقمًا.',
-            'image.image' => 'يجب أن يكون الملف المرفوع صورة.',
-            'image.max' => 'يجب ألا يتجاوز حجم الصورة 2 ميجابايت.',
             'receive_site_notifications.boolean'=>'يجب ان يكون الاشعارات عبر الموقع اما 1 مقبول او 0 غير مقبول',
             'receive_email_notifications.boolean'=>'يجب أن يكون الاشعارات عبر البريد الالكتروني إما 1 مقبول او 0 غير مقبول',
         ]);
@@ -95,20 +91,6 @@ class UserController extends Controller
         }
         try {
             $fields=$request->only(['username','name','phone_number','receive_email_notifications','receive_site_notifications']);
-            // if ($request->hasFile('image')) {
-            //     $fields['image']=$this->ImageService->saveImage($fields['image'],'images_users');
-            // }
-            // elseif($request->has('name')){
-            //     $user = $this->UserRepository->getById($id);
-            //     if ($request->input('name') !== $user->name) {
-            //         if ($this->AvatarService->isDefaultAvatar($user->image)) 
-            //         {
-            //             $this->ImageService->deleteImage($user->image);
-            //             $newDefaultAvatar = $this->AvatarService->createAvatar($request->input('name'));
-            //             $fields['image'] = $newDefaultAvatar;
-            //         }
-            //     }
-            // }
             $User=$this->UserRepository->update($fields,$id);
             return ApiResponseClass::sendResponse($User,'User is updated successfully.');
         } catch (Exception $e) {
