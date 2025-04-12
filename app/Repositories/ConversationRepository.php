@@ -78,18 +78,19 @@ class ConversationRepository implements RepositoriesInterface
         return Conversation::where('id', $id)->delete() > 0;
     }
 
-    public function getUserConversations($userId,$searchName = null)
+    public function getUserConversations($userId, $searchName = null)
 {
     // Retrieve all conversations where the user is either the sender or receiver
     $query = Conversation::where('sender_id', $userId)
-    ->orWhere('receiver_id', $userId)
-    ->with(['sender:id,name', 'receiver:id,name', 'ad:id,title', 'lastMessage']);
+        ->orWhere('receiver_id', $userId)
+        ->with(['sender:id,name', 'receiver:id,name', 'ad:id,title', 'lastMessage']);
+
     if ($searchName) {
         $query->whereHas('sender', function($q) use ($searchName, $userId) {
-            $q->where('id', '!=', $userId) ->where('name', 'LIKE', "%{$searchName}%");
+            $q->where('id', '!=', $userId)->where('name', 'LIKE', "%{$searchName}%");
         })
         ->orWhereHas('receiver', function($q) use ($searchName, $userId) {
-                $q->where('id', '!=', $userId)->where('name', 'LIKE', "%{$searchName}%");
+            $q->where('id', '!=', $userId)->where('name', 'LIKE', "%{$searchName}%");
         });
     }
 
@@ -115,7 +116,7 @@ class ConversationRepository implements RepositoriesInterface
             $unreadConversationsCount++;
         }
         
-        // the last message in a messages array 
+        // Store the last message in a messages array 
         $conversation->messages = $conversation->lastMessage ? [$conversation->lastMessage] : [];
         // Remove the temporary lastMessage relationship as it's now in messages array
         unset($conversation->lastMessage); 
@@ -123,8 +124,13 @@ class ConversationRepository implements RepositoriesInterface
         return $conversation;
     });
 
+    // Sort conversations by the last message's date (newest first)
+    $sortedConversations = $conversations->sortByDesc(function ($conversation) {
+        return $conversation->messages[0]->created_at ?? now(); // If no messages, use current time
+    })->values(); // Reset keys to maintain array structure
+
     return [
-        'conversations' => $conversations,
+        'conversations' => $sortedConversations,
         'unread_conversations_count' => $unreadConversationsCount
     ];
 }
