@@ -45,7 +45,7 @@ class SocialMediaLinkController extends Controller
             'platform' => ['required','string','max:255'],
             'url' =>['required','url','max:255'],
             'icon' =>['required','string','max:255'],
-            'is_active' =>['boolean'],
+            'is_active' =>['required','boolean'],
         ], [
             'platform.required' => 'حقل اسم المنصة مطلوب',
             'platform.string' => 'يجب أن يكون اسم المنصة نصاً',
@@ -56,6 +56,7 @@ class SocialMediaLinkController extends Controller
             'icon.required' => 'حقل الأيقونة مطلوب',
             'icon.string' => 'يجب أن تكون الأيقونة نصاً',
             'icon.max' => 'يجب ألا يتجاوز اسم الأيقونة 255 حرفاً',
+            'is_active.required' => 'يجب اختيار حالة المنصة',
             'is_active.boolean' => 'يجب أن تكون حالة التفعيل إما صحيحة أو خاطئة',
         ]);
         if ($validator->fails()) {
