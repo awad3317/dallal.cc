@@ -49,7 +49,7 @@ class UserDashboardController extends Controller
             $favorites = $user->likes()->where(function($query) {
                 $query->whereNull('verified')
                       ->orWhere('verified', true);
-            })->with(['category', 'region', 'saleOption'])->withMax('bids', 'amount')->paginate(12);  
+            })->with(['category.parent', 'region.parent', 'saleOption'])->withMax('bids', 'amount')->paginate(12);  
             return ApiResponseClass::sendResponse($favorites, 'favorites retrieved successfully.');
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error retrieving favorites: ' . $e->getMessage());
