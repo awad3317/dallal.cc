@@ -13,7 +13,6 @@ use App\Http\Controllers\API\CommentController;
 use App\Http\Controllers\API\ContactController;
 use App\Http\Controllers\API\Auth\OTPController;
 use App\Http\Controllers\API\CategoryController;
-use App\Http\Controllers\API\FavoriteController;
 use App\Http\Controllers\API\Auth\RoleController;
 use App\Http\Controllers\API\SaleOptionController;
 use App\Http\Controllers\API\ConversationController;
@@ -75,7 +74,7 @@ Route::middleware(['auth:sanctum','check.banned'])->group(function () {
     Route::post('/sendMessage',[ConversationController::class,'sendMessage']);
     Route::post('/checkConversationExists',[ConversationController::class,'checkConversationExists']);
     // Route::get('/permission',[PermissionController::class,'index']);
-    Route::apiResource('/favorite',FavoriteController::class)->except(['show','update']);
+    // Route::apiResource('/favorite',FavoriteController::class)->except(['show','update']);
     Route::post('/like',[LikeController::class,'store']);
     Route::delete('/like/{ad_id}',[LikeController::class,'destroy']);
 
