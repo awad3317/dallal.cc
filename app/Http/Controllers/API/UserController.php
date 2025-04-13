@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use Exception;
 use Illuminate\Http\Request;
-// use App\Services\AvatarService;
 use Illuminate\Validation\Rule;
 use App\Classes\ApiResponseClass;
 use App\Http\Controllers\Controller;
@@ -69,15 +68,11 @@ class UserController extends Controller
             return ApiResponseClass::sendError('You do not have permission to update this user.');
         }
         $validator = Validator::make($request->all(), [
-            'username' => ['sometimes','string','regex:/^[A-Za-z0-9_]+$/', Rule::unique('users')->ignore($id)],
             'name' => ['sometimes','string','max:100'],
             'phone_number' => ['sometimes','string','min:10','max:15',],
             'receive_site_notifications'=> ['sometimes','boolean'],
             'receive_email_notifications'=> ['sometimes','boolean']
         ],[
-            'username.string' => 'يجب أن يكون اسم المستخدم نصًا.',
-            'username.regex' => 'يجب أن يحتوي اسم المستخدم على أحرف إنجليزية وأرقام وشرطة سفلية (_) فقط.',
-            'username.unique' => 'اسم المستخدم هذا مستخدم بالفعل.',
             'name.string' => 'يجب أن يكون الاسم نصًا.',
             'name.max' => 'يجب ألا يتجاوز الاسم 100 حرف.',
             'phone_number.string' => 'يجب أن يكون رقم الهاتف نصًا.',
@@ -90,7 +85,7 @@ class UserController extends Controller
             return ApiResponseClass::sendValidationError($validator->errors()->first(),$validator->errors());
         }
         try {
-            $fields=$request->only(['username','name','phone_number','receive_email_notifications','receive_site_notifications']);
+            $fields=$request->only(['name','phone_number','receive_email_notifications','receive_site_notifications']);
             $User=$this->UserRepository->update($fields,$id);
             return ApiResponseClass::sendResponse($User,'User is updated successfully.');
         } catch (Exception $e) {

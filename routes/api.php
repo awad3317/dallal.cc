@@ -74,7 +74,6 @@ Route::middleware(['auth:sanctum','check.banned'])->group(function () {
     Route::post('/sendMessage',[ConversationController::class,'sendMessage']);
     Route::post('/checkConversationExists',[ConversationController::class,'checkConversationExists']);
     // Route::get('/permission',[PermissionController::class,'index']);
-    // Route::apiResource('/favorite',FavoriteController::class)->except(['show','update']);
     Route::post('/like',[LikeController::class,'store']);
     Route::delete('/like/{ad_id}',[LikeController::class,'destroy']);
 
@@ -109,6 +108,9 @@ Route::post('/contact',[ContactController::class,'store']);
 Route::get('/contactIndex',[ContactController::class,'contactIndex']);
 
 Route::get('/SocialMediaLink',[SocialMediaLinkController::class,'index']);
+
+
+Route::get('/get-coordinates', [RegionController::class, 'getCoordinates']);
 
 
 

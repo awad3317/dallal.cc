@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\RegionRepository;
 use Illuminate\Support\Facades\Validator;
+use GuzzleHttp\Client;
 
 class RegionController extends Controller
 {
@@ -147,5 +148,38 @@ class RegionController extends Controller
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error deleting Region: ' . $e->getMessage());
         }
+    }
+
+    public function getCoordinates(Request $request)
+    {
+        // التحقق من وجود البيانات المطلوبة
+        $request->validate([
+            'city' => 'required|string',
+            'neighborhood' => 'required|string',
+        ]);
+
+        $city = $request->input('city');
+        $neighborhood = $request->input('neighborhood');
+        
+        // إنشاء query للبحث (مثال: "حي الكندرة، جدة")
+        $query = urlencode("$neighborhood, $city");
+
+        // إرسال طلب إلى Nominatim API
+        $client = new Client();
+        $response = $client->get("https://nominatim.openstreetmap.org/search?format=json&q={$query}");
+        
+        $data = json_decode($response->getBody(), true);
+
+        // إذا وجدنا نتائج
+        if (!empty($data)) {
+            $firstResult = $data[0];
+            return response()->json([
+                'latitude' => $firstResult['lat'],
+                'longitude' => $firstResult['lon'],
+                'address' => $firstResult['display_name'],
+            ]);
+        }
+
+        return response()->json(['error' => 'Location not found'], 404);
     }
 }
