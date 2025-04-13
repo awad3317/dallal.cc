@@ -166,8 +166,11 @@ class RegionController extends Controller
 
         // إرسال طلب إلى Nominatim API
         $client = new Client();
-        $response = $client->get("https://nominatim.openstreetmap.org/search?format=json&q={$query}");
-        
+        $response = $client->get("https://nominatim.openstreetmap.org/search?format=json&q={$query}", [
+            'headers' => [
+                'User-Agent' => 'dallal/1.0 (info@dallal.cc)', 
+            ],
+        ]);
         $data = json_decode($response->getBody(), true);
 
         // إذا وجدنا نتائج
