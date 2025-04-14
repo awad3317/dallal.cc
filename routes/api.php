@@ -110,10 +110,6 @@ Route::get('/contactIndex',[ContactController::class,'contactIndex']);
 Route::get('/SocialMediaLink',[SocialMediaLinkController::class,'index']);
 
 
-Route::get('/get-coordinates', [RegionController::class, 'getCoordinates']);
-
-
-
 
 
 
