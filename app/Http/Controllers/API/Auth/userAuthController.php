@@ -76,7 +76,7 @@ class userAuthController extends Controller
         $credentials=$request->only(['identifier','password']);
         $user=$this->UserRepository->findByUsernameOrEmail($credentials['identifier']);
         if (!$user) {
-            return ApiResponseClass::sendError('Unauthorized', ['error' => 'البيانات غير صحيحه'], 401);
+            return ApiResponseClass::sendError('البريد الإلكتروني أو كلمة المرور غير صحيحة', ['error' => 'البيانات غير صحيحه'], 401);
         }
         if (!$user->email_verified) {
             // Generate a random OTP and prepare it for sending
@@ -85,9 +85,9 @@ class userAuthController extends Controller
             // Send an email with the OTP code to the user's email address
             // SendOtpEmailJob::dispatch($user->email, $otp);
             Mail::to($user->email)->send(new OtpMail($otp));
-            // $user->token="not token";
-        //    return ApiResponseClass::sendResponse(['user' => $user], "'البريد الإلكتروني غير محقق. تم إرسال رمز التحقق'.$user->email");
-           return ApiResponseClass::sendError('يجب التحقق من الاميل اولا', null,403);
+            // !Important: Do not modify this error message without updating the frontend.
+            // The frontend checks this exact string to handle unverified accounts.
+            return ApiResponseClass::sendError('حسابك غير مفعّل بعد، يرجى التحقق من بريدك الإلكتروني لاستكمال التسجيل. تم إرسال رمز تحقق جديد إليك.', null,403);
         }
 
         // Check if the user exists and if the password is correct
