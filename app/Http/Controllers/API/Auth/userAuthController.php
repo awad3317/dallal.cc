@@ -104,7 +104,7 @@ class userAuthController extends Controller
             $user->token=$token;
             return ApiResponseClass::sendResponse(['user' => $user], 'تم تسجيل دخول بنجاح');
         }
-        return ApiResponseClass::sendError('Unauthorized', ['error' => 'البيانات غير صحيحه'],401);
+        return ApiResponseClass::sendError('البريد الإلكتروني أو كلمة المرور غير صحيحة', ['error' => 'البيانات غير صحيحه'],401);
         
     }
 
