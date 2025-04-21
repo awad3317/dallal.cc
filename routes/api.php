@@ -38,6 +38,7 @@ Route::middleware(['auth:sanctum','check.banned'])->group(function () {
     Route::get('/getUserData',[UserDashboardController::class,'getUserData']);
     Route::get('/getUserAds',[UserDashboardController::class,'getUserAds']);
     Route::get('/getUserFavoriteAds',[UserDashboardController::class,'getUserFavoriteAds']);
+    
         //      Dashborad for Admin     //
     Route::get('/getAds',[AdminDashboardController::class,'getAds']);
     Route::get('/getStatisticsByYear/{year}',[AdminDashboardController::class,'getStatisticsByYear']);
@@ -76,8 +77,6 @@ Route::middleware(['auth:sanctum','check.banned'])->group(function () {
     // Route::get('/permission',[PermissionController::class,'index']);
     Route::post('/like',[LikeController::class,'store']);
     Route::delete('/like/{ad_id}',[LikeController::class,'destroy']);
-
-    // Route::post('/conversations/mark-as-read', [ConversationController::class, 'markMessagesAsRead']);
     
 });
     //           Auth Route          //
