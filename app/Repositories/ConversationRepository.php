@@ -122,15 +122,14 @@ class ConversationRepository implements RepositoriesInterface
     
         return $conversation;
     });
-    // Sort conversations: unread first, then sort by last message date (newest first)
-    $sortedConversations = $conversations->sortByDesc(function ($conversation) {
-        // Primary sort: unread messages first (has_unread = true comes first)
-        // Secondary sort: date of last message (newest first)
-        return [
-            $conversation->has_unread ? 0 : 1,
-            $conversation->messages[0]->created_at ?? null
-        ];
-    })->values();
+    // Sort conversations: unread first, then sort by last message date (oldest first)
+$sortedConversations = $conversations->sortByDesc(function ($conversation) {
+    // Primary sort: unread messages first (has_unread = true comes first)
+    return $conversation->has_unread ? 1 : 0;
+})->sortBy(function ($conversation) {
+    // Secondary sort: date of last message (oldest first)
+    return $conversation->messages[0]->created_at ?? now();
+})->values();
 
     return [
         'conversations' => $conversations,
