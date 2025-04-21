@@ -62,7 +62,7 @@ class AdRepository implements RepositoriesInterface
             })
             ->withMax('bids', 'amount')
             ->filter()
-            ->orderBy('ads.created_at', 'desc') // تحديد الجدول هنا
+            ->orderBy('ads.created_at', 'desc') 
             ->paginate(12);
     }
 
