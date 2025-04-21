@@ -127,7 +127,7 @@ class ConversationRepository implements RepositoriesInterface
         // Primary sort: unread messages first (has_unread = true comes first)
         // Secondary sort: date of last message (newest first)
         return [
-            $conversation->has_unread ? 1 : 0,
+            $conversation->has_unread ? 0 : 1,
             $conversation->messages[0]->created_at ?? null
         ];
     })->values();
