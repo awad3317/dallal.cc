@@ -122,16 +122,7 @@ class ConversationRepository implements RepositoriesInterface
     
         return $conversation;
     });
-    // Sort conversations: unread first, then sort by last message date (oldest to newest)
-$sortedConversations = $conversations->sortBy(function ($conversation) {
-    // Primary sort: unread messages first (has_unread = true comes first)
-    // Secondary sort: date of last message (oldest first)
-    return [
-        $conversation->has_unread ? 0 : 1,  // 0 comes before 1 (unread first)
-        $conversation->messages[0]->created_at ?? now() // older dates come first
-    ];
-})->values();
-
+    
     return [
         'conversations' => $conversations,
         'unread_conversations_count' => $unreadConversationsCount
