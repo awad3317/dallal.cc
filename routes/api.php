@@ -77,7 +77,7 @@ Route::middleware(['auth:sanctum','check.banned'])->group(function () {
     Route::post('/like',[LikeController::class,'store']);
     Route::delete('/like/{ad_id}',[LikeController::class,'destroy']);
 
-    Route::post('/conversations/mark-as-read', [ConversationController::class, 'markMessagesAsRead']);
+    // Route::post('/conversations/mark-as-read', [ConversationController::class, 'markMessagesAsRead']);
     
 });
     //           Auth Route          //
