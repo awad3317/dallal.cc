@@ -15,6 +15,7 @@ use App\Http\Controllers\API\Auth\OTPController;
 use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\Auth\RoleController;
 use App\Http\Controllers\API\SaleOptionController;
+use App\Http\Controllers\API\SiteSettingController;
 use App\Http\Controllers\API\ConversationController;
 use App\Http\Controllers\API\Auth\userAuthController;
 use App\Http\Controllers\API\Auth\PermissionController;
@@ -42,6 +43,10 @@ Route::middleware(['auth:sanctum','check.banned'])->group(function () {
         //      Dashborad for Admin     //
     Route::get('/getAds',[AdminDashboardController::class,'getAds']);
     Route::get('/getStatisticsByYear/{year}',[AdminDashboardController::class,'getStatisticsByYear']);
+
+        //      Site settings           //
+    Route::get('/setting', [SiteSettingController::class, 'index']);
+    Route::put('/setting', [SiteSettingController::class, 'update']);
     
     Route::apiResource('/contact',ContactController::class)->except(['store','update']); 
     Route::post('/contactStore',[ContactController::class,'contactStore']);  
