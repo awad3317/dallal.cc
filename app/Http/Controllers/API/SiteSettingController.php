@@ -30,9 +30,6 @@ class SiteSettingController extends Controller
     public function index()
     {
         try {
-            if (!Auth::user()->has_role('admin')) {
-                return ApiResponseClass::sendError('Unauthorized', 403);
-            }
             $siteSettings= Cache::remember('site_settings', now()->addHours(24), function () {
                 return $this->SiteSettingRepository->index();
             });
