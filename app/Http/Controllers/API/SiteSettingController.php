@@ -11,6 +11,7 @@ use App\Classes\ApiResponseClass;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Repositories\SiteSettingRepository;
+use Illuminate\Support\Facades\Auth;
 
 class SiteSettingController extends Controller
 {
@@ -28,6 +29,9 @@ class SiteSettingController extends Controller
     public function index()
     {
         try {
+            if (!Auth::user()->has_role('admin')) {
+                return ApiResponseClass::sendError('Unauthorized', 403);
+            }
             $SiteSettings=$this->SiteSettingRepository->index();
             return ApiResponseClass::sendResponse($SiteSettings, 'All SiteSettings retrieved successfully.');
         } catch (Exception $e) {
@@ -56,6 +60,9 @@ class SiteSettingController extends Controller
      */
     public function update(Request $request)
     {
+        if (!Auth::user()->has_role('admin')) {
+            return ApiResponseClass::sendError('Unauthorized', 403);
+        }
         $validator = Validator::make($request->all(), [
             'site_name' => ['required','string'],
             'meta_description' => ['required','string'],
