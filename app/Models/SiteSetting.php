@@ -23,14 +23,14 @@ class SiteSetting extends Model
         'is_maintenance',
         'maintenance_message'
     ];
-    public function getlogopathAttribute($value)
+    public function getlogo_pathAttribute($value)
     {
         if (!str_starts_with($value, 'http')) {
             return config('app.url') . '/' . $value;
         }
         return $value;
     }
-    public function getfaviconpathAttribute($value)
+    public function getfavicon_pathAttribute($value)
     {
         if (!str_starts_with($value, 'http')) {
             return config('app.url') . '/' . $value;
