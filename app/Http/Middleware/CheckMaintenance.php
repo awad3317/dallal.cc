@@ -23,9 +23,10 @@ class CheckMaintenance
             if ($request->user()?->is_admin) {
                 return $next($request);
             }
-            return response()->view('maintenance', [
-                'message' => $settings->maintenance_message
-            ], 503);
+            return response()->json([
+                'success' => false,
+                'message' => $settings->maintenance_message,
+            ], 403);
         }
         return $next($request);
     }
