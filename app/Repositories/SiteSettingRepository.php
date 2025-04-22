@@ -44,7 +44,8 @@ class SiteSettingRepository implements RepositoriesInterface
      */
     public function update(array $data, $id): SiteSetting
     {
-        $SiteSetting = SiteSetting::firstOrUpdate([], $data);
+        $SiteSetting = SiteSetting::firstOrNew();
+        $SiteSetting->update($data);
         return $SiteSetting;
     }
 
