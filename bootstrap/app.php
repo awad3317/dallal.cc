@@ -21,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'check.banned' => \App\Http\Middleware\CheckBannedUser::class,
+            'Check.Maintenance'=> \App\Http\Middleware\CheckMaintenance::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

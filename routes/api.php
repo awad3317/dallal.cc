@@ -33,7 +33,7 @@ Route::post('/pusher/auth',function (Request $request){
     return Broadcast::auth($request);
 });
 
-Route::middleware(['auth:sanctum','check.banned'])->group(function () {
+Route::middleware(['auth:sanctum','check.banned','Check.Maintenance'])->group(function () {
     Route::post('/logout',[userAuthController::class,'logout']);
         //      Dashboard for User      //
     Route::get('/getUserData',[UserDashboardController::class,'getUserData']);

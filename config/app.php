@@ -123,4 +123,6 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'maintenance_bypass_secret' => env('MAINTENANCE_BYPASS_SECRET', 'admin123'),
+
 ];
