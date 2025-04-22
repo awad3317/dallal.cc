@@ -11,6 +11,7 @@ use App\Classes\ApiResponseClass;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Repositories\SiteSettingRepository;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Auth;
 
 class SiteSettingController extends Controller
@@ -32,8 +33,10 @@ class SiteSettingController extends Controller
             if (!Auth::user()->has_role('admin')) {
                 return ApiResponseClass::sendError('Unauthorized', 403);
             }
-            $SiteSettings=$this->SiteSettingRepository->index();
-            return ApiResponseClass::sendResponse($SiteSettings, 'All SiteSettings retrieved successfully.');
+            $siteSettings= Cache::remember('site_settings', now()->addHours(24), function () {
+                return $this->SiteSettingRepository->index();
+            });
+            return ApiResponseClass::sendResponse($siteSettings, 'All SiteSettings retrieved successfully.');
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error retrieving SiteSettings: ' . $e->getMessage());
         }
@@ -81,21 +84,22 @@ class SiteSettingController extends Controller
             return ApiResponseClass::sendValidationError($validator->errors()->first(),$validator->errors());
         }
         try {
-            $SiteSetting = SiteSetting::firstOrNew();
+            $siteSetting = SiteSetting::firstOrNew();
             $fields=$request->only(['site_name','meta_description','meta_keywords','email','phone','address','is_maintenance','maintenance_message']);
             if ($request->hasFile('logo')) {
                 // Delete old primary image
-                $this->ImageService->deleteImage($SiteSetting->logo_path);
+                $this->ImageService->deleteImage($siteSetting->logo_path);
                 // Save new primary image
                 $fields['logo_path'] = $this->ImageService->saveImage($request->file('logo','Site_images'));
             }
             if ($request->hasFile('favicon')) {
                 // Delete old primary image
-                $this->ImageService->deleteImage($SiteSetting->favicon_path);
+                $this->ImageService->deleteImage($siteSetting->favicon_path);
                 // Save new primary image
                 $fields['favicon_path'] = $this->ImageService->saveImage($request->file('favicon','Site_images'));
             }
-            $SiteSetting=$this->SiteSettingRepository->update($fields,null);
+            $siteSetting=$this->SiteSettingRepository->update($fields,null);
+            Cache::put('site_settings', $fields, now()->addHours(24));
             return ApiResponseClass::sendResponse($fields, 'تم تحديث الإعدادات بنجاح.');
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error updated SiteSetting: ' . $e->getMessage());
