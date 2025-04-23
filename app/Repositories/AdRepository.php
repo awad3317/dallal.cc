@@ -144,7 +144,6 @@ class AdRepository implements RepositoriesInterface
             $Ad->likes()->delete();
             $Ad->images()->delete();
             $Ad->conversations()->delete();
-            $Ad->favoritedBy()->detach();
             return $Ad->delete();
         });
     }
