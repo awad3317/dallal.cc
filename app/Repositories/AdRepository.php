@@ -151,7 +151,7 @@ class AdRepository implements RepositoriesInterface
     {
         $ad = Ad::with(['user', 'category.parent', 'region.parent', 'saleOption', 'bids.user:id,name', 'images', 'comments.user:id,name,image'])
                 ->withMax('bids', 'amount')
-                ->where('slug', $slug)->firstOrFail();
+                ->whereRaw('BINARY slug = ?', [$slug])->firstOrFail();
         // Check if the ad is rejected (verified = false)
         if ($ad->verified === 0) {
             return false;
