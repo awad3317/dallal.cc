@@ -23,18 +23,18 @@ class SiteSetting extends Model
         'is_maintenance',
         'maintenance_message'
     ];
-    public function getLogoPathAttribute($value)
-    {
-        if (!str_starts_with($value, 'http')) {
-            return config('app.url') . '/' . $value;
-        }
-        return $value;
-    }
-    public function getFaviconPathAttribute($value)
-    {
-        if (!str_starts_with($value, 'http')) {
-            return config('app.url') . '/' . $value;
-        }
-        return $value;
-    }
+    // public function getLogoPathAttribute($value)
+    // {
+    //     if (!str_starts_with($value, 'http')) {
+    //         return config('app.url') . '/' . $value;
+    //     }
+    //     return $value;
+    // }
+    // public function getFaviconPathAttribute($value)
+    // {
+    //     if (!str_starts_with($value, 'http')) {
+    //         return config('app.url') . '/' . $value;
+    //     }
+    //     return $value;
+    // }
 }
