@@ -30,10 +30,9 @@ class SiteSettingController extends Controller
     public function index()
     {
         try {
-            // $siteSettings= Cache::remember('site_settings', now()->addHours(24), function () {
-            //     return $this->SiteSettingRepository->index();
-            // });
-            $siteSettings= $this->SiteSettingRepository->index();
+            $siteSettings= Cache::remember('site_settings', now()->addHours(24), function () {
+                return $this->SiteSettingRepository->index();
+            });
             return ApiResponseClass::sendResponse($siteSettings, 'All SiteSettings retrieved successfully.');
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error retrieving SiteSettings: ' . $e->getMessage());
@@ -97,7 +96,7 @@ class SiteSettingController extends Controller
                 $fields['favicon_path'] = $this->ImageService->saveImage($request->file('favicon','Site_images'));
             }
             $siteSetting=$this->SiteSettingRepository->update($fields,null);
-            Cache::put('site_settings', $fields, now()->addHours(24));
+            Cache::forget('site_settings');
             return ApiResponseClass::sendResponse($fields, 'تم تحديث الإعدادات بنجاح.');
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error updated SiteSetting: ' . $e->getMessage());

@@ -45,7 +45,6 @@ Route::middleware(['auth:sanctum','check.banned'])->group(function () {
     Route::get('/getStatisticsByYear/{year}',[AdminDashboardController::class,'getStatisticsByYear']);
 
         //      Site settings           //
-    Route::get('/setting', [SiteSettingController::class, 'index']);
     Route::put('/setting', [SiteSettingController::class, 'update']);
     
     Route::apiResource('/contact',ContactController::class)->except(['store','update']); 
@@ -112,6 +111,7 @@ Route::post('/contact',[ContactController::class,'store']);
 Route::get('/contactIndex',[ContactController::class,'contactIndex']);
 
 Route::get('/SocialMediaLink',[SocialMediaLinkController::class,'index']);
+Route::get('/setting', [SiteSettingController::class, 'index']);
 
 
 
