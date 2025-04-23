@@ -131,10 +131,10 @@ class AdController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id,Request $request)
+    public function show($slug,Request $request)
     {
         try{
-            $ad = $this->AdRepository->getByIdWithSimilarAd($id,PersonalAccessToken::findToken($request->bearerToken())->tokenable_id ?? null);
+            $ad = $this->AdRepository->getBySlugWithSimilarAd($slug,PersonalAccessToken::findToken($request->bearerToken())->tokenable_id ?? null);
             if($ad == false){
                 return ApiResponseClass::sendError('This ad has been rejected and cannot be viewed');
             }

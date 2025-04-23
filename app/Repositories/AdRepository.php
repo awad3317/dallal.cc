@@ -122,7 +122,7 @@ class AdRepository implements RepositoriesInterface
     public function delete($id): bool
     {
         return DB::transaction(function () use ($id) {
-            $Ad = Ad::with(['bids', 'images', 'comments', 'views', 'likes', 'favoritedBy','conversations'])->findOrFail($id);
+            $Ad = Ad::with(['bids', 'images', 'comments', 'views', 'likes','conversations'])->findOrFail($id);
             foreach ($Ad->images as $image) {
                 $baseUrl = config('app.url').'/';
                 $filePath = str_replace($baseUrl, '', $image);
@@ -148,11 +148,11 @@ class AdRepository implements RepositoriesInterface
             return $Ad->delete();
         });
     }
-    public function getByIdWithSimilarAd($id, $user_id)
+    public function getBySlugWithSimilarAd($slug, $user_id)
     {
         $ad = Ad::with(['user', 'category.parent', 'region.parent', 'saleOption', 'bids.user:id,name', 'images', 'comments.user:id,name,image'])
                 ->withMax('bids', 'amount')
-                ->findOrFail($id);
+                ->where('slug', $slug)->firstOrFail();
         // Check if the ad is rejected (verified = false)
         if ($ad->verified === 0) {
             return false;

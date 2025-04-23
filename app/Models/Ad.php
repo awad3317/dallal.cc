@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Mehradsadeghi\FilterQueryString\FilterQueryString;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Cviebrock\EloquentSluggable\Sluggable;
 
 
 /**
@@ -14,6 +15,8 @@ class Ad extends Model
 {
     use FilterQueryString;
     use HasFactory;
+    use Sluggable;
+    
 
     /**
      * Filterable fields for query string filtering.
@@ -41,6 +44,22 @@ class Ad extends Model
         'likes',
         'verified'
     ];
+
+     /**
+     * Return the sluggable configuration array for this model.
+     *
+     * @return array
+     */
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'title',
+                'onUpdate' => true,
+                'separator' => '-',
+            ]
+        ];
+    }
 
     public function getPrimaryImageAttribute($value)
     {

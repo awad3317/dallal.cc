@@ -103,7 +103,7 @@ Route::post('/resetPassword', [forgetPasswordController::class,'resetPassword'])
 
 Route::get('/ad',[AdController::class,'index']);
 Route::post('/nearbyAds',[AdController::class,'nearbyAds']);
-Route::get('/ad/{id}',[AdController::class,'show']);
+Route::get('/ad/{slug}',[AdController::class,'show']);
 Route::get('/saleOption',[SaleOptionController::class,'index']);
 Route::get('/bid',[BidController::class,'index']);
 
