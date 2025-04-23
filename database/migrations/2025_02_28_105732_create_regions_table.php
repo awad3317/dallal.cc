@@ -18,7 +18,6 @@ return new class extends Migration
             $table->decimal('longitude', 10, 7)->nullable()->comment('خط الطول');
             $table->foreignId('parent_id')->nullable()->constrained('regions')->onDelete('cascade');
             $table->timestamps();
-            // $table->spatialIndex(['latitude', 'longitude']); 
         });
     }
 
