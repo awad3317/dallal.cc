@@ -48,8 +48,12 @@ class CategoryRepository implements RepositoriesInterface
         return Category::whereNull('parent_id')->get();
     }
 
-    public function getChildren($id)
+    public function getChildren($slug)
     {
-        return Category::where('parent_id', $id)->get();
+        $category = Category::where('slug', $slug)->first();
+        if (!$category) {
+            return collect();
+        }
+        return Category::where('parent_id', $category->id)->get();
     }
 }

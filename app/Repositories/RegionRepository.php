@@ -49,8 +49,12 @@ class RegionRepository implements RepositoriesInterface
         return Region::whereNull('parent_id')->get();
     }
 
-    public function getChildren($id)
+    public function getChildren($slug)
     {
-        return Region::where('parent_id', $id)->get();
+        $Region = Region::where('slug', $slug)->first();
+        if (!$Region) {
+            return collect(); 
+        }
+        return Region::where('parent_id', $Region->id)->get();
     }
 }

@@ -46,11 +46,11 @@ class RegionController extends Controller
 
     }
 
-    public function getChildren($id)
+    public function getChildren($slug)
     {
         try {
              // Retrieve all Children regions from the repository
-            $Children=$this->RegionRepository->getChildren($id);
+            $Children=$this->RegionRepository->getChildren($slug);
             return ApiResponseClass::sendResponse($Children,'All Children retrieved successfully.');
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error retrieving Children: ' . $e->getMessage());

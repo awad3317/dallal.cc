@@ -43,15 +43,16 @@ class CategoryController extends Controller
         }
     }
 
-    public function getChildren($id)
+    public function getChildren($slug)
     {
         try {
-            $Children=$this->CategoryRepository->getChildren($id);
+            $Children=$this->CategoryRepository->getChildren($slug);
             return ApiResponseClass::sendResponse($Children,'All Children retrieved successfully.');
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error retrieving Children: ' . $e->getMessage());
         }
     }
+    
 
     /**
      * Store a newly created resource in storage.

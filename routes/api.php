@@ -90,11 +90,11 @@ Route::post('/verifyOtpAndLogin',[OTPController::class,'verifyOtpAndLogin']);
 Route::post('/resendOTP',[OTPController::class,'resendOTP']);
     //             Regions           //
 Route::get('/regions/parents', [RegionController::class,'getParents']);
-Route::get('/regions/{id}/children', [RegionController::class,'getChildren']);
+Route::get('/regions/{slug}/children', [RegionController::class,'getChildren']);
 Route::get('/region',[RegionController::class,'index']);
     //             Category           //
 Route::get('/categories/parents', [CategoryController::class,'getParents']);
-Route::get('/categories/{id}/children', [CategoryController::class,'getChildren']);
+Route::get('/categories/{slug}/children', [CategoryController::class,'getChildren']);
 Route::get('/category',[CategoryController::class,'index']);
     //             Forget Password     //
 Route::post('/forgetPassword', [forgetPasswordController::class,'forgetPassword']);
