@@ -18,12 +18,12 @@ class AdRepository implements RepositoriesInterface
     {
         //
     }
-    public function index($region_id, $category_id, $latitude = null, $longitude = null)
+    public function index($region_slug, $category_slug, $latitude = null, $longitude = null)
     {
         $query = Ad::query()->select('ads.*');
     
-        if ($region_id) {
-            $region = Region::with('children')->find($region_id);
+        if ($region_slug) {
+            $region = Region::with('children')->where('slug', $region_slug)->first();
             if ($region) {
                 $regionIds = $region->children()->pluck('id')->push($region->id);
                 $allRegionIds = Region::whereIn('parent_id', $regionIds)->pluck('id');
@@ -32,8 +32,8 @@ class AdRepository implements RepositoriesInterface
             }
         }
     
-        if ($category_id) {
-            $category = Category::with('children')->find($category_id);
+        if ($category_slug) {
+            $category = Category::with('children')->where('slug', $category_slug)->first();
             if ($category) {
                 $categoryIds = $category->children()->pluck('id')->push($category->id);
                 $allCategoryIds = Category::whereIn('parent_id', $categoryIds)->pluck('id');
