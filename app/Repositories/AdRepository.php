@@ -18,7 +18,7 @@ class AdRepository implements RepositoriesInterface
     {
         //
     }
-    public function index($region_slug, $category_slug, $latitude = null, $longitude = null)
+    public function index($region_slug, $category_slug, $category_child_slug,$latitude = null, $longitude = null)
     {
         $query = Ad::query()->select('ads.*');
     
@@ -32,6 +32,9 @@ class AdRepository implements RepositoriesInterface
             }
         }
     
+        if($category_child_slug){
+            $category_slug= $category_child_slug;
+        }
         if ($category_slug) {
             $category = Category::with('children')->where('slug', $category_slug)->first();
             if ($category) {
