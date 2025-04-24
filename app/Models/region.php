@@ -3,18 +3,45 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Cviebrock\EloquentSluggable\Sluggable;
 
 /**
  * Region model representing geographical regions with hierarchical relationships.
  */
 class region extends Model
 {
+    use Sluggable;
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = ['name', 'parent_id','latitude', 'longitude'];
+
+     /**
+     * Return the sluggable configuration array for this model.
+     *
+     * @return array
+     */
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'name',
+                'onUpdate' => true,
+                'separator' => '-',
+                'method' => function ($string, $separator) {
+                $slug = preg_replace('/\s+/', '-', trim($string));
+                
+                $slug = preg_replace('/[^\p{Arabic}\d\-_]/u', '', $slug);
+                
+                $slug = preg_replace('/\-+/', '-', $slug);
+                
+                return trim($slug, '-');
+            }
+            ]
+        ];
+    }
 
     /**
      * Get the parent region of this region (for hierarchical structures).

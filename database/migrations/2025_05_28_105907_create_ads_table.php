@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->foreignId('region_id')->constrained()->onDelete('cascade');
             $table->string('title',255);
+            $table->string('slug')->unique()->index();
             $table->text('description');
             $table->float('price');
             $table->string('primary_image');

@@ -58,13 +58,10 @@ class Ad extends Model
                 'onUpdate' => true,
                 'separator' => '-',
                 'method' => function ($string, $separator) {
-                // استبدال المسافات بشرطات فقط
                 $slug = preg_replace('/\s+/', '-', trim($string));
                 
-                // إزالة أي أحرف غير مرغوب فيها (اختياري)
                 $slug = preg_replace('/[^\p{Arabic}\d\-_]/u', '', $slug);
                 
-                // إزالة الشرطات المكررة
                 $slug = preg_replace('/\-+/', '-', $slug);
                 
                 return trim($slug, '-');
