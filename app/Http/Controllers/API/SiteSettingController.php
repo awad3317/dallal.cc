@@ -31,7 +31,7 @@ class SiteSettingController extends Controller
     {
         try {
             $siteSettings= Cache::remember('site_settings', now()->addHours(24), function () {
-                return $this->SiteSettingRepository->index();
+                return $this->SiteSettingRepository->index()->first();
             });
             return response()->json([
                 'success' => true,
