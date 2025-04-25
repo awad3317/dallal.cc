@@ -21,7 +21,8 @@ class SiteSetting extends Model
         'phone',
         'address',
         'is_maintenance',
-        'maintenance_message'
+        'maintenance_message',
+        'working_hours'
     ];
     public function getLogoPathAttribute($value)
     {

@@ -14,12 +14,13 @@ return new class extends Migration
         Schema::create('site_settings', function (Blueprint $table) {
             $table->id();
             $table->string('site_name');
-            $table->string('logo_path')->nullable();
-            $table->string('favicon_path')->nullable();
+            $table->string('logo_path');
+            $table->string('favicon_path');
             $table->text('meta_description')->nullable();
             $table->string('meta_keywords')->nullable();
             $table->string('email');
             $table->string('phone');
+            $table->string('working_hours');
             $table->text('address');
             $table->boolean('is_maintenance')->default(false);
             $table->text('maintenance_message')->nullable();

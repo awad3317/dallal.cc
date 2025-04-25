@@ -71,6 +71,7 @@ class SiteSettingController extends Controller
             'phone' => ['required','string'],
             'address' => ['required','string'],
             'is_maintenance' =>['required', 'boolean'],
+            'working_hours'=>['required','string'],
             'maintenance_message' =>  ['required','string'],
             'logo'=> ['sometimes', Rule::when($request->hasFile('logo'),['image','max:2048']),Rule::when(is_string($request->logo),'string')],
             'favicon'=>['sometimes', Rule::when($request->hasFile('favicon'),['image','max:2048']),Rule::when(is_string($request->favicon),'string')]
@@ -82,7 +83,7 @@ class SiteSettingController extends Controller
         }
         try {
             $siteSetting = SiteSetting::firstOrNew();
-            $fields=$request->only(['site_name','meta_description','meta_keywords','email','phone','address','is_maintenance','maintenance_message']);
+            $fields=$request->only(['site_name','meta_description','meta_keywords','email','phone','address','is_maintenance','maintenance_message','working_hours']);
             if ($request->hasFile('logo')) {
                 // Delete old primary image
                 $this->ImageService->deleteImage($siteSetting->logo_path);
