@@ -34,7 +34,7 @@ class Category extends Model
                 'method' => function ($string, $separator) {
                 $slug = preg_replace('/\s+/', '-', trim($string));
                 
-                $slug = preg_replace('/[^\p{Arabic}\d\-_]/u', '', $slug);
+                $slug = preg_replace('/[^\p{Arabic}\p{Latin}\d\-_]/u', '', $slug);
                 
                 $slug = preg_replace('/\-+/', '-', $slug);
                 
