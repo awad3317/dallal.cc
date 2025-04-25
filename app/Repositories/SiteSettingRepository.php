@@ -20,7 +20,7 @@ class SiteSettingRepository implements RepositoriesInterface
      */
     public function index()
     {
-        return SiteSetting::get();
+        return SiteSetting::first();
     }
 
     /**

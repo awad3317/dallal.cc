@@ -33,6 +33,12 @@ class SiteSettingController extends Controller
             $siteSettings= Cache::remember('site_settings', now()->addHours(24), function () {
                 return $this->SiteSettingRepository->index();
             });
+            // return response()->json([
+            //     'success' => true,
+            //     'data' => $siteSettings,
+            //     'message' => 'All SiteSettings retrieved successfully.'
+            // ], 200);
+           
             return ApiResponseClass::sendResponse($siteSettings, 'All SiteSettings retrieved successfully.');
         } catch (Exception $e) {
             return ApiResponseClass::sendError('Error retrieving SiteSettings: ' . $e->getMessage());
