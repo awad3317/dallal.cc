@@ -73,8 +73,8 @@ class SiteSettingController extends Controller
             'is_maintenance' =>['required', 'boolean'],
             'working_hours'=>['required','string'],
             'maintenance_message' =>  ['required','string'],
-            'logo'=> ['sometimes', Rule::when($request->hasFile('logo'),['image','mimes:svg,jpeg,png,jpg,gif','max:2048']),Rule::when(is_string($request->logo),'string')],
-            'favicon'=>['sometimes', Rule::when($request->hasFile('favicon'),['image','mimes:svg,jpeg,png,jpg,gif','max:2048']),Rule::when(is_string($request->favicon),'string')]
+            'logo'=> ['sometimes', Rule::when($request->hasFile('logo'),['mimes:svg,jpeg,png,jpg,gif','max:2048']),Rule::when(is_string($request->logo),'string')],
+            'favicon'=>['sometimes', Rule::when($request->hasFile('favicon'),['mimes:svg,jpeg,png,jpg,gif','max:2048']),Rule::when(is_string($request->favicon),'string')]
         ],[
 
         ]);
