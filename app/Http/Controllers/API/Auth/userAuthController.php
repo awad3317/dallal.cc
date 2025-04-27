@@ -111,7 +111,7 @@ class userAuthController extends Controller
     public function logout(Request $request)
     { 
         $user = Auth::user();
-        $user->tokens()->delete(); 
+        $user->token()->delete(); 
         return ApiResponseClass::sendResponse(null, 'تم تسجيل الخروج بنجاح');
     }
 
