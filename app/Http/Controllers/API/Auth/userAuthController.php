@@ -66,9 +66,10 @@ class userAuthController extends Controller
 
     public function login(Request $request)
     {
+        
+        // Rate limiting: 5 login attempts per 2 minutes per IP to prevent brute force attacks
         $maxAttempts = 5;
-        $decaySeconds = 120; // دقيقتين
-
+        $decaySeconds = 120;
         $executed = RateLimiter::attempt(
             'login-attempt:' . $request->ip(),
             $maxAttempts,
@@ -77,11 +78,8 @@ class userAuthController extends Controller
         );
         if (!$executed) {
             $seconds = RateLimiter::availableIn('login-attempt:' . $request->ip());
-            
-            // تحويل الثواني إلى دقائق وثواني (للعرض بطريقة سهلة)
             $minutes = floor($seconds / 60);
             $remainingSeconds = $seconds % 60;
-            
             $message = sprintf(
                 'لقد تجاوزت الحد المسموح (%d محاولات كل دقيقتين). يرجى المحاولة مرة أخرى بعد %d دقيقة و %d ثانية.',
                 $maxAttempts,
