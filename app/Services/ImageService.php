@@ -5,6 +5,7 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
+use LaravelImageSanitize\ImageSanitize;
 
 class ImageService
 {
@@ -18,12 +19,14 @@ class ImageService
     public function saveImage($image, $folder = 'Primary_images')
     {
 
+        $sanitizer = new ImageSanitize();
+        $cleanPrimaryImage = $sanitizer->sanitize($image);
         // Generate a unique filename
-        $filename = uniqid('', true) . '.' . $image->getClientOriginalExtension();
+        $filename = uniqid('', true) . '.' . $cleanPrimaryImage->getClientOriginalExtension();
         $filePath = $folder . '/' . $filename;
 
         // Save the file to the specified folder
-        $image->storeAs($folder, $filename, 'public');
+        $cleanPrimaryImage->storeAs($folder, $filename, 'public');
         // $filePath = Storage::putFileAs($folder, $image, $filename);
 
         // Return the full file path
