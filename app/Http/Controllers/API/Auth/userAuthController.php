@@ -13,6 +13,8 @@ use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Cache\RateLimiter;
+use Illuminate\Support\Facades\RateLimiter as FacadeRateLimiter;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -63,6 +65,14 @@ class userAuthController extends Controller
 
     public function login(Request $request)
     {
+        // $executed = FacadeRateLimiter::attempt(
+        //     'login-attempt:'.$request->ip(),
+        //     $perMinute = 5,
+        //     function() {}
+        // );
+        // if (!$executed) {
+        //     return ApiResponseClass::sendError('لقد تجاوزت الحد المسموح من محاولات الدخول. يرجى المحاولة لاحقاً.', null, 429);
+        // }
         $validator = Validator::make($request->all(), [
             'identifier' => ['required'],
             'password' => ['required','string'],
