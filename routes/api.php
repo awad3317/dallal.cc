@@ -85,7 +85,8 @@ Route::middleware(['auth:sanctum','check.banned'])->group(function () {
 });
     //           Auth Route          //
 Route::post('/register',[userAuthController::class,'register']);
-Route::post('/login',[userAuthController::class,'login'])->middleware('throttle:5,1');
+Route::post('/login',[userAuthController::class,'login']);
+// ->middleware('throttle:5,1');
 Route::post('/verifyOtpAndLogin',[OTPController::class,'verifyOtpAndLogin']);
 Route::post('/resendOTP',[OTPController::class,'resendOTP']);
     //             Regions           //
