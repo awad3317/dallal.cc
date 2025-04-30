@@ -13,8 +13,9 @@ use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Cache\RateLimiter;
-use Illuminate\Support\Facades\RateLimiter as FacadeRateLimiter;
+// use Illuminate\Cache\RateLimiter;
+use Illuminate\Support\Facades\RateLimiter;
+// use Illuminate\Support\Facades\RateLimiter as FacadeRateLimiter;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -65,13 +66,30 @@ class userAuthController extends Controller
 
     public function login(Request $request)
     {
-        $executed = FacadeRateLimiter::attempt(
-            'login-attempt:'.$request->ip(),
-            $perMinute = 5,
-            function() {}
+        $maxAttempts = 5;
+        $decaySeconds = 120; // دقيقتين
+
+        $executed = RateLimiter::attempt(
+            'login-attempt:' . $request->ip(),
+            $maxAttempts,
+            function () {},
+            $decaySeconds
         );
         if (!$executed) {
-            return ApiResponseClass::sendError('لقد تجاوزت الحد المسموح من محاولات الدخول. يرجى المحاولة لاحقاً.', null, 429);
+            $seconds = RateLimiter::availableIn('login-attempt:' . $request->ip());
+            
+            // تحويل الثواني إلى دقائق وثواني (للعرض بطريقة سهلة)
+            $minutes = floor($seconds / 60);
+            $remainingSeconds = $seconds % 60;
+            
+            $message = sprintf(
+                'لقد تجاوزت الحد المسموح (%d محاولات كل دقيقتين). يرجى المحاولة مرة أخرى بعد %d دقيقة و %d ثانية.',
+                $maxAttempts,
+                $minutes,
+                $remainingSeconds
+            );
+            
+            return ApiResponseClass::sendError($message, null, 429);
         }
         $validator = Validator::make($request->all(), [
             'identifier' => ['required'],
