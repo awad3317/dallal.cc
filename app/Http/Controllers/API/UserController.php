@@ -65,7 +65,7 @@ class UserController extends Controller
     public function update(Request $request,$id)
     {
         if($id != Auth::id()){
-            return ApiResponseClass::sendError('You do not have permission to update this user.');
+            return ApiResponseClass::sendError('غير مسموح لك بتحديث بيانات هذا المستخدم');
         }
         $validator = Validator::make($request->all(), [
             'name' => ['sometimes','string','max:100'],

@@ -4,6 +4,7 @@ namespace App\Repositories;
 use App\Models\User;
 use Laratrust\Models\Role;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Interfaces\RepositoriesInterface;
 
@@ -18,7 +19,7 @@ class UserRepository implements RepositoriesInterface
     }
     public function index(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
-        return User::with(['role'])->filter()->paginate(10);
+        return User::with(['role'])->where('id', '!=', Auth::id())->where('id', '!=', 1)->filter()->paginate(10);
     }
 
     public function getById($id): User
