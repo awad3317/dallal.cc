@@ -47,8 +47,8 @@ Route::middleware(['auth:sanctum','check.banned'])->group(function () {
         //      Site settings           //
     Route::put('/setting', [SiteSettingController::class, 'update']);
     
-    Route::apiResource('/contact',ContactController::class)->except(['store','update']); 
-    Route::post('/contactStore',[ContactController::class,'contactStore']);  
+    // Route::apiResource('/contact',ContactController::class)->except(['store','update']); 
+    // Route::post('/contactStore',[ContactController::class,'contactStore']);  
     
 
     Route::apiResource('/region',RegionController::class)->except(['index']);
