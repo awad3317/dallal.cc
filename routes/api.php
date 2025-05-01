@@ -34,6 +34,7 @@ Route::post('/pusher/auth',function (Request $request){
 });
 
 Route::middleware(['auth:sanctum','check.banned'])->group(function () {
+
     Route::post('/logout',[userAuthController::class,'logout']);
         //      Dashboard for User      //
     Route::get('/getUserData',[UserDashboardController::class,'getUserData']);
@@ -44,12 +45,9 @@ Route::middleware(['auth:sanctum','check.banned'])->group(function () {
     Route::get('/getAds',[AdminDashboardController::class,'getAds']);
     Route::get('/getStatisticsByYear/{year}',[AdminDashboardController::class,'getStatisticsByYear']);
 
-        //      Site settings           //
-    Route::put('/setting', [SiteSettingController::class, 'update'])->middleware(['image-sanitize']);
     
     Route::apiResource('/contact',ContactController::class)->except(['store','update']);  
     
-
     Route::apiResource('/region',RegionController::class)->except(['index']);
     Route::apiResource('/category',CategoryController::class)->except(['inedx']);
     Route::apiResource('/comment',CommentController::class)->except(['show','update']);
@@ -58,10 +56,6 @@ Route::middleware(['auth:sanctum','check.banned'])->group(function () {
     Route::post('/assignRole/{user_id}',[UserController::class,'assignRole']);
     Route::post('/revokeRole/{user_id}',[UserController::class,'revokeRole']);
     Route::post('/toggleBan/{user_id}',[UserController::class,'toggleBan']);
-    
-    Route::apiResource('/ad',AdController::class)->except(['index','show','update'])->middleware(['image-sanitize']);
-    Route::post('/ad/{id}',[AdController::class,'update'])->middleware(['image-sanitize']);
-    
 
     Route::post('/updatePrimaryImage/{ad_id}',[AdController::class,'updatePrimaryImage']);
     Route::get('/ad/edit/{id}',[AdController::class,'edit']);
@@ -70,8 +64,8 @@ Route::middleware(['auth:sanctum','check.banned'])->group(function () {
     
     Route::apiResource('/saleOption',SaleOptionController::class)->except(['index']);
     Route::apiResource('/bid',BidController::class)->except(['index']);
-    Route::apiResource('/image',ImageController::class)->except(['show','index','update'])->middleware(['image-sanitize']);
-    Route::post('/image/{id}',[ImageController::class,'update'])->middleware(['image-sanitize']);
+    
+    
     Route::apiResource('/role',RoleController::class)->except(['destroy','update','store']);
     Route::apiResource('/conversation',ConversationController::class)->except(['update','destroy']);
     Route::apiResource('/SocialMediaLink',SocialMediaLinkController::class)->except(['index']);
@@ -80,6 +74,19 @@ Route::middleware(['auth:sanctum','check.banned'])->group(function () {
     // Route::get('/permission',[PermissionController::class,'index']);
     Route::post('/like',[LikeController::class,'store']);
     Route::delete('/like/{ad_id}',[LikeController::class,'destroy']);
+
+    // ======= Image Upload Routes (Sanitized) =======
+    // All routes in this group automatically process uploaded images
+    // to remove malicious code and EXIF data
+    Route::middleware(['image-sanitize'])->group(function () {
+        //      Site settings           //
+        Route::put('/setting', [SiteSettingController::class, 'update']);
+
+        Route::apiResource('/ad',AdController::class)->except(['index','show','update']);
+        Route::apiResource('/image',ImageController::class)->except(['show','index','update']);
+        Route::post('/ad/{id}',[AdController::class,'update']);
+        Route::post('/image/{id}',[ImageController::class,'update']);
+    });
     
 });
     //           Auth Route          //
