@@ -114,43 +114,4 @@ class ContactController extends Controller
         }
     }
 
-    public function contactIndex(){
-        try {
-            $phone = config('contact.phone');
-            $email = config('contact.email');
-            $workingHours = config('contact.working_hours');
-            return ApiResponseClass::sendResponse(['phone'=>$phone,'email'=>$email,'working'=>$workingHours],'All Contacts retrieved successfully.');
-        } catch (Exception $e) {
-            return ApiResponseClass::sendError('Error returned Contact: ' . $e->getMessage());
-        }
-       
-    }
-
-    public function contactStore(Request $request){
-        $validator = Validator::make($request->all(), [
-            'phone' =>  ['required','string'],
-            'email' =>  ['required','email'],
-            'working_hours' => ['required','string'],
-        ],[
-            'phone.required' => 'يجب كتابة رقم الجوال التواصل',
-            'email.required' => 'يجب كتابة البريد الالكتروني',
-            'working_hours.required' => 'يجب كتابة اوقات العمل',
-        ]);
-        if ($validator->fails()) {
-            return ApiResponseClass::sendValidationError($validator->errors()->first(), $validator->errors());
-        }
-        if (!Auth::user()->has_role('admin')) {
-            return ApiResponseClass::sendError('ليس لديك صلاحية لحدف الرسالة', 403);
-        }
-        $fields=$request->only(['phone','email','working_hours']);
-        $contactData = [
-            'phone' => $fields['phone'],
-            'email' =>  $fields['email'],
-            'working_hours' => $fields['working_hours'],
-        ];
-        $content = "<?php\n\nreturn " . var_export($contactData, true) . ";\n";
-        File::put(config_path('contact.php'), $content);
-       
-        return ApiResponseClass::sendResponse($contactData,'تم حفظ البيانات بنجاح');
-    }
 }
