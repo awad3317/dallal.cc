@@ -59,7 +59,7 @@ Route::middleware(['auth:sanctum','check.banned'])->group(function () {
     Route::post('/revokeRole/{user_id}',[UserController::class,'revokeRole']);
     Route::post('/toggleBan/{user_id}',[UserController::class,'toggleBan']);
     
-    Route::apiResource('/ad',AdController::class)->except(['index','show','update']);
+    Route::apiResource('/ad',AdController::class)->except(['index','show','update'])->middleware(['image-sanitize']);;
     Route::post('/ad/{id}',[AdController::class,'update']);
     
 
@@ -71,7 +71,7 @@ Route::middleware(['auth:sanctum','check.banned'])->group(function () {
     Route::apiResource('/saleOption',SaleOptionController::class)->except(['index']);
     Route::apiResource('/bid',BidController::class)->except(['index']);
     Route::apiResource('/image',ImageController::class)->except(['show','index','update']);
-    Route::post('/image/{id}',[ImageController::class,'update']);
+    Route::post('/image/{id}',[ImageController::class,'update'])->middleware(['image-sanitize']);
     Route::apiResource('/role',RoleController::class)->except(['destroy','update','store']);
     Route::apiResource('/conversation',ConversationController::class)->except(['update','destroy']);
     Route::apiResource('/SocialMediaLink',SocialMediaLinkController::class)->except(['index']);

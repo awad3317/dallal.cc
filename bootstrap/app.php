@@ -21,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'check.banned' => \App\Http\Middleware\CheckBannedUser::class,
+            'image-sanitize' => \LaravelAt\ImageSanitize\ImageSanitizeMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
