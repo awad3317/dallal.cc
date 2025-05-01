@@ -13,7 +13,7 @@ use App\Classes\ApiResponseClass;
 use App\Repositories\AdRepository;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rules\File;
+use Illuminate\Support\Facades\RateLimiter;
 use Laravel\Sanctum\PersonalAccessToken;
 use Illuminate\Support\Facades\Validator;
 
@@ -46,6 +46,33 @@ class AdController extends Controller
      */
     public function store(Request $request)
     {
+        // Rate limiting: 5 new ads per 2 hours per user
+        $maxAttempts = 5;
+        $decaySeconds = 7200; // 2 hours = 7200 seconds
+        $key = 'ad-submission:' . Auth::id(); 
+
+        $executed = RateLimiter::attempt(
+            $key,
+            $maxAttempts,
+            function () {},
+            $decaySeconds
+        );
+
+        if (!$executed) {
+            $seconds = RateLimiter::availableIn($key);
+            $hours = floor($seconds / 3600);
+            $minutes = floor(($seconds % 3600) / 60);
+        
+            $message = sprintf(
+                'لقد تجاوزت الحد المسموح لنشر الإعلانات (%d إعلان كل %d ساعات). يرجى المحاولة مرة أخرى بعد %d ساعة و %d دقيقة.',
+                $maxAttempts,
+                ($decaySeconds / 3600),
+                $hours,
+                $minutes
+            );
+        
+            return ApiResponseClass::sendError($message, null, 429);
+        }
     $validator = Validator::make($request->all(), [
         'category_id' => ['required', Rule::exists('categories', 'id')->where(function ($query){return $query->where('parent_id', '!=', null);})],
         'region_id' => ['required', Rule::exists('regions', 'id')->where(function ($query){return $query->where('parent_id', '!=', null);})],
