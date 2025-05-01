@@ -74,8 +74,30 @@ class SiteSettingController extends Controller
             'working_hours'=>['required','string'],
             'maintenance_message' =>  ['required','string'],
             'logo'=> ['sometimes', Rule::when($request->hasFile('logo'),['mimes:svg,jpeg,png,jpg,gif','max:2048']),Rule::when(is_string($request->logo),'string')],
-            'favicon'=>['sometimes', Rule::when($request->hasFile('favicon'),['mimes:svg,jpeg,png,jpg,gif','max:2048']),Rule::when(is_string($request->favicon),'string')]
+            'favicon'=>['sometimes', Rule::when($request->hasFile('favicon'),['mimes:svg','max:2048']),Rule::when(is_string($request->favicon),'string')]
         ],[
+            'site_name.required' => 'حقل اسم الموقع مطلوب.',
+            'site_name.string' => 'يجب أن يكون اسم الموقع نصياً.',
+            'meta_description.required' => 'حقل وصف الميتا مطلوب.',
+            'meta_description.string' => 'يجب أن يكون وصف الميتا نصياً.',
+            'meta_keywords.required' => 'حقل الكلمات المفتاحية مطلوب.',
+            'meta_keywords.string' => 'يجب أن تكون الكلمات المفتاحية نصية.',
+            'email.required' => 'حقل البريد الإلكتروني مطلوب.',
+            'email.email' => 'يجب إدخال بريد إلكتروني صالح.',
+            'phone.required' => 'حقل الهاتف مطلوب.',
+            'phone.string' => 'يجب أن يكون الهاتف نصياً.',
+            'address.required' => 'حقل العنوان مطلوب.',
+            'address.string' => 'يجب أن يكون العنوان نصياً.',
+            'is_maintenance.required' => 'حقل وضع الصيانة مطلوب.',
+            'is_maintenance.boolean' => 'يجب أن يكون وضع الصيانة نعم أو لا.',
+            'working_hours.required' => 'حقل ساعات العمل مطلوب.',
+            'working_hours.string' => 'يجب أن تكون ساعات العمل نصية.',
+            'maintenance_message.required' => 'حقل رسالة الصيانة مطلوب.',
+            'maintenance_message.string' => 'يجب أن تكون رسالة الصيانة نصية.',
+            'logo.mimes' => 'يجب أن يكون الملف من نوع: svg, jpeg, png, jpg, gif.',
+            'logo.max' => 'يجب ألا يتجاوز حجم الملف 2 ميجابايت.',
+            'favicon.mimes' => 'يجب أن يكون الملف من نوع svg فقط.',
+            'favicon.max' => 'يجب ألا يتجاوز حجم الملف 2 ميجابايت.',
 
         ]);
         if ($validator->fails()) {
